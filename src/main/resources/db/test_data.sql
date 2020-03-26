@@ -1,15 +1,13 @@
-DELETE
-FROM USER;
-DELETE
-FROM RESTAURANT;
+DELETE FROM USER;
+DELETE FROM RESTAURANT;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO USER (ROLE, NAME, EMAIL, PASSWORD)
-VALUES ('User', 'User 2', 'abc@yandex.ru', 'password1'),    --id: 1000000
-       ('User', 'User 1', 'def@yandex.ru', 'password2'),    --id: 1000001
-       ('Admin', 'Admin 2', 'asd@yandex.ru', 'admin2'),
-       ('Admin', 'Admin 1', 'qwe@yandex.ru', 'admin1'),
-       ('User', 'User 3', 'abc@yandex.ru', 'password3');    --id: 1000004
+VALUES ('REGULAR_USER', 'User 2', 'abc@yandex.ru', 'password1'),    --id: 1000000
+       ('REGULAR_USER', 'User 1', 'def@yandex.ru', 'password2'),    --id: 1000001
+       ('ADMIN', 'Admin 2', 'asd@yandex.ru', 'admin2'),
+       ('ADMIN', 'Admin 1', 'qwe@yandex.ru', 'admin1'),
+       ('REGULAR_USER', 'User 3', 'ghi@yandex.ru', 'password3');    --id: 1000004
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Корейский'),       --id: 100005
@@ -42,6 +40,6 @@ INSERT INTO VOTE (DATE, RESTAURANT_ID, USER_ID)
 VALUES ('2020-03-24', 100005, 100001),
        ('2020-03-24', 100006, 100004),
        ('2020-03-24', 100006, 100000),
-       ('2020-03-25', 100007, 100000),
+       ('2020-03-25', 100005, 100000),
        ('2020-03-25', 100006, 100004),
        ('2020-03-25', 100005, 100001);
