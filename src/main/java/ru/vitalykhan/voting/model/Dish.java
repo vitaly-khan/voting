@@ -1,28 +1,40 @@
 package ru.vitalykhan.voting.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Dish extends AbstractNamedEntity {
 
-    private Integer price;      //price multiplied by 100
+    @PositiveOrZero
+    private int price;      //price multiplied by 100
 
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+    @JoinColumn(name = "menu_id")
     private Menu menu;
 
     public Dish() {
     }
 
-    public Dish(Integer id, String name, Integer price, Menu menu) {
+    public Dish(int id, String name, Integer price, Menu menu) {
         super(id, name);
         this.price = price;
         this.menu = menu;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

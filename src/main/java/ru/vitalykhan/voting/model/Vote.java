@@ -1,13 +1,32 @@
 package ru.vitalykhan.voting.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Entity
 public class Vote extends AbstractEntityWithId {
 
+    @NotNull
+    @FutureOrPresent
     private LocalDate date;
 
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Vote() {

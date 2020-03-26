@@ -1,20 +1,7 @@
 package ru.vitalykhan.voting.model;
 
-//import org.hibernate.annotations.BatchSize;
-//import org.hibernate.annotations.Cache;
-//import org.hibernate.annotations.CacheConcurrencyStrategy;
-//import org.hibernate.validator.constraints.Range;
-//import org.springframework.util.CollectionUtils;
-//
-//import javax.persistence.*;
-//import javax.validation.constraints.Email;
-//import javax.validation.constraints.NotBlank;
-//import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Size;
-//import java.util.*;
-//
-//import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
-
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.Instant;
 
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -23,8 +10,7 @@ import java.time.Instant;
 //        @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
 //        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u ORDER BY u.name, u.email"),
 //})
-//@Entity
-//@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
+@Entity
 public class User extends AbstractNamedEntity {
 
 //    public static final String DELETE = "User.delete";
@@ -32,24 +18,21 @@ public class User extends AbstractNamedEntity {
 //    public static final String ALL_SORTED = "User.getAllSorted";
 
 
-//    @Column(name = "email", nullable = false, unique = true)
-//    @Email
-//    @NotBlank
-//    @Size(max = 100)
+    @Email
     private String email;
 
-//    @Column(name = "password", nullable = false)
-    //    @NotBlank
-//    @Size(min = 5, max = 100)
+    @NotBlank
+    @Size(min = 5, max = 50)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private Role role;
 
-//    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
-//    @NotNull
+    @NotNull
+    @PastOrPresent
     private Instant registered = Instant.now();
 
-    //    @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
 //    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -68,16 +51,12 @@ public class User extends AbstractNamedEntity {
     public User() {
     }
 
-//    public User(User u) {
-//        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getCaloriesPerDay(), u.isEnabled(), u.getRegistered(), u.getRoles());
-//    }
-
     public static User regularUserOf(String name, String email, String password) {
         User result = new User();
         result.setName(name);
         result.setEmail(email);
         result.setPassword(password);
-        result.setRole(Role.REGULAR_USER);
+        result.setRole(Role.USER);
         result.setRegistered(Instant.now());
         result.setEnabled(true);
         return result;

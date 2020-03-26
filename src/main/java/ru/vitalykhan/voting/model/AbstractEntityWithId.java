@@ -1,20 +1,16 @@
 package ru.vitalykhan.voting.model;
 
-//import org.hibernate.Hibernate;
-//import org.springframework.data.domain.Persistable;
-//
-//import javax.persistence.*;
+import org.springframework.data.domain.Persistable;
 
-import javax.persistence.Id;
+import javax.persistence.*;
 
-//@MappedSuperclass
-public abstract class AbstractEntityWithId /*implements Persistable<Integer> */{
-    public static final int START_SEQ = 100000;
+@MappedSuperclass
+public abstract class AbstractEntityWithId implements Persistable<Integer> {
+    public static final int START_SEQ = 100_000;
 
     @Id
-//    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
-//  //    @Column(name = "id", unique = true, nullable = false, columnDefinition = "integer default nextval('global_seq')")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
+    @SequenceGenerator(name = "seq_generator", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_generator")
 
 //  See https://hibernate.atlassian.net/browse/HHH-3718 and https://hibernate.atlassian.net/browse/HHH-12034
 //  Proxy initialization when accessing its identifier managed now by JPA_PROXY_COMPLIANCE setting
@@ -31,17 +27,17 @@ public abstract class AbstractEntityWithId /*implements Persistable<Integer> */{
         this.id = id;
     }
 
-//    @Override
+    @Override
     public Integer getId() {
         return id;
     }
 
-//    @Override
+    @Override
     public boolean isNew() {
         return this.id == null;
     }
 
-//    @Override
+    @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + id;
     }

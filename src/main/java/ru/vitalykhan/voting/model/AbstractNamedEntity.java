@@ -5,12 +5,15 @@ package ru.vitalykhan.voting.model;
 //import javax.validation.constraints.Size;
 
 
-//@MappedSuperclass
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+@MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractEntityWithId {
 
-//    @NotBlank
-//    @Size(min = 2, max = 100)
-//    @Column(name = "name", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 100)
     protected String name;
 
     protected AbstractNamedEntity() {
