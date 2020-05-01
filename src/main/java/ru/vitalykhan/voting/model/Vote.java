@@ -20,8 +20,8 @@ public class Vote extends AbstractEntityWithId {
     @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -32,16 +32,16 @@ public class Vote extends AbstractEntityWithId {
     public Vote() {
     }
 
-    public Vote(LocalDate date, Restaurant restaurant, User user) {
+    public Vote(LocalDate date, Menu menu, User user) {
         this.date = date;
-        this.restaurant = restaurant;
+        this.menu = menu;
         this.user = user;
     }
 
-    public Vote(Integer id, LocalDate date, Restaurant restaurant, User user) {
+    public Vote(Integer id, LocalDate date, Menu menu, User user) {
         super(id);
         this.date = date;
-        this.restaurant = restaurant;
+        this.menu = menu;
         this.user = user;
     }
 
@@ -53,12 +53,12 @@ public class Vote extends AbstractEntityWithId {
         this.date = date;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public Menu getMenu() {
+        return menu;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setMenu(Menu menu) {
+        this.menu = menu;
     }
 
     public User getUser() {
@@ -74,7 +74,7 @@ public class Vote extends AbstractEntityWithId {
         return "Vote{" +
                 "id=" + id +
                 ". date=" + date +
-                ", restaurant=" + restaurant +
+                ", menu=" + menu +
                 ", user=" + user +
                 '}';
     }
