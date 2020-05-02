@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:component-scan base-package="ru.vitalykhan.voting.repository.impl"/>
+    <context:component-scan base-package="ru.vitalykhan.voting.repository"/>
 
     <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
 
@@ -28,13 +28,16 @@
           p:username="${database.username}"
           p:password="${database.password}"/>
 
-    <jpa:repositories base-package="ru.vitalykhan.voting.repository.*"/>
+    <jpa:repositories base-package="ru.vitalykhan.voting.repository"/>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
-          p:packagesToScan="ru.vitalykhan.voting.model"
-          p:jpaVendorAdapter="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+          p:packagesToScan="ru.vitalykhan.voting.model">
+<!--          p:jpaVendorAdapter="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">-->
 
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
         <property name="jpaPropertyMap">
             <map>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).SHOW_SQL}" value="${hibernate.format_sql}"/>
@@ -72,5 +75,10 @@
     <!--        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/topjava"/>-->
     <!--        <context:property-placeholder location="classpath:db/tomcat.properties" system-properties-mode="OVERRIDE"/>-->
     <!--    </beans>-->
+
+<!--    Spring Web MVC-->
+    <context:component-scan base-package="ru.vitalykhan.voting.controller"/>
+
+
 
 </beans>
