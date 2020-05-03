@@ -1,7 +1,6 @@
 package ru.vitalykhan.voting.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
@@ -17,13 +16,14 @@ public class Menu extends AbstractEntityWithId {
     private LocalDate date;
 
     @NotNull
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonIgnore
     private Restaurant restaurant;
 
     //List is preferred over Set as it's likely to set an order of dishes within menu in future
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
+    @OneToMany(mappedBy = "menu")
+    @JsonIgnore
     private List<Dish> dishes;
 
     public Menu() {
