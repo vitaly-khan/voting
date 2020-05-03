@@ -18,12 +18,10 @@ public class Menu extends AbstractEntityWithId {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
-    @JsonIgnore
     private Restaurant restaurant;
 
     //List is preferred over Set as it's likely to set an order of dishes within menu in future
     @OneToMany(mappedBy = "menu")
-    @JsonIgnore
     private List<Dish> dishes;
 
     public Menu() {

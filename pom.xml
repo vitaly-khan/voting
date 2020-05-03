@@ -59,17 +59,34 @@
             <version>2.5.0</version>
         </dependency>
 
-<!--        JPA (Persistence API) + Hiberbate-->
+<!--        Hiberbate-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+
+<!--        Jackson-->
+<!--        Main library for JSON serialization in RestController-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-json.version}</version>
         </dependency>
+
+<!--        To serialize lazy fields of Hibernate-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+            <version>${jackson-json.version}</version>
+        </dependency>
+<!--        To shorten JSON body for serialized LocalDate-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-json.version}</version>
+        </dependency>
+
 
 <!--        Entity Validation -->
         <dependency>
