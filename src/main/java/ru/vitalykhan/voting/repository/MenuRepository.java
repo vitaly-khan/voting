@@ -1,5 +1,7 @@
 package ru.vitalykhan.voting.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +14,17 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public interface MenuRepository extends CrudRepository<Menu, Integer> {
+public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
-    @Query("SELECT m FROM Menu m WHERE m.date=:date")
-//    @Query("SELECT m FROM Menu m JOIN FETCH Dish d WHERE m.date=:date")
-    List<Menu> findByDateWithDishes(@Param("date") LocalDate date);
+    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant WHERE m.date=:date")
+    List<Menu> findAllByDate(@Param("date") LocalDate date);
+
+    //    Left this chunk of code in case I'll need to change to LAZY for menu.restaurant
+
+//    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant")
+//    List<Menu> findAll();
+//    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant")
+//    List<Menu> findByID();
+
 
 }

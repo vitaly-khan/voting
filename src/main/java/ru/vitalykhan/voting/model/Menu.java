@@ -21,7 +21,7 @@ public class Menu extends AbstractEntityWithId {
     private Restaurant restaurant;
 
     //List is preferred over Set as it's likely to set an order of dishes within menu in future
-    @OneToMany(mappedBy = "menu")
+    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     private List<Dish> dishes;
 
     public Menu() {
