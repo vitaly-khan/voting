@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 public class Dish extends AbstractNamedEntity {
 
     @PositiveOrZero
-    private int price;      //price multiplied by 100
+    private Integer price;      //price multiplied by 100
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,8 +26,8 @@ public class Dish extends AbstractNamedEntity {
     public Dish() {
     }
 
-    public Dish(int id, String name, Integer price, Menu menu) {
-        super(id, name);
+    public Dish(String name, Integer price, Menu menu) {
+        super(null, name);
         this.price = price;
         this.menu = menu;
     }

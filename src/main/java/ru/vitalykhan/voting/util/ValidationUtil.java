@@ -13,7 +13,7 @@ public class ValidationUtil {
         }
     }
 
-    public static void assureIdConsistency(HasId object, Integer id) {
+    public static void assureIdConsistency(HasId object, int id) {
         if (object.isNew()) {
             object.setId(id);
         } else if (object.getId() != id) {
