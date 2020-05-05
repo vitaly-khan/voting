@@ -1,6 +1,8 @@
-package ru.vitalykhan.voting.To;
+package ru.vitalykhan.voting.to;
 
-public class AbstractTo {
+import ru.vitalykhan.voting.HasId;
+
+public class AbstractTo implements HasId {
     protected Integer id;
 
     public AbstractTo() {
