@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.vitalykhan.voting.To.MenuTo;
+import ru.vitalykhan.voting.to.MenuTo;
 import ru.vitalykhan.voting.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Restaurant;

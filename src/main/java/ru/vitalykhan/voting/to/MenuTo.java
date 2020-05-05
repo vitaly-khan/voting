@@ -1,4 +1,4 @@
-package ru.vitalykhan.voting.To;
+package ru.vitalykhan.voting.to;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;

@@ -12,6 +12,7 @@ import ru.vitalykhan.voting.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
+import ru.vitalykhan.voting.util.ValidationUtil;
 
 import java.net.URI;
 
@@ -47,6 +48,8 @@ public class RestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+        ValidationUtil.assureIsNew(restaurant);
+
         Restaurant newRestaurant = restaurantRepository.save(restaurant);
         log.info("Create a new restaurant {}", newRestaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -55,22 +58,17 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(newRestaurant);
     }
 
-    @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
-        //Reply conservatively, accept liberally
-        if (restaurant.isNew()) {
-            restaurant.setId(restaurantId);
-        } else if (restaurant.getId() != restaurantId) {
-            throw new IllegalRequestDataException("Restaurant must be with id=" + restaurantId);
-        }
+    public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+        ValidationUtil.assureIdConsistency(restaurant, id);
 
-        if (restaurantRepository.findById(restaurantId).isPresent()) {
-            log.info("Update restaurant {}", restaurant);
-            restaurantRepository.save(restaurant);
-        } else {
+        if (restaurantRepository.findById(id).isEmpty()) {
             throw new NotFoundException(restaurant + " doesn't exist in DB!");
+        } else {
+            log.info("Update restaurant with id={}", id);
+            restaurantRepository.save(restaurant);
         }
     }
 }
