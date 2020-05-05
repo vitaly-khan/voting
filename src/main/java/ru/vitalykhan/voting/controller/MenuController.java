@@ -6,14 +6,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.To.MenuTo;
+import ru.vitalykhan.voting.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
-import ru.vitalykhan.voting.util.MenuUtil;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -33,23 +34,14 @@ public class MenuController {
         this.restaurantRepository = restaurantRepository;
     }
 
-    @GetMapping
-    public Iterable<Menu> getAll() {
-        log.info("Get all menus");
-        return menuRepository.findAll();
-    }
-
     @GetMapping("/{menuId}")
     public Menu getById(@PathVariable int menuId) {
         log.info("Get menu with id={}", menuId);
         return menuRepository.findById(menuId).orElse(null);
     }
 
-    @GetMapping("/filter")
-    public List<Menu> getByDate(@RequestParam
-                                @NotNull
-                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                        LocalDate date) {
+    @GetMapping
+    public List<Menu> getByDate(@RequestParam @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get menus by date: {}", date);
         return menuRepository.findAllByDate(date);
     }
@@ -60,13 +52,6 @@ public class MenuController {
         return menuRepository.findAllByDate(LocalDate.now());
     }
 
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAll() {
-        log.info("Delete all menus");
-        menuRepository.deleteAll();
-    }
-
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int menuId) {
@@ -74,11 +59,16 @@ public class MenuController {
         menuRepository.deleteById(menuId);
     }
 
-    @PostMapping(value = "/restaurants/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Menu> create(@RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Menu> create(@RequestBody MenuTo menuTo) {
+        Integer restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        Menu newMenu = menuRepository.save(MenuUtil.getMenuOf(menuTo, restaurant));
-        log.info("Create menu {}", newMenu);
+        if (restaurant == null) {
+            throw new NotFoundException(String.format("Restaurant with id=%s wasn't found!", restaurantId));
+        }
+        Menu newMenu = menuRepository.save(new Menu(menuTo.getDate(), restaurant));
+        log.info("Create a new menu {}", newMenu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("menus/{id}")
                 .buildAndExpand(newMenu.getId()).toUri();

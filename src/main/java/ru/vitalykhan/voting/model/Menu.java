@@ -6,13 +6,14 @@ import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
 public class Menu extends AbstractEntityWithId {
 
     @NotNull
-    @FutureOrPresent
+    @FutureOrPresent            //Creating backdated menus is not allowed.
     private LocalDate date;
 
     @NotNull
@@ -20,18 +21,16 @@ public class Menu extends AbstractEntityWithId {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    //List is preferred over Set as it's likely to set an order of dishes within menu in future
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
-    private List<Dish> dishes;
+    //List is preferred over Set as it's likely to set an order of dishes within menu in perspective
+    private List<Dish> dishes = Collections.emptyList();
 
     public Menu() {
     }
 
-    public Menu(Integer id, @NotNull LocalDate date, Restaurant restaurant, List<Dish> dishes) {
-        super(id);
+    public Menu(LocalDate date, Restaurant restaurant) {
         this.date = date;
         this.restaurant = restaurant;
-        this.dishes = dishes;
     }
 
     public LocalDate getDate() {

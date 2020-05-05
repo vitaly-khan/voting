@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.exception.IllegalRequestDataException;
@@ -38,13 +38,6 @@ public class RestaurantController {
         return restaurantRepository.findById(restaurantId).orElse(null);
     }
 
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAll() {
-        log.info("Delete all restaurants");
-        restaurantRepository.deleteAll();
-    }
-
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int restaurantId) {
@@ -55,7 +48,7 @@ public class RestaurantController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
         Restaurant newRestaurant = restaurantRepository.save(restaurant);
-        log.info("Create restaurant {}", newRestaurant);
+        log.info("Create a new restaurant {}", newRestaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("restaurants/{id}")
                 .buildAndExpand(newRestaurant.getId()).toUri();
@@ -64,6 +57,7 @@ public class RestaurantController {
 
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @Transactional
     public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         //Reply conservatively, accept liberally
         if (restaurant.isNew()) {
