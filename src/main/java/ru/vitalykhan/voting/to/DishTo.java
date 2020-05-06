@@ -12,7 +12,7 @@ public class DishTo extends AbstractTo {
 
     //"Zero", because complimentary dish can be possible use case
     @PositiveOrZero
-    private Integer price;      //price multiplied by 100
+    private int price;      //price multiplied by 100
 
     @Positive
     private Integer menuId;
@@ -20,7 +20,8 @@ public class DishTo extends AbstractTo {
     public DishTo() {
     }
 
-    public DishTo(String name, Integer price, Integer menuId) {
+    public DishTo(Integer id, String name, Integer price, Integer menuId) {
+        super(id);
         this.name = name;
         this.price = price;
         this.menuId = menuId;
@@ -34,11 +35,11 @@ public class DishTo extends AbstractTo {
         this.name = name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
