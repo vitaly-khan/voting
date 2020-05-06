@@ -26,7 +26,7 @@ public class Dish extends AbstractNamedEntity {
     public Dish() {
     }
 
-    public Dish(int id, String name, Integer price, Menu menu) {
+    public Dish(Integer id, String name, Integer price, Menu menu) {
         super(id, name);
         this.price = price;
         this.menu = menu;
@@ -54,7 +54,7 @@ public class Dish extends AbstractNamedEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", menu=" + menu +
+                ", menuId=" + menu.id +
                 '}';
     }
 }
