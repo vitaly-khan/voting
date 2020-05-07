@@ -17,11 +17,10 @@ public class Menu extends AbstractEntityWithId {
     private LocalDate date;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-
-    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
+    @OneToMany
     //List is preferred over Set as it's likely to set an order of dishes within menu in perspective
     private List<Dish> dishes = Collections.emptyList();
 
