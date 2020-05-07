@@ -8,8 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.vitalykhan.voting.exception.IllegalRequestDataException;
-import ru.vitalykhan.voting.exception.NotFoundException;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.util.ValidationUtil;
@@ -48,7 +47,7 @@ public class RestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
-        ValidationUtil.assureIsNew(restaurant);
+        ValidationUtil.checkIsNew(restaurant);
 
         Restaurant newRestaurant = restaurantRepository.save(restaurant);
         log.info("Create a new restaurant {}", newRestaurant);

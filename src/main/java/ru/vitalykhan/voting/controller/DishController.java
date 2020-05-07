@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.vitalykhan.voting.to.DishTo;
-import ru.vitalykhan.voting.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Dish;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.repository.DishRepository;
 import ru.vitalykhan.voting.repository.MenuRepository;
+import ru.vitalykhan.voting.to.DishTo;
 import ru.vitalykhan.voting.util.DishUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import java.net.URI;
 import java.util.List;
@@ -57,7 +57,7 @@ public class DishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Dish> create(@RequestBody DishTo dishTo) {
-        ValidationUtil.assureIsNew(dishTo);
+        ValidationUtil.checkIsNew(dishTo);
 
         Integer menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
@@ -80,7 +80,7 @@ public class DishController {
 
         if (dishRepository.findById(id).isEmpty()) {
             throw new NotFoundException(String.format(
-                    "Dish with id=" + dishTo.getId() + " doesn't exist in DB!"));
+                    "Dish with id=%d doesn't exist in DB!", dishTo.getId()));
         } else {
             log.info("Update dish with id={}", id);
             Menu menu = menuRepository.findById(dishTo.getMenuId()).orElse(null);

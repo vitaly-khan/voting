@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.vitalykhan.voting.to.MenuTo;
-import ru.vitalykhan.voting.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
+import ru.vitalykhan.voting.to.MenuTo;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;

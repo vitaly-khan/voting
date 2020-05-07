@@ -1,4 +1,4 @@
-package ru.vitalykhan.voting.exception;
+package ru.vitalykhan.voting.util.exception;
 
 public class IllegalRequestDataException extends RuntimeException {
     public IllegalRequestDataException(String message) {
