@@ -1,7 +1,12 @@
 package ru.vitalykhan.voting.util;
 
 import ru.vitalykhan.voting.HasId;
+import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
+import ru.vitalykhan.voting.util.exception.IllegalVoteException;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
+
+import java.time.LocalDate;
 
 public class ValidationUtil {
     private ValidationUtil() {
@@ -19,5 +24,16 @@ public class ValidationUtil {
         } else if (object.getId() != id) {
             throw new IllegalRequestDataException(object + " must be with id=" + id);
         }
+    }
+
+    public static void checkMenuIsTodays(Menu menu, int menuId, LocalDate today) {
+        if (menu == null) {
+            throw new NotFoundException(String.format("Menu with id=%d wasn't found!", menuId));
+        }
+
+        if (!menu.getDate().equals(today)) {
+            throw new IllegalVoteException(String.format("Menu with id=%d mustn't be voted today!", menuId));
+        }
+
     }
 }
