@@ -5,10 +5,17 @@
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/security
+       https://www.springframework.org/schema/security/spring-security.xsd">
 
     <context:component-scan base-package="ru.vitalykhan.voting.repository"/>
 
@@ -16,10 +23,11 @@
 
     <jdbc:initialize-database enabled="${database.init}">
         <jdbc:script location="${jdbc.initLocation}"/>
-        <jdbc:script location="${jdbc.testDataLocation}" encoding="utf-8"/>
+        <jdbc:script location="${jdbc.testDataLocation}"/>
     </jdbc:initialize-database>
 
     <!--no pooling-->
+    <!--TODO: change to real dataSource!-->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="org.hsqldb.jdbcDriver"
@@ -108,4 +116,24 @@
 <!--        <mvc:argument-resolvers>-->
 <!--            <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>-->
 <!--        </mvc:argument-resolvers>-->
-    </mvc:annotation-driven></beans>
+    </mvc:annotation-driven>
+
+    <security:http create-session="stateless">
+        <security:http-basic/>
+        <security:intercept-url pattern="/restaurants/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/menus/todays" access="permitAll()"/>
+        <security:intercept-url pattern="/menus/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/dishes/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/votes/filter" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/votes/**" access="hasRole('ROLE_USER')"/>
+        <!--        <intercept-url pattern="/profile/register" access="isAnonymous()"/>-->
+        <security:intercept-url pattern="/spring" access="isAuthenticated()"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <security:user-service>
+        <security:user name="user1@yandex.ru" password="{noop}password1" authorities="ROLE_USER"/>
+        <security:user name="admin1@yandex.ru" password="{noop}admin1" authorities="ROLE_ADMIN"/>
+        <security:user name="admin2@yandex.ru" password="{noop}admin2" authorities="ROLE_ADMIN"/>
+    </security:user-service>
+</beans>
