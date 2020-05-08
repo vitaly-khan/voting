@@ -29,16 +29,12 @@ public class VoteController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private VoteRepository voteRepository;
-
     private MenuRepository menuRepository;
 
     public VoteController(VoteRepository voteRepository, MenuRepository menuRepository) {
         this.voteRepository = voteRepository;
         this.menuRepository = menuRepository;
     }
-
-    //TODO: getAllByDate is for Admin
-    // and getAllByAuthUser is for User!
 
     @GetMapping
     public List<Vote> getAllForAuthUser() {
@@ -57,7 +53,7 @@ public class VoteController {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public void vote(@RequestParam int menuId) {
-        Menu menu = menuRepository.findById(menuId).orElse(null);
+        Menu menu = menuRepository.findByIDLazily(menuId);
         LocalDate today = LocalDate.now();
 
         ValidationUtil.checkMenuIsTodays(menu, menuId, today);

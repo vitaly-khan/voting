@@ -20,7 +20,8 @@ public class Menu extends AbstractEntityWithId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-    @OneToMany
+
+    @OneToMany(mappedBy = "menu")
     //List is preferred over Set as it's likely to set an order of dishes within menu in perspective
     private List<Dish> dishes = Collections.emptyList();
 

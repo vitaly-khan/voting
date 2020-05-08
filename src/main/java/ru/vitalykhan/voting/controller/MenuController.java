@@ -37,7 +37,7 @@ public class MenuController {
     @GetMapping("/{menuId}")
     public Menu getById(@PathVariable int menuId) {
         log.info("Get menu with id={}", menuId);
-        return menuRepository.findById(menuId).orElse(null);
+        return menuRepository.findByID(menuId);
     }
 
     @GetMapping
