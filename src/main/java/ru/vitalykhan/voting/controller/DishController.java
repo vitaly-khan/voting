@@ -39,19 +39,11 @@ public class DishController {
         return dishRepository.findById(dishId).orElse(null);
     }
 
-    @GetMapping
-    @Transactional(readOnly = true)
-    public List<Dish> getByMenuId(@RequestParam int menuId) {
-        log.info("Get all dishes for menu with id={}", menuId);
-        Menu menu = menuRepository.findById(menuId).orElse(null);
-        return dishRepository.findAllByMenu(menu);
-    }
-
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
-        menuRepository.deleteById(dishId);
+        dishRepository.deleteById(dishId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
