@@ -18,6 +18,7 @@
        https://www.springframework.org/schema/security/spring-security.xsd">
 
     <context:component-scan base-package="ru.vitalykhan.voting.repository"/>
+    <context:component-scan base-package="ru.vitalykhan.voting"/>
 
     <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
 
@@ -127,16 +128,11 @@
         <security:intercept-url pattern="/votes/filter" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/votes/**" access="hasRole('ROLE_USER')"/>
         <!--        <intercept-url pattern="/profile/register" access="isAnonymous()"/>-->
-        <security:intercept-url pattern="/spring" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/**" access="permitAll()"/>
         <security:csrf disabled="true"/>
     </security:http>
 
-    <security:jdbc-user-service data-source-ref="dataSource"
-                                users-by-username-query="SELECT email, password, enabled FROM user WHERE email=?"
-                                authorities-by-username-query="SELECT email, 'ROLE_' + role FROM user WHERE email=?"/>
-<!--    <security:user-service>-->
-<!--        <security:user name="user1@yandex.ru" password="{noop}password1" authorities="ROLE_USER"/>-->
-<!--        <security:user name="admin1@yandex.ru" password="{noop}admin1" authorities="ROLE_ADMIN"/>-->
-<!--        <security:user name="admin2@yandex.ru" password="{noop}admin2" authorities="ROLE_ADMIN"/>-->
-<!--    </security:user-service>-->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="securityUserService"/>
+    </security:authentication-manager>
 </beans>

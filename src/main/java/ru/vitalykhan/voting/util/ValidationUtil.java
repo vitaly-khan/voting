@@ -32,8 +32,7 @@ public class ValidationUtil {
         }
 
         if (!menu.getDate().equals(today)) {
-            throw new IllegalVoteException(String.format("Menu with id=%d mustn't be voted today!", menuId));
+            throw new IllegalVoteException(String.format("Menu with id=%d can't be voted today!", menuId));
         }
-
     }
 }

@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.vitalykhan.voting.model.Menu;
-import ru.vitalykhan.voting.model.User;
 import ru.vitalykhan.voting.model.Vote;
 import ru.vitalykhan.voting.repository.MenuRepository;
+import ru.vitalykhan.voting.repository.UserRepository;
 import ru.vitalykhan.voting.repository.VoteRepository;
 import ru.vitalykhan.voting.util.SecurityUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
@@ -31,7 +31,7 @@ public class VoteController {
     private VoteRepository voteRepository;
     private MenuRepository menuRepository;
 
-    public VoteController(VoteRepository voteRepository, MenuRepository menuRepository) {
+    public VoteController(VoteRepository voteRepository, MenuRepository menuRepository, UserRepository userRepository) {
         this.voteRepository = voteRepository;
         this.menuRepository = menuRepository;
     }
@@ -58,13 +58,17 @@ public class VoteController {
 
         ValidationUtil.checkMenuIsTodays(menu, menuId, today);
 
+        Vote newVote = new Vote(today, menu, SecurityUtil.get().getUser());
         int userId = SecurityUtil.authUserId();
-        Vote newVote = new Vote(today, menu, new User()); //TODO: fetch real User!
 
-        if (LocalTime.now().isBefore(UPDATE_VOTE_DEADLINE) ||   //it benefits by reducing queries to DB.
-                voteRepository.findByDateAndUserId(today, userId) == null) {
+        Vote oldVote = voteRepository.findByDateAndUserId(today, userId);
+        if (oldVote == null) {
             log.info("User with id={} voted for menu with id={} and date={}", userId, menuId, today);
             voteRepository.save(newVote);
+        } else if (LocalTime.now().isBefore(UPDATE_VOTE_DEADLINE)) {
+            log.info("User with id={} voted again on {}; old choice: menu with id={}, new choice: menu with id={}",
+                    userId, today, oldVote.getMenu().getId(), menuId);
+            oldVote.setMenu(menu);
         } else {
             throw new IllegalVoteException(String.format(
                     "User with id=%d can't change his vote after %tH:%<tM", userId, UPDATE_VOTE_DEADLINE));
