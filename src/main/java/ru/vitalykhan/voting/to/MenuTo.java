@@ -11,10 +11,7 @@ public class MenuTo extends AbstractTo {
     private LocalDate date;
 
     @Positive
-    private Integer restaurantId;
-
-    public MenuTo() {
-    }
+    private int restaurantId;
 
     public MenuTo(LocalDate date, int restaurantId) {
         this.date = date;
@@ -25,16 +22,8 @@ public class MenuTo extends AbstractTo {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Integer getRestaurantId() {
+    public int getRestaurantId() {
         return restaurantId;
-    }
-
-    public void setRestaurantId(Integer restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     @Override

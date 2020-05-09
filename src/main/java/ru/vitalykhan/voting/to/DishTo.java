@@ -8,19 +8,16 @@ import javax.validation.constraints.Size;
 public class DishTo extends AbstractTo {
     @NotBlank
     @Size(min = 2, max = 100)
-    protected String name;
+    private String name;
 
     //"Zero", because complimentary dish can be possible use case
     @PositiveOrZero
     private int price;      //price multiplied by 100
 
     @Positive
-    private Integer menuId;
+    private int menuId;
 
-    public DishTo() {
-    }
-
-    public DishTo(Integer id, String name, Integer price, Integer menuId) {
+    public DishTo(Integer id, String name, Integer price, int menuId) {
         super(id);
         this.name = name;
         this.price = price;
@@ -31,24 +28,12 @@ public class DishTo extends AbstractTo {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public Integer getMenuId() {
         return menuId;
-    }
-
-    public void setMenuId(Integer menuId) {
-        this.menuId = menuId;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package ru.vitalykhan.voting.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.time.Instant;
 
@@ -19,10 +21,11 @@ public class User extends AbstractNamedEntity {
 
 
     @Email
+    @Size(max = 100)
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 50)
+    @Size(min = 5, max = 68)  //Max number must cover 68 symbols of bcrypt encoding
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -121,7 +124,6 @@ public class User extends AbstractNamedEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", role=" + role +
                 ", registered=" + registered +
                 ", enabled=" + enabled +
