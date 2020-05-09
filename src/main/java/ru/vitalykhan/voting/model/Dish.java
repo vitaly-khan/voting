@@ -20,6 +20,7 @@ public class Dish extends AbstractNamedEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
+    //TODO: consider alternatives for JsonIgnore
     @JsonIgnore
     private Menu menu;
 

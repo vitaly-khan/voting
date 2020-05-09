@@ -1,7 +1,5 @@
 package ru.vitalykhan.voting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -22,7 +20,6 @@ public class Menu extends AbstractEntityWithId {
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "menu")
-    //List is preferred over Set as it's likely to set an order of dishes within menu in perspective
     private List<Dish> dishes = Collections.emptyList();
 
     public Menu() {

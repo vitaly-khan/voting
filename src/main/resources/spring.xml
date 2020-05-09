@@ -131,9 +131,12 @@
         <security:csrf disabled="true"/>
     </security:http>
 
-    <security:user-service>
-        <security:user name="user1@yandex.ru" password="{noop}password1" authorities="ROLE_USER"/>
-        <security:user name="admin1@yandex.ru" password="{noop}admin1" authorities="ROLE_ADMIN"/>
-        <security:user name="admin2@yandex.ru" password="{noop}admin2" authorities="ROLE_ADMIN"/>
-    </security:user-service>
+    <security:jdbc-user-service data-source-ref="dataSource"
+                                users-by-username-query="SELECT email, password, enabled FROM user WHERE email=?"
+                                authorities-by-username-query="SELECT email, 'ROLE_' + role FROM user WHERE email=?"/>
+<!--    <security:user-service>-->
+<!--        <security:user name="user1@yandex.ru" password="{noop}password1" authorities="ROLE_USER"/>-->
+<!--        <security:user name="admin1@yandex.ru" password="{noop}admin1" authorities="ROLE_ADMIN"/>-->
+<!--        <security:user name="admin2@yandex.ru" password="{noop}admin2" authorities="ROLE_ADMIN"/>-->
+<!--    </security:user-service>-->
 </beans>
