@@ -27,26 +27,26 @@ GET     /restaurants
     curl -s http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Get by ID
-GET     /restaurants/{restaurantId}
+GET     /restaurants/[_restaurant id_]
 
     curl -s http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
 #### Delete by ID
-DELETE  /restaurants/{restaurantId}
+DELETE  /restaurants/[_restaurant id_]
 
     curl -s -X DELETE http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
 #### Create
 POST  /restaurants
 
-Body: {"name":[<i>restaurant name</i>]}
+Body: {"name":[_restaurant name_]}
 
     curl -s -X POST -d '{"name":"French"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Update
-PUT  /restaurants/{restaurantId}
+PUT  /restaurants/[_restaurant id_]
 
-Body: {"name":[<i>restaurant name</i>]}
+Body: {"name":[_restaurant name_]}
 
     curl -s -X PUT -d '{"name":"Italian"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
@@ -55,7 +55,7 @@ Body: {"name":[<i>restaurant name</i>]}
 ## REST API for Menus
 
 #### Get by ID
-GET     /menus/{menuId} ***(for ADMINs only)***
+GET     /menus/[_menu id_] ***(for ADMINs only)***
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
@@ -66,19 +66,19 @@ GET     /menus/today ***(for EVERYONE)***
     curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
 #### Get menus by date
  
-GET     /menus/?date={ISO date} ***(for ADMINs only)***
+GET     /menus/?date=[_ISO date_] ***(for ADMINs only)***
 
     curl -s http://localhost:8080/voting/menus/?date=2020-05-03 -u admin1@gmail.com:admin1
 
 #### Delete by ID 
-DELETE  /menus/{menuId} ***(for ADMINs only)***
+DELETE  /menus/[_menu id_] ***(for ADMINs only)***
 
     curl -s -X DELETE http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
 
 #### Create 
 POST  /menus ***(for ADMINs only)***  
 
-Body: {"date":"[<i>ISO date</i>"], "restaurantId":[<i>restaurant id</i>]}
+Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
 
     curl -s -X POST -d '{"date":"2020-05-30","restaurantId":100006}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus -u admin1@gmail.com:admin1
 
@@ -88,26 +88,26 @@ Body: {"date":"[<i>ISO date</i>"], "restaurantId":[<i>restaurant id</i>]}
 ***(for ADMINs only)***
 
 #### Get by ID
-GET     /dishes/{dishId}
+GET     /dishes/[_dish id_]
 
     curl -s http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
 #### Delete by ID
-DELETE  /dishes/{dishId}
+DELETE  /dishes/[_dish id_]
 
     curl -s -X DELETE http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
 #### Create
 POST  /dishes
 
-Body: {"name":"[<i>dish name</i>]", "price":[<i>dish price</i>], "menuId":[<i>menu id</i>]}
+Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
     curl -s -X POST -d '{"name":"Japanese New Dish","price": 9900,"menuId": 100009}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes -u admin1@gmail.com:admin1
 
 #### Update
-PUT  /dishes/{dishId}
+PUT  /dishes/[_dish id]
 
-Body: {"name":"[<i>dish name</i>]", "price":[<i>dish price</i>], "menuId":[<i>menu id</i>]}
+Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
     curl -s -X PUT -d '{"name": "Japanese Updated Dish","price":77000,"menuId":100009}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes/100016 -u admin1@gmail.com:admin1
 
@@ -125,7 +125,7 @@ GET     /votes ***(for REGULAR USERs only)***
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
 #### Vote for a specific menu 
-POST /votes?menusId={menu id} ***(for REGULAR USERs only)***
+POST /votes?menuId={_menu id_} ***(for REGULAR USERs only)***
 
     curl -s -X POST http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
     
@@ -137,7 +137,7 @@ POST /votes?menusId={menu id} ***(for REGULAR USERs only)***
 #### Register as a Regular User 
 POST /profile/register ***(for ANONYMOUS only)***
     
-Body: {"name":"[<i>user name</i>]", "email":[<i>e-mail</i>], "password":[<i>password</i>]}
+Body: {"name":"[_user name_]", "email":[_e-mail_], "password":[_password_]}
 
     curl -s -X POST -d '{"name": "New User", "email":"tEsT@gmail.com","password":"test-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile/register
 
