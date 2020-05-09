@@ -5,11 +5,11 @@ DELETE FROM RESTAURANT;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO USER (ROLE, NAME, EMAIL, PASSWORD)
-VALUES ('USER', 'User 2', 'user2@yandex.ru', '{noop}password2'),    --id: 1000000
-       ('USER', 'User 1', 'user1@yandex.ru', '{noop}password1'),    --id: 1000001
-       ('ADMIN', 'Admin 2', 'admin2@yandex.ru', '{noop}admin2'),
-       ('ADMIN', 'Admin 1', 'admin1@yandex.ru', '{noop}admin1'),
-       ('USER', 'User 3', 'user3@yandex.ru', '{noop}password3');    --id: 1000004
+VALUES ('USER', 'User 2', 'user2@gmail.com', '{noop}password2'),    --id: 1000000
+       ('USER', 'User 1', 'user1@gmail.com', '{noop}password1'),    --id: 1000001
+       ('ADMIN', 'Admin 2', 'admin2@gmail.com', '{noop}admin2'),
+       ('ADMIN', 'Admin 1', 'admin1@gmail.com', '{noop}admin1'),
+       ('USER', 'User 3', 'user3@gmail.com', '{noop}password3');    --id: 1000004
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Korean'),       --id: 100005
