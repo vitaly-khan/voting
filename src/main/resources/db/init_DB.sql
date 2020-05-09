@@ -59,3 +59,4 @@ CREATE TABLE vote
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX vote_unique_date_user_id ON vote (date, user_id);
+CREATE INDEX vote_unique_date ON vote (date);
