@@ -120,12 +120,12 @@ Body: {"name":"[<i>dish name</i>]", "price":[<i>dish price</i>], "menuId":[<i>me
 GET     /votes/filter ***(for ADMINs only)***
 
     curl -s http://localhost:8080/voting/votes/filter?date=2020-05-08 -u admin1@gmail.com:admin1
-#### Get all votes of authenticated user 
-GET     /votes ***(for USERs only)***
+#### Get all votes of an authenticated user 
+GET     /votes ***(for REGULAR USERs only)***
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
-#### Vote for a specific menu (for USERs only)
-POST /votes?menusId={menu id} ***(for USERs only)
+#### Vote for a specific menu 
+POST /votes?menusId={menu id} ***(for REGULAR USERs only)***
 
     curl -s -X POST http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
     
