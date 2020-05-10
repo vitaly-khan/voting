@@ -54,17 +54,6 @@ public class User extends AbstractNamedEntity {
     public User() {
     }
 
-    public static User regularUserOf(String name, String email, String password) {
-        User result = new User();
-        result.setName(name);
-        result.setEmail(email);
-        result.setPassword(password);
-        result.setRole(Role.USER);
-        result.setRegistered(Instant.now());
-        result.setEnabled(true);
-        return result;
-    }
-
     public User(Integer id, String name, String email, String password, Role role, Instant registered, boolean enabled) {
         super(id, name);
         this.email = email;

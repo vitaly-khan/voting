@@ -8,9 +8,6 @@ import java.util.Map;
 @Entity
 public class Restaurant extends AbstractNamedEntity {
 
-    public Restaurant() {
-    }
-
     @Override
     public String toString() {
         return "Restaurant{" +
