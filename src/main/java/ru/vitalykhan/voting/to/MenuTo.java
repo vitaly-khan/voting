@@ -13,11 +13,6 @@ public class MenuTo extends AbstractTo {
     @Positive
     private int restaurantId;
 
-    public MenuTo(LocalDate date, int restaurantId) {
-        this.date = date;
-        this.restaurantId = restaurantId;
-    }
-
     public LocalDate getDate() {
         return date;
     }

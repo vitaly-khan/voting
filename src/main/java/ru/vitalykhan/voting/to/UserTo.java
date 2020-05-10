@@ -18,16 +18,6 @@ public class UserTo extends AbstractTo {
     @Size(min = 5, max = 50)
     private String password;
 
-    //Required for binding
-    public UserTo() {
-    }
-
-    public UserTo(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-
     public String getPassword() {
         return password;
     }

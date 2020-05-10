@@ -17,13 +17,6 @@ public class DishTo extends AbstractTo {
     @Positive
     private int menuId;
 
-    public DishTo(Integer id, String name, Integer price, int menuId) {
-        super(id);
-        this.name = name;
-        this.price = price;
-        this.menuId = menuId;
-    }
-
     public String getName() {
         return name;
     }
