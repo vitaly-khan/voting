@@ -39,14 +39,14 @@ DELETE  /restaurants/[_restaurant id_]
 #### Create
 POST  /restaurants
 
-Body: {"name":[_restaurant name_]}
+Body: {"name":"[_restaurant name_]"}
 
     curl -s -X POST -d '{"name":"French"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Update
 PUT  /restaurants/[_restaurant id_]
 
-Body: {"name":[_restaurant name_]}
+Body: {"name":"[_restaurant name_]"}
 
     curl -s -X PUT -d '{"name":"Italian"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
@@ -137,7 +137,7 @@ POST /votes?menuId={_menu id_} ***(for REGULAR USERs only)***
 #### Register as a Regular User 
 POST /profile/register ***(for ANONYMOUS only)***
     
-Body: {"name":"[_user name_]", "email":[_e-mail_], "password":[_password_]}
+Body: {"name":"[_user name_]", "email":"[_e-mail_]", "password":"[_password_]"}
 
     curl -s -X POST -d '{"name": "New User", "email":"tEsT@gmail.com","password":"test-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile/register
 
