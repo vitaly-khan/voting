@@ -13,6 +13,7 @@ import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.util.ValidationUtil;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -46,7 +47,7 @@ public class RestaurantController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         ValidationUtil.checkIsNew(restaurant);
 
         Restaurant newRestaurant = restaurantRepository.save(restaurant);

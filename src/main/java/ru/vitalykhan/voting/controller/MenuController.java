@@ -16,6 +16,7 @@ import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.to.MenuTo;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
@@ -61,7 +62,7 @@ public class MenuController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Menu> create(@RequestBody MenuTo menuTo) {
+    public ResponseEntity<Menu> create(@Valid @RequestBody MenuTo menuTo) {
         Integer restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null) {

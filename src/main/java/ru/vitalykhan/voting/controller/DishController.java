@@ -17,6 +17,7 @@ import ru.vitalykhan.voting.util.DishUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class DishController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Dish> create(@RequestBody DishTo dishTo) {
+    public ResponseEntity<Dish> create(@Valid @RequestBody DishTo dishTo) {
         ValidationUtil.checkIsNew(dishTo);
 
         Integer menuId = dishTo.getMenuId();
@@ -67,7 +68,7 @@ public class DishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@RequestBody DishTo dishTo, @PathVariable int id) {
+    public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         ValidationUtil.assureIdConsistency(dishTo, id);
 
         if (dishRepository.findById(id).isEmpty()) {
