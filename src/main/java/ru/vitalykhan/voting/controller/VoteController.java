@@ -58,7 +58,7 @@ public class VoteController {
 
         ValidationUtil.checkMenuIsTodays(menu, menuId, today);
 
-        Vote newVote = new Vote(today, menu, SecurityUtil.get().getUser());
+        Vote newVote = new Vote(today, menu, SecurityUtil.getUser());
         int userId = SecurityUtil.authUserId();
 
         Vote oldVote = voteRepository.findByDateAndUserId(today, userId);

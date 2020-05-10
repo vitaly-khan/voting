@@ -11,7 +11,7 @@ public class UserUtil {
     }
 
     public static User of(UserTo userTo) {
-        return new User(null, userTo.getName(), userTo.getEmail(), userTo.getPassword(),
+        return new User(userTo.getId(), userTo.getName(), userTo.getEmail(), userTo.getPassword(),
                 Role.USER, Instant.now(), true);
     }
 

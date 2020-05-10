@@ -3,6 +3,7 @@ package ru.vitalykhan.voting.util;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import ru.vitalykhan.voting.AuthenticatedUser;
+import ru.vitalykhan.voting.model.User;
 
 import java.util.Objects;
 
@@ -24,6 +25,10 @@ public class SecurityUtil {
         AuthenticatedUser user = safeGet();
         Objects.requireNonNull(user, "No authenticated user was found!");
         return user;
+    }
+
+    public static User getUser() {
+        return get().getUser();
     }
 
     public static int authUserId() {

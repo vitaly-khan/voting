@@ -21,12 +21,12 @@ As a result, provide a link to github repository. It should contain the code, RE
 
 ***(for ADMINs only)***
 
-#### Get all
+#### Get all (without menus)
 GET     /restaurants
 
     curl -s http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
-#### Get by ID
+#### Get by ID (without menus)
 GET     /restaurants/[_restaurant id_]
 
     curl -s http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
@@ -59,12 +59,12 @@ GET     /menus/[_menu id_] ***(for ADMINs only)***
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's menus 
+#### Get today's menus (with restaurants and dishes)
 
 GET     /menus/today ***(for EVERYONE)***
 
     curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
-#### Get menus by date
+#### Get menus by date (with restaurants and dishes)
  
 GET     /menus/?date=[_ISO date_] ***(for ADMINs only)***
 
@@ -133,11 +133,27 @@ POST /votes?menuId={_menu id_} ***(for REGULAR USERs only)***
 
 ## REST API for Users
 
+#### Get the current profile 
+GET /profile ***(for AUTHENTICATED only)***
+    
+    curl -s http://localhost:8080/voting/profile -u user1@gmail.com:password1
+
+#### Disable the current profile
+PUT /profile/disable ***(for AUTHENTICATED only)***
+    
+    curl -s -X PUT http://localhost:8080/voting/profile/disable -u user1@gmail.com:password1
 
 #### Register as a Regular User 
 POST /profile/register ***(for ANONYMOUS only)***
     
 Body: {"name":"[_user name_]", "email":"[_e-mail_]", "password":"[_password_]"}
 
-    curl -s -X POST -d '{"name": "New User", "email":"tEsT@gmail.com","password":"test-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile/register
+    curl -s -X POST -d '{"name": "New User", "email":"nEw@gmail.com","password":"new-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile/register
 
+#### Update the current profile 
+PUT /profile/update ***(for AUTHENTICATED only)***
+
+Body: {"name":"[_user name_]", "email":"[_e-mail_]", "password":"[_password_]"}
+    
+    curl -s -X PUT -d '{"name": "Updated User", "email":"uPdAtEd@gmail.com","password":"updated-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile -u user2@gmail.com:password2
+    
