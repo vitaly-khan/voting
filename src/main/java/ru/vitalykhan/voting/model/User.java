@@ -7,18 +7,8 @@ import javax.validation.constraints.*;
 import java.time.Instant;
 
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//@NamedQueries({
-//        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
-//        @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
-//        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u ORDER BY u.name, u.email"),
-//})
 @Entity
 public class User extends AbstractNamedEntity {
-
-//    public static final String DELETE = "User.delete";
-//    public static final String BY_EMAIL = "User.getByEmail";
-//    public static final String ALL_SORTED = "User.getAllSorted";
-
 
     @Email
     @Size(max = 100)
@@ -46,10 +36,6 @@ public class User extends AbstractNamedEntity {
 //    // @Fetch(FetchMode.SUBSELECT)
 //    @BatchSize(size = 200)
 //    private Set<Role> roles;
-
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    @OrderBy("dateTime DESC")
-//    protected List<Meal> meals;
 
     public User() {
     }

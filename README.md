@@ -19,24 +19,31 @@ As a result, provide a link to github repository. It should contain the code, RE
 * * *
 ## REST API for Restaurants
 
-***(for ADMINs only)***
 
-#### Get all (without menus)
+#### Get all (without menus)        
+Access: ADMIN
+
 GET     /restaurants
 
     curl -s http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Get by ID (without menus)
+Access: ADMIN
+
 GET     /restaurants/[_restaurant id_]
 
     curl -s http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
 #### Delete by ID
+Access: ADMIN
+
 DELETE  /restaurants/[_restaurant id_]
 
     curl -s -X DELETE http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
 #### Create
+Access: ADMIN
+
 POST  /restaurants
 
 Body: {"name":"[_restaurant name_]"}
@@ -44,6 +51,8 @@ Body: {"name":"[_restaurant name_]"}
     curl -s -X POST -d '{"name":"French"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Update
+Access: ADMIN
+
 PUT  /restaurants/[_restaurant id_]
 
 Body: {"name":"[_restaurant name_]"}
@@ -55,28 +64,38 @@ Body: {"name":"[_restaurant name_]"}
 ## REST API for Menus
 
 #### Get by ID
-GET     /menus/[_menu id_] ***(for ADMINs only)***
+Access: ADMIN
+
+GET     /menus/[_menu id_] 
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
 #### Get today's menus (with restaurants and dishes)
 
-GET     /menus/today ***(for EVERYONE)***
+Access: EVERYONE
+
+GET     /menus/today
 
     curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
 #### Get menus by date (with restaurants and dishes)
  
-GET     /menus/?date=[_ISO date_] ***(for ADMINs only)***
+Access: ADMIN
+
+GET     /menus/?date=[_ISO date_]
 
     curl -s http://localhost:8080/voting/menus/?date=2020-05-03 -u admin1@gmail.com:admin1
 
 #### Delete by ID 
-DELETE  /menus/[_menu id_] ***(for ADMINs only)***
+Access: ADMIN
+
+DELETE  /menus/[_menu id_]
 
     curl -s -X DELETE http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
 
 #### Create 
-POST  /menus ***(for ADMINs only)***  
+Access: ADMIN
+
+POST  /menus  
 
 Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
 
@@ -85,19 +104,24 @@ Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
 * * *
 
 ## REST API for Dishes
-***(for ADMINs only)***
 
 #### Get by ID
+Access: ADMIN
+
 GET     /dishes/[_dish id_]
 
     curl -s http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
 #### Delete by ID
+Access: ADMIN
+
 DELETE  /dishes/[_dish id_]
 
     curl -s -X DELETE http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
 #### Create
+Access: ADMIN
+
 POST  /dishes
 
 Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
@@ -105,6 +129,8 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
     curl -s -X POST -d '{"name":"Japanese New Dish","price": 9900,"menuId": 100009}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes -u admin1@gmail.com:admin1
 
 #### Update
+Access: ADMIN
+
 PUT  /dishes/[_dish id]
 
 Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
@@ -116,16 +142,22 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 ## REST API for Votes
 
 
-#### Get all votes on a specific date 
-GET     /votes/filter ***(for ADMINs only)***
+#### Get all votes on a specific date (with Restaurants, without users and dishes)
+Access: ADMIN
 
-    curl -s http://localhost:8080/voting/votes/filter?date=2020-05-08 -u admin1@gmail.com:admin1
-#### Get all votes of an authenticated user 
-GET     /votes ***(for REGULAR USERs only)***
+GET     /votes/filter
+
+    curl -s http://localhost:8080/voting/votes/filter?date=2020-05-03 -u admin1@gmail.com:admin1
+#### Get all votes of an authenticated user (with Restaurants, without users and dishes) 
+Access: REGULAR USER
+
+GET     /votes
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
 #### Vote for a specific menu 
-POST /votes?menuId={_menu id_} ***(for REGULAR USERs only)***
+Access: REGULAR USER
+
+POST /votes?menuId={_menu id_}
 
     curl -s -X POST http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
     
@@ -134,24 +166,32 @@ POST /votes?menuId={_menu id_} ***(for REGULAR USERs only)***
 ## REST API for Users
 
 #### Get the current profile 
-GET /profile ***(for AUTHENTICATED only)***
+Access: AUTHENTICATED
+
+GET /profile
     
     curl -s http://localhost:8080/voting/profile -u user1@gmail.com:password1
 
 #### Disable the current profile
-PUT /profile/disable ***(for AUTHENTICATED only)***
+Access: AUTHENTICATED
+
+PUT /profile/disable
     
     curl -s -X PUT http://localhost:8080/voting/profile/disable -u user1@gmail.com:password1
 
 #### Register as a Regular User 
-POST /profile/register ***(for ANONYMOUS only)***
+Access: ANONYMOUS
+
+POST /profile/register 
     
 Body: {"name":"[_user name_]", "email":"[_e-mail_]", "password":"[_password_]"}
 
     curl -s -X POST -d '{"name": "New User", "email":"nEw@gmail.com","password":"new-password"}' -H 'Content-Type:application/json' http://localhost:8080/voting/profile/register
 
 #### Update the current profile 
-PUT /profile/update ***(for AUTHENTICATED only)***
+Access: AUTHENTICATED
+
+PUT /profile/update
 
 Body: {"name":"[_user name_]", "email":"[_e-mail_]", "password":"[_password_]"}
     

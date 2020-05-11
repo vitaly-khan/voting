@@ -14,13 +14,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
+    //TODO: check is DISTINCT is necessary
     @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.date=:date")
     List<Menu> findAllByDate(@Param("date") LocalDate date);
 
-    //TODO: investigate n+1 requests problem
     @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.id=:id")
-    Menu findByID(@Param("id") int id);
-
-    @Query("SELECT m FROM Menu m WHERE m.id=:id")
-    Menu findByIDLazily(@Param("id") int id);
+    Menu findByIdWithRestaurantAndDishes(@Param("id") int id);
 }

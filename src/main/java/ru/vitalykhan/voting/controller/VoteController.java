@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/votes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
 
-    private static final LocalTime UPDATE_VOTE_DEADLINE = LocalTime.of(11, 0);
+    private static final LocalTime VOTE_UPDATE_DEADLINE = LocalTime.of(11, 0);
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -40,38 +40,41 @@ public class VoteController {
     public List<Vote> getAllForAuthUser() {
         int userId = SecurityUtil.authUserId();
         log.info("Get all votes of user with id={}", userId);
-        return voteRepository.findAllByUserId(userId);
+        return voteRepository.findAllByUserIdWithRestaurants(userId);
     }
 
+    //Get all votes for a specific date with restaurant IDs, so the front-end can process voting results
     @GetMapping("/filter")
     public List<Vote> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get all votes for date {}", date);
-        return voteRepository.findAllByDate(date);
+        return voteRepository.findAllByDateWithRestaurants(date);
     }
+
+    //TODO: add "/todays"
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public void vote(@RequestParam int menuId) {
-        Menu menu = menuRepository.findByIDLazily(menuId);
+        Menu menu = menuRepository.findById(menuId).orElse(null);
         LocalDate today = LocalDate.now();
 
         ValidationUtil.checkMenuIsTodays(menu, menuId, today);
 
-        Vote newVote = new Vote(today, menu, SecurityUtil.getUser());
         int userId = SecurityUtil.authUserId();
-
         Vote oldVote = voteRepository.findByDateAndUserId(today, userId);
+
         if (oldVote == null) {
             log.info("User with id={} voted for menu with id={} and date={}", userId, menuId, today);
+            Vote newVote = new Vote(today, menu, SecurityUtil.getUser());
             voteRepository.save(newVote);
-        } else if (LocalTime.now().isBefore(UPDATE_VOTE_DEADLINE)) {
+        } else if (LocalTime.now().isBefore(VOTE_UPDATE_DEADLINE)) {
             log.info("User with id={} voted again on {}; old choice: menu with id={}, new choice: menu with id={}",
                     userId, today, oldVote.getMenu().getId(), menuId);
             oldVote.setMenu(menu);
         } else {
             throw new IllegalVoteException(String.format(
-                    "User with id=%d can't change his vote after %tH:%<tM", userId, UPDATE_VOTE_DEADLINE));
+                    "User with id=%d can't change his vote after %tH:%<tM", userId, VOTE_UPDATE_DEADLINE));
         }
     }
 }
