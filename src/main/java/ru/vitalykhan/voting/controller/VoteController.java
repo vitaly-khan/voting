@@ -46,11 +46,19 @@ public class VoteController {
     //Get all votes for a specific date with restaurant IDs, so the front-end can process voting results
     @GetMapping("/filter")
     public List<Vote> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("Get all votes for date {}", date);
+        return getByDate(date);
+    }
+
+    @GetMapping("/todays")
+    public List<Vote> getTodays() {
+        return getByDate(LocalDate.now());
+    }
+
+    private List<Vote> getByDate(LocalDate date) {
+        log.info("Get all votes for {}", date);
         return voteRepository.findAllByDateWithRestaurants(date);
     }
 
-    //TODO: add "/todays"
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

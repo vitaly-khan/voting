@@ -135,6 +135,7 @@
         <security:intercept-url pattern="/menus/**" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/dishes/**" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/votes/filter" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/votes/todays" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/votes/**" access="hasRole('ROLE_USER')"/>
         <security:intercept-url pattern="/profile/register" access="isAnonymous()"/>
         <security:intercept-url pattern="/profile/**" access="isAuthenticated()"/>

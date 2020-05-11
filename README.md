@@ -148,6 +148,12 @@ Access: ADMIN
 GET     /votes/filter
 
     curl -s http://localhost:8080/voting/votes/filter?date=2020-05-03 -u admin1@gmail.com:admin1
+#### Get all today's votes (with Restaurants, without users and dishes)
+Access: ADMIN
+
+GET     /votes/todays
+
+    curl -s http://localhost:8080/voting/votes/todays -u admin1@gmail.com:admin1
 #### Get all votes of an authenticated user (with Restaurants, without users and dishes) 
 Access: REGULAR USER
 
