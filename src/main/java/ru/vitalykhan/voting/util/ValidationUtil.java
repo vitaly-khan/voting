@@ -14,7 +14,8 @@ public class ValidationUtil {
 
     public static void checkIsNew(HasId object) {
         if (!object.isNew()) {
-            throw new IllegalRequestDataException(object + " must be new (id=null)!");
+            throw new IllegalRequestDataException(
+                    object.getClass().getSimpleName().replaceFirst("To", "") + " id must be null!");
         }
     }
 
@@ -22,7 +23,10 @@ public class ValidationUtil {
         if (object.isNew()) {
             object.setId(id);
         } else if (object.getId() != id) {
-            throw new IllegalRequestDataException(object + " must be with id=" + id);
+            throw new IllegalRequestDataException(String.format(
+                    "%s must be with id=%d!",
+                    object.getClass().getSimpleName().replaceFirst("To", ""),
+                    id));
         }
     }
 

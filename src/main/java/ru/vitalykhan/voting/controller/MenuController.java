@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,6 +67,8 @@ public class MenuController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Menu> create(@Valid @RequestBody MenuTo menuTo) {
+        checkIsNew(menuTo);
+
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         checkFound(restaurant != null, restaurantId, Restaurant.class);

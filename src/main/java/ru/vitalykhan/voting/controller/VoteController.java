@@ -74,8 +74,7 @@ public class VoteController {
 
         if (oldVote == null) {
             log.info("User with id={} voted for menu with id={} and date={}", userId, menuId, today);
-            Vote newVote = new Vote(today, menu, SecurityUtil.getUser());
-            voteRepository.save(newVote);
+            voteRepository.save(new Vote(today, menu, SecurityUtil.getUser()));
         } else if (LocalTime.now().isBefore(VOTE_UPDATE_DEADLINE)) {
             log.info("User with id={} voted again on {}; old choice: menu with id={}, new choice: menu with id={}",
                     userId, today, oldVote.getMenu().getId(), menuId);
