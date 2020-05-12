@@ -14,7 +14,6 @@ import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.to.MenuTo;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -67,11 +66,10 @@ public class MenuController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Menu> create(@Valid @RequestBody MenuTo menuTo) {
-        Integer restaurantId = menuTo.getRestaurantId();
+        int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        if (restaurant == null) {
-            throw new NotFoundException(String.format("Restaurant with id=%s wasn't found!", restaurantId));
-        }
+        checkFound(restaurant != null, restaurantId, Restaurant.class);
+
         Menu newMenu = menuRepository.save(new Menu(menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

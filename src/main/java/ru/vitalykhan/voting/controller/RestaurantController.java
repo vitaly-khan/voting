@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -66,12 +65,9 @@ public class RestaurantController {
     @Transactional
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
         assureIdConsistency(restaurant, id);
+        checkFound(restaurantRepository.findById(id).isPresent(), id, getClass());
 
-        if (restaurantRepository.findById(id).isEmpty()) {
-            throw new NotFoundException(restaurant + " doesn't exist in DB!");
-        } else {
-            log.info("Update restaurant with id={}", id);
-            restaurantRepository.save(restaurant);
-        }
+        log.info("Update restaurant with id={}", id);
+        restaurantRepository.save(restaurant);
     }
 }

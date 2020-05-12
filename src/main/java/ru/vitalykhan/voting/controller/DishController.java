@@ -14,7 +14,6 @@ import ru.vitalykhan.voting.repository.DishRepository;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.to.DishTo;
 import ru.vitalykhan.voting.util.DishUtil;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -54,11 +53,10 @@ public class DishController {
     public ResponseEntity<Dish> create(@Valid @RequestBody DishTo dishTo) {
         checkIsNew(dishTo);
 
-        Integer menuId = dishTo.getMenuId();
+        int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
-        if (menu == null) {
-            throw new NotFoundException(String.format("Menu with id=%s wasn't found!", menuId));
-        }
+        checkFound(menu != null, menuId, Menu.class);
+
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
         log.info("Create a new dish {}", newDish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -72,14 +70,13 @@ public class DishController {
     @Transactional
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         assureIdConsistency(dishTo, id);
+        log.info("Update dish with id={}", id);
+        checkFound(dishRepository.findById(id).isPresent(), id, getClass());
 
-        if (dishRepository.findById(id).isEmpty()) {
-            throw new NotFoundException(String.format(
-                    "Dish with id=%d doesn't exist in DB!", dishTo.getId()));
-        } else {
-            log.info("Update dish with id={}", id);
-            Menu menu = menuRepository.findById(dishTo.getMenuId()).orElse(null);
-            dishRepository.save(DishUtil.of(dishTo, menu));
-        }
+        int menuId = dishTo.getMenuId();
+        Menu menu = menuRepository.findById(menuId).orElse(null);
+        checkFound(menu != null, menuId, Menu.class);
+
+        dishRepository.save(DishUtil.of(dishTo, menu));
     }
 }
