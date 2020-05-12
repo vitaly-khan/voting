@@ -43,7 +43,7 @@ public class VoteController {
         return voteRepository.findAllByUserIdWithRestaurants(userId);
     }
 
-    //Get all votes for a specific date with restaurant IDs, so the front-end can process voting results
+    //Get all votes  with restaurants for a specific date, so the front-end can process voting results
     @GetMapping("/filter")
     public List<Vote> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return getByDate(date);

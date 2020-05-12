@@ -64,10 +64,10 @@ public class RestaurantController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+        log.info("Update restaurant with id={}", id);
         assureIdConsistency(restaurant, id);
         checkFound(restaurantRepository.findById(id).isPresent(), id, getClass());
 
-        log.info("Update restaurant with id={}", id);
         restaurantRepository.save(restaurant);
     }
 }

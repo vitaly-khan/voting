@@ -61,9 +61,9 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserTo userTo) {
         int authId = SecurityUtil.authUserId();
+        log.info("Update user with id={} as {}", authId, userTo);
         ValidationUtil.assureIdConsistency(userTo, authId);
 
-        log.info("Update user with id={} as {}", authId, userTo);
         User user = UserUtil.of(userTo);
         userRepository.save(passwordAndEmailProcessing(user));
     }
