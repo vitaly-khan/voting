@@ -8,13 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
-import ru.vitalykhan.voting.util.ValidationUtil;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.net.URI;
+
+import static ru.vitalykhan.voting.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,19 +37,21 @@ public class RestaurantController {
     @GetMapping("/{restaurantId}")
     public Restaurant getById(@PathVariable int restaurantId) {
         log.info("Get restaurants with id={}", restaurantId);
-        return restaurantRepository.findById(restaurantId).orElse(null);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        checkFound(restaurant != null, restaurantId, getClass());
+        return restaurant;
     }
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int restaurantId) {
         log.info("Delete restaurant with id={}", restaurantId);
-        restaurantRepository.deleteById(restaurantId);
+        checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, getClass());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
-        ValidationUtil.checkIsNew(restaurant);
+        checkIsNew(restaurant);
 
         Restaurant newRestaurant = restaurantRepository.save(restaurant);
         log.info("Create a new restaurant {}", newRestaurant);
@@ -62,7 +65,7 @@ public class RestaurantController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
-        ValidationUtil.assureIdConsistency(restaurant, id);
+        assureIdConsistency(restaurant, id);
 
         if (restaurantRepository.findById(id).isEmpty()) {
             throw new NotFoundException(restaurant + " doesn't exist in DB!");

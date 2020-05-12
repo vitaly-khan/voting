@@ -14,12 +14,12 @@ import ru.vitalykhan.voting.repository.DishRepository;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.to.DishTo;
 import ru.vitalykhan.voting.util.DishUtil;
-import ru.vitalykhan.voting.util.ValidationUtil;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+
+import static ru.vitalykhan.voting.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,20 +37,22 @@ public class DishController {
     @GetMapping("/{dishId}")
     public Dish getById(@PathVariable int dishId) {
         log.info("Get dish with id={}", dishId);
-        return dishRepository.findById(dishId).orElse(null);
+        Dish dish = dishRepository.findById(dishId).orElse(null);
+        checkFound(dish != null, dishId, getClass());
+        return dish;
     }
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
-        dishRepository.deleteById(dishId);
+        checkFound(dishRepository.delete(dishId) != 0, dishId, getClass());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Dish> create(@Valid @RequestBody DishTo dishTo) {
-        ValidationUtil.checkIsNew(dishTo);
+        checkIsNew(dishTo);
 
         Integer menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
@@ -69,7 +71,7 @@ public class DishController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
-        ValidationUtil.assureIdConsistency(dishTo, id);
+        assureIdConsistency(dishTo, id);
 
         if (dishRepository.findById(id).isEmpty()) {
             throw new NotFoundException(String.format(

@@ -35,4 +35,13 @@ public class ValidationUtil {
             throw new IllegalVoteException(String.format("Menu with id=%d can't be voted today!", menuId));
         }
     }
+
+    public static void checkFound(boolean found, int restaurantId, Class clazz) {
+        if (!found) {
+            throw new NotFoundException(String.format(
+                    "%s with id=%d wasn't found!",
+                    clazz.getSimpleName().replaceFirst("Controller", ""),
+                    restaurantId));
+        }
+    }
 }

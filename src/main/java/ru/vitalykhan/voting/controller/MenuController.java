@@ -22,6 +22,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
+
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MenuController {
@@ -37,9 +39,10 @@ public class MenuController {
 
     @GetMapping("/{menuId}")
     public Menu getById(@PathVariable int menuId) {
-        //TODO: check if not found
         log.info("Get menu with id={}", menuId);
-        return menuRepository.findByIdWithRestaurantAndDishes(menuId);
+        Menu menu = menuRepository.findByIdWithRestaurantAndDishes(menuId);
+        checkFound(menu != null, menuId, getClass());
+        return menu;
     }
 
     @GetMapping
@@ -58,7 +61,7 @@ public class MenuController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
-        menuRepository.deleteById(menuId);
+        checkFound(menuRepository.delete(menuId) != 0, menuId, getClass());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
