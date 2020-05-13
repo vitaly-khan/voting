@@ -46,7 +46,7 @@ public class MenuController {
     }
 
     @GetMapping
-    public List<Menu> getByDate(@RequestParam @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<Menu> getByDate(@RequestParam @NotNull LocalDate date) {
         log.info("Get menus by date: {}", date);
         return menuRepository.findAllByDate(date);
     }

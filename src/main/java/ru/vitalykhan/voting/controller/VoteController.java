@@ -16,6 +16,7 @@ import ru.vitalykhan.voting.util.SecurityUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -45,7 +46,7 @@ public class VoteController {
 
     //Get all votes  with restaurants for a specific date, so the front-end can process voting results
     @GetMapping("/filter")
-    public List<Vote> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<Vote> getAllByDate(@RequestParam @NotNull LocalDate date) {
         return getByDate(date);
     }
 

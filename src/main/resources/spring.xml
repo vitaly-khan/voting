@@ -88,15 +88,14 @@
 <!--    Spring Web MVC-->
     <context:component-scan base-package="ru.vitalykhan.voting.controller"/>
 
-    <bean class="ru.vitalykhan.voting.controller.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
+    <bean class="ru.vitalykhan.voting.controller.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
     <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
-<!--        <property name="formatters">-->
-<!--            <set>-->
-<!--                <bean class="ru.javawebinar.topjava.web.converter.DateTimeFormatters.LocalTimeFormatter"/>-->
-<!--                <bean class="ru.javawebinar.topjava.web.converter.DateTimeFormatters.LocalDateFormatter"/>-->
-<!--            </set>-->
-<!--        </property>-->
+        <property name="formatters">
+            <set>
+                <bean class="ru.vitalykhan.voting.controller.converter.LocalDateFormatter"/>
+            </set>
+        </property>
     </bean>
 
     <mvc:annotation-driven conversion-service="conversionService">
