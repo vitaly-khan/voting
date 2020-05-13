@@ -57,7 +57,7 @@ PUT  /restaurants/[_restaurant id_]
 
 Body: {"name":"[_restaurant name_]"}
 
-    curl -s -X PUT -d '{"name":"Italian"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
+    curl -s -X PUT -d '{"name":"Italian"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100006 -u admin1@gmail.com:admin1
 
 * * *
 
