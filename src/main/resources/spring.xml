@@ -27,7 +27,7 @@
         <jdbc:script location="${jdbc.testDataLocation}"/>
     </jdbc:initialize-database>
 
-<!--    Spring Data JPA-->
+    <!--    Spring Data JPA-->
     <!--TODO: change to real dataSource!-->
 
     <jpa:repositories base-package="ru.vitalykhan.voting.repository"/>
@@ -54,18 +54,19 @@
             <map>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).SHOW_SQL}" value="${hibernate.showSql}"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
-                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}" value="${hibernate.use_sql_comments}"/>
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                       value="${hibernate.use_sql_comments}"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}" value="false"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_AUTO}" value="${hibernate.hbm2ddl.auto}"/>
 
                 <!--https://github.com/hibernate/hibernate-orm/blob/master/documentation/src/main/asciidoc/userguide/chapters/caching/Caching.adoc#caching-provider-jcache-->
-<!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).CACHE_REGION_FACTORY}" value="org.hibernate.cache.jcache.internal.JCacheRegionFactory"/>-->
-<!--                <entry key="#{T(org.hibernate.cache.jcache.ConfigSettings).PROVIDER}" value="org.ehcache.jsr107.EhcacheCachingProvider"/>-->
-<!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>-->
-<!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/> &lt;!&ndash;default&ndash;&gt;-->
+                <!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).CACHE_REGION_FACTORY}" value="org.hibernate.cache.jcache.internal.JCacheRegionFactory"/>-->
+                <!--                <entry key="#{T(org.hibernate.cache.jcache.ConfigSettings).PROVIDER}" value="org.ehcache.jsr107.EhcacheCachingProvider"/>-->
+                <!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>-->
+                <!--                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}" value="false"/> &lt;!&ndash;default&ndash;&gt;-->
 
-<!--                <entry key="javax.persistence.validation.group.pre-persist" value="ru.javawebinar.topjava.View$Persist"/>-->
-<!--                <entry key="javax.persistence.validation.group.pre-update" value="ru.javawebinar.topjava.View$Persist"/>-->
+                <!--                <entry key="javax.persistence.validation.group.pre-persist" value="ru.javawebinar.topjava.View$Persist"/>-->
+                <!--                <entry key="javax.persistence.validation.group.pre-update" value="ru.javawebinar.topjava.View$Persist"/>-->
                 <!--
                                     <entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_SCRIPTS_ACTION}" value="drop-and-create"/>
                                     <entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_SCRIPTS_CREATE_TARGET}" value="${TOPJAVA_ROOT}/config/ddl/create.ddl"/>
@@ -76,7 +77,7 @@
         </property>
     </bean>
 
-<!--    Spring Tx-->
+    <!--    Spring Tx-->
     <tx:annotation-driven/>
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
@@ -89,10 +90,11 @@
     <!--        <context:property-placeholder location="classpath:db/tomcat.properties" system-properties-mode="OVERRIDE"/>-->
     <!--    </beans>-->
 
-<!--    Spring Web MVC-->
+    <!--    Spring Web MVC-->
     <context:component-scan base-package="ru.vitalykhan.voting.controller"/>
 
-    <bean class="ru.vitalykhan.voting.controller.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
+    <bean class="ru.vitalykhan.voting.controller.json.JacksonObjectMapper" id="objectMapper"
+          factory-method="getMapper"/>
 
     <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
         <property name="formatters">
@@ -104,17 +106,17 @@
 
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:message-converters>
-<!--            This adds customized ObjectMapper to Spring MVC-->
+            <!--            This adds customized ObjectMapper to Spring MVC-->
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
-<!--        <mvc:argument-resolvers>-->
-<!--            <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>-->
-<!--        </mvc:argument-resolvers>-->
+        <!--        <mvc:argument-resolvers>-->
+        <!--            <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>-->
+        <!--        </mvc:argument-resolvers>-->
     </mvc:annotation-driven>
 
-<!--    Spring Security-->
+    <!--    Spring Security-->
     <bean class="org.springframework.security.crypto.factory.PasswordEncoderFactories" id="passwordEncoder"
           factory-method="createDelegatingPasswordEncoder"/>
 

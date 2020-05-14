@@ -11,7 +11,7 @@ public class LocalDateFormatter implements Formatter<LocalDate> {
 
     @Override
     public LocalDate parse(String text, Locale locale) {
-        Assert.notNull(text, "Date string mustn't be null!" );
+        Assert.notNull(text, "Date string mustn't be null!");
         return LocalDate.parse(text);
     }
 

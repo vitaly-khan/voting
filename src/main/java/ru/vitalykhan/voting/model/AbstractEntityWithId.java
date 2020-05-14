@@ -1,6 +1,5 @@
 package ru.vitalykhan.voting.model;
 
-import org.springframework.data.domain.Persistable;
 import ru.vitalykhan.voting.HasId;
 
 import javax.persistence.*;

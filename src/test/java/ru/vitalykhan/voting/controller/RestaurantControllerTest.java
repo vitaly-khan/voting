@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vitalykhan.voting.RestaurantTestData;
 import ru.vitalykhan.voting.TestUtil;
-import ru.vitalykhan.voting.UserTestData;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
