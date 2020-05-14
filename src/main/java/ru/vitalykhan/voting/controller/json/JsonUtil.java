@@ -1,10 +1,12 @@
 package ru.vitalykhan.voting.controller.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static ru.vitalykhan.voting.controller.json.JacksonObjectMapper.getMapper;
 
@@ -35,13 +37,10 @@ public class JsonUtil {
         }
     }
 
-//    public static <T> String writeAdditionProps(T obj, String addName, Object addValue) {
-//        return writeAdditionProps(obj, Map.of(addName, addValue));
-//    }
-
-//    public static <T> String writeAdditionProps(T obj, Map<String, Object> addProps) {
-//        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<Map<String, Object>>() {});
-//        map.putAll(addProps);
-//        return writeValue(map);
-//    }
+    //For User Test
+    public static <T> String writeAdditionProps(T obj, String name, Object value) {
+        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<>() {});
+        map.putAll(Map.of(name, value));
+        return writeValue(map);
+    }
 }

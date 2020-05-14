@@ -1,11 +1,14 @@
 package ru.vitalykhan.voting;
 
+import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Role;
 import ru.vitalykhan.voting.model.User;
 
 import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
 
 public class UserTestData {
+    public static TestMatcher<User> USER_MATCHER = new TestMatcher<>(User.class, "password", "registered");
+
     public static final int USER1_ID = START_SEQ + 1;
     public static final int USER2_ID = START_SEQ;
     public static final int USER3_ID = START_SEQ + 4;
@@ -20,4 +23,21 @@ public class UserTestData {
     public static final User ADMIN1 = new User(ADMIN1_ID, "Admin 1", "admin1@gmail.com", "admin1", Role.ADMIN);
     public static final User ADMIN2 = new User(ADMIN2_ID, "Admin 2", "admin2@gmail.com", "admin2", Role.ADMIN);
     public static final User[] ADMINS = new User[]{ADMIN1, ADMIN2};
+
+    public static String jsonWithPassword(User user, String password) {
+        return JsonUtil.writeAdditionProps(user, "password", password);
+    }
+
+    public static User getNew() {
+        return new User(null, "New User", "new@gmail.com", "newPassword", Role.USER);
+    }
+
+    public static User getUpdated() {
+        User updated = new User(USER1);
+        updated.setName("User 1 Updated");
+        updated.setEmail("user1updated@gmail.com");
+        updated.setPassword("updatedPassword");
+
+        return updated;
+    }
 }
