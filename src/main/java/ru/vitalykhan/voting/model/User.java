@@ -53,6 +53,15 @@ public class User extends AbstractNamedEntity {
         this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getRole(), u.getRegistered(), u.isEnabled());
     }
 
+    //For UserTestData class
+    public User(Integer id, String name, String email, String password, Role role) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.registered = Instant.now();
+    }
+
     public String getEmail() {
         return email;
     }

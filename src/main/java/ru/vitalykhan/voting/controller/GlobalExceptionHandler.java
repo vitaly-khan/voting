@@ -28,12 +28,19 @@ import static ru.vitalykhan.voting.util.exception.ErrorType.*;
 public class GlobalExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    //TODO: create property file for this map
+    public static final String E_MAIL_DUPLICATION = "Such e-mail already exists!";
+    public static final String DATE_RESTAURANT_MENU_DUPLICATION = "A menu on this date for this restaurant exists already!";
+    public static final String DISH_NAME_MENU_DUPLICATION = "This menu contains a dish with the same name already!";
+    public static final String DATE_USER_VOTE_DUPLICATION = "User can't have 2 votes on the same date!";
+    public static final String RESTAURANT_NAME_DUPLICATION = "Restaurant with the same name exists already!";
+
     private static final Map<String, String> UNIQUE_CONSTRAINTS = Map.of(
-            "users_unique_email_idx", "Such e-mail already exists!",
-            "menu_unique_date_restaurant_id_idx", "A menu on this date for this restaurant exists already!",
-            "dish_unique_menu_id_name_idx", "This menu contains a dish with the same name already!",
-            "vote_unique_date_user_id", "User can't have 2 votes on the same date!");
+            "users_unique_email_idx", E_MAIL_DUPLICATION,
+            "menu_unique_date_restaurant_id_idx", DATE_RESTAURANT_MENU_DUPLICATION,
+            "dish_unique_menu_id_name_idx", DISH_NAME_MENU_DUPLICATION,
+            "vote_unique_date_user_id", DATE_USER_VOTE_DUPLICATION,
+            "integrity constraint violation: unique constraint or index violation; sys_ct_10255 table: restaurant",
+            RESTAURANT_NAME_DUPLICATION);
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  //422
     @ExceptionHandler(NotFoundException.class)

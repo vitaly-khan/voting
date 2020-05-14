@@ -1,10 +1,5 @@
 package ru.vitalykhan.voting.model;
 
-//import javax.persistence.Column;
-//import javax.validation.constraints.NotBlank;
-//import javax.validation.constraints.Size;
-
-
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
