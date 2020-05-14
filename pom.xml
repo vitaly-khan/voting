@@ -11,12 +11,17 @@
 
     <properties>
         <java.version>11</java.version>
+
         <spring.version>5.2.5.RELEASE</spring.version>
         <spring-security.version>5.3.1.RELEASE</spring-security.version>
         <spring-data-jpa.version>2.2.6.RELEASE</spring-data-jpa.version>
+
         <hibernate.version>5.4.12.Final</hibernate.version>
         <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
+        <ehcache.version>3.8.1</ehcache.version>
+
         <tomcat.version>9.0.31</tomcat.version>
+
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
 
@@ -82,6 +87,26 @@
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+
+        <!-- Hibernate 2nd level cache-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>javax.cache</groupId>-->
+<!--            <artifactId>cache-api</artifactId>-->
+<!--            <version>1.1.0</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <scope>runtime</scope>
+            <version>${ehcache.version}</version>
+        </dependency>
+
+
 
 
         <!-- Jackson -->

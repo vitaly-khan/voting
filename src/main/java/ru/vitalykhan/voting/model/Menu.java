@@ -1,5 +1,8 @@
 package ru.vitalykhan.voting.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -7,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 public class Menu extends AbstractEntityWithId {
 
