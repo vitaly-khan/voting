@@ -5,13 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.vitalykhan.voting.AuthenticatedUser;
 import ru.vitalykhan.voting.model.User;
 import ru.vitalykhan.voting.repository.UserRepository;
 import ru.vitalykhan.voting.to.UserTo;
-import ru.vitalykhan.voting.util.SecurityUtil;
 import ru.vitalykhan.voting.util.UserUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
 
@@ -32,16 +33,16 @@ public class ProfileController {
     }
 
     @GetMapping
-    public User get() {
-        log.info("Get current user, id={}", SecurityUtil.authUserId());
-        return SecurityUtil.getUser();
+    public User get(@AuthenticationPrincipal AuthenticatedUser authUser) {
+        log.info("Get current user, id={}", authUser.getId());
+        return authUser.getUser();
     }
 
     @PutMapping("/disable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void disable() {
-        log.info("Disable user with id={}", SecurityUtil.authUserId());
-        User user = SecurityUtil.getUser();
+    public void disable(@AuthenticationPrincipal AuthenticatedUser authUser) {
+        log.info("Disable user with id={}", authUser.getId());
+        User user = authUser.getUser();
         user.setEnabled(false);
         userRepository.save(user);
     }
@@ -58,8 +59,8 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody UserTo userTo) {
-        int authId = SecurityUtil.authUserId();
+    public void update(@Valid @RequestBody UserTo userTo, @AuthenticationPrincipal AuthenticatedUser authUser) {
+        int authId = authUser.getId();
         log.info("Update user with id={} as {}", authId, userTo);
         ValidationUtil.assureIdConsistency(userTo, authId);
 

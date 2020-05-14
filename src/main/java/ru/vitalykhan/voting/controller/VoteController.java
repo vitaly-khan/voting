@@ -4,14 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.vitalykhan.voting.AuthenticatedUser;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Vote;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.UserRepository;
 import ru.vitalykhan.voting.repository.VoteRepository;
-import ru.vitalykhan.voting.util.SecurityUtil;
 import ru.vitalykhan.voting.util.ValidationUtil;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
 
@@ -37,8 +38,8 @@ public class VoteController {
     }
 
     @GetMapping
-    public List<Vote> getAllForAuthUser() {
-        int userId = SecurityUtil.authUserId();
+    public List<Vote> getAllForAuthUser(@AuthenticationPrincipal AuthenticatedUser authUser) {
+        int userId = authUser.getId();
         log.info("Get all votes of user with id={}", userId);
         return voteRepository.findAllByUserIdWithRestaurants(userId);
     }
@@ -63,18 +64,18 @@ public class VoteController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public void vote(@RequestParam int menuId) {
+    public void vote(@RequestParam int menuId, @AuthenticationPrincipal AuthenticatedUser authUser) {
         Menu menu = menuRepository.findById(menuId).orElse(null);
         LocalDate today = LocalDate.now();
 
         ValidationUtil.checkMenuIsTodays(menu, menuId, today);
 
-        int userId = SecurityUtil.authUserId();
+        int userId = authUser.getId();
         Vote oldVote = voteRepository.findByDateAndUserId(today, userId);
 
         if (oldVote == null) {
             log.info("User with id={} voted for menu with id={} and date={}", userId, menuId, today);
-            voteRepository.save(new Vote(today, menu, SecurityUtil.getUser()));
+            voteRepository.save(new Vote(today, menu, authUser.getUser()));
         } else if (LocalTime.now().isBefore(VOTE_UPDATE_DEADLINE)) {
             log.info("User with id={} voted again on {}; old choice: menu with id={}, new choice: menu with id={}",
                     userId, today, oldVote.getMenu().getId(), menuId);

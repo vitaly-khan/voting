@@ -105,15 +105,18 @@
     </bean>
 
     <mvc:annotation-driven conversion-service="conversionService">
+
+<!--    Adds customized ObjectMapper to Spring MVC-->
         <mvc:message-converters>
-            <!--            This adds customized ObjectMapper to Spring MVC-->
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
-        <!--        <mvc:argument-resolvers>-->
-        <!--            <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>-->
-        <!--        </mvc:argument-resolvers>-->
+
+<!--    Gives quick access to @AuthenticatedPrincipal-->
+        <mvc:argument-resolvers>
+            <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>
+        </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
     <!--    Spring Security-->
