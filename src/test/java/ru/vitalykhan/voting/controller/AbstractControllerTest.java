@@ -42,7 +42,7 @@ public abstract class AbstractControllerTest {
         return jsonPath("$.type").value(type.getDescription());
     }
 
-    public ResultMatcher detailMessage(String code) {
+    public ResultMatcher detailMessageIs(String code) {
         return jsonPath("$.details").value(code);
     }
 }

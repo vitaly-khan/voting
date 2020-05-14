@@ -75,7 +75,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID).contentType(MediaType.APPLICATION_JSON)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
@@ -147,7 +148,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void updateByRegularUser() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID).contentType(MediaType.APPLICATION_JSON)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isForbidden());
@@ -156,7 +158,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void updateByAnonymous() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID).contentType(MediaType.APPLICATION_JSON)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isUnauthorized());
     }
@@ -213,7 +216,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isConflict())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
-                .andExpect(detailMessage(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
+                .andExpect(detailMessageIs(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
     }
 
     @Test
@@ -227,6 +230,6 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isConflict())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
-                .andExpect(detailMessage(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
+                .andExpect(detailMessageIs(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
     }
 }
