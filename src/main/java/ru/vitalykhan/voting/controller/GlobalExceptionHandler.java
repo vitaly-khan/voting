@@ -10,7 +10,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,6 +50,12 @@ public class GlobalExceptionHandler {
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler({IllegalVoteException.class})
+    public ErrorInfo illegalVoteError(HttpServletRequest req, RuntimeException e) {
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+    }
+
     //MethodArgumentTypeMismatchException is thrown in case of URI: voting/restaurants/sometext
     //HttpMessageNotReadableException is thrown in case of wrong JSON body {"wrongName":"Italian"}
     //HttpRequestMethodNotSupportedException is thrown in case of URI: DELETE: voting/restaurants
@@ -55,18 +63,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)  // 400
     @ExceptionHandler({IllegalRequestDataException.class,
             MethodArgumentTypeMismatchException.class,
-            HttpMessageNotReadableException.class/*,
-            //TODO: something's wrong with these 2 exceptions handling! It won't work when uncommented!
-            MissingServletRequestParameterException.class*//*,
-            HttpRequestMethodNotSupportedException.class*/})
-    public ErrorInfo badRequestError(HttpServletRequest req, RuntimeException e) {
+            HttpMessageNotReadableException.class,
+            MissingServletRequestParameterException.class,
+            HttpRequestMethodNotSupportedException.class})
+    public ErrorInfo badRequestError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, BAD_REQUEST);
-    }
-
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalVoteException.class})
-    public ErrorInfo illegalRequestDataAndVoteError(HttpServletRequest req, RuntimeException e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
     //MethodArgumentTypeMismatchException.class is thrown in case of database unique indices violation.
