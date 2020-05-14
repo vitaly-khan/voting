@@ -54,7 +54,7 @@ public class DishController {
         checkIsNew(dishTo);
 
         int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.findById(menuId).orElse(null);
+        Menu menu = menuRepository.getOne(menuId);
         checkFound(menu != null, menuId, Menu.class);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
@@ -74,7 +74,7 @@ public class DishController {
         checkFound(dishRepository.findById(id).isPresent(), id, getClass());
 
         int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.findById(menuId).orElse(null);
+        Menu menu = menuRepository.getOne(menuId);
         checkFound(menu != null, menuId, Menu.class);
 
         dishRepository.save(DishUtil.of(dishTo, menu));
