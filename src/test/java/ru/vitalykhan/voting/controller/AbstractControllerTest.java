@@ -45,4 +45,8 @@ public abstract class AbstractControllerTest {
     public ResultMatcher detailMessageIs(String code) {
         return jsonPath("$.details").value(code);
     }
+
+    public ResultMatcher parentExceptionIs(String code) {
+        return jsonPath("$.parentException").value(code);
+    }
 }

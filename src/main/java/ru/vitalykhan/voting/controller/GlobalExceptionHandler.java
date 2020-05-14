@@ -28,7 +28,7 @@ import static ru.vitalykhan.voting.util.exception.ErrorType.*;
 public class GlobalExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public static final String E_MAIL_DUPLICATION = "Such e-mail already exists!";
+    public static final String E_MAIL_DUPLICATION = "User with the same e-mail already exists!";
     public static final String DATE_RESTAURANT_MENU_DUPLICATION = "A menu on this date for this restaurant exists already!";
     public static final String DISH_NAME_MENU_DUPLICATION = "This menu contains a dish with the same name already!";
     public static final String DATE_USER_VOTE_DUPLICATION = "User can't have 2 votes on the same date!";
