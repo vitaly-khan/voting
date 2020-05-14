@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({IllegalRequestDataException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class/*,
-            //TODO: something wrong with these 2 exceptions hadling! It won't work if uncomment!
+            //TODO: something's wrong with these 2 exceptions handling! It won't work when uncommented!
             MissingServletRequestParameterException.class*//*,
             HttpRequestMethodNotSupportedException.class*/})
     public ErrorInfo badRequestError(HttpServletRequest req, RuntimeException e) {
