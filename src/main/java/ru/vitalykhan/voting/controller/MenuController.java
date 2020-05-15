@@ -2,6 +2,8 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,7 @@ public class MenuController {
     }
 
     @GetMapping("/todays")
+    @Cacheable("todaysMenus")
     public List<Menu> getTodays() {
         log.info("Get today's menus");
         return menuRepository.findAllByDate(LocalDate.now());
@@ -58,6 +61,7 @@ public class MenuController {
 
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
         checkFound(menuRepository.delete(menuId) != 0, menuId, getClass());
@@ -65,6 +69,7 @@ public class MenuController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public ResponseEntity<Menu> create(@Valid @RequestBody MenuTo menuTo) {
         checkIsNew(menuTo);
 

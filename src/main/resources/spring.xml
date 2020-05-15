@@ -6,6 +6,7 @@
        xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
@@ -15,7 +16,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/security
-       https://www.springframework.org/schema/security/spring-security.xsd">
+       https://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
     <context:component-scan base-package="ru.vitalykhan.voting.repository"/>
     <context:component-scan base-package="ru.vitalykhan.voting"/>
@@ -69,6 +70,16 @@
                 <!--                <entry key="javax.persistence.validation.group.pre-persist" value="ru.vitalykhan.voting.View$Persist"/>-->
                 <!--                <entry key="javax.persistence.validation.group.pre-update" value="ru.vitalykhan.voting.View$Persist"/>-->
             </map>
+        </property>
+    </bean>
+
+    <!-- Spring Caching: enables scanning for @Cacheable annotation -->
+    <cache:annotation-driven cache-manager="ehCacheManager"/>
+
+    <bean id="ehCacheManager" class="org.springframework.cache.jcache.JCacheCacheManager">
+        <property name="cacheManager">
+            <bean class="org.springframework.cache.jcache.JCacheManagerFactoryBean"
+                  p:cacheManagerUri="classpath:ehcache.xml"/>
         </property>
     </bean>
 
