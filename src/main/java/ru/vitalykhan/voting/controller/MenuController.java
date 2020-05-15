@@ -49,15 +49,16 @@ public class MenuController {
     @GetMapping
     public List<Menu> getByDate(@RequestParam @NotNull LocalDate date) {
         log.info("Get menus by date: {}", date);
-        return menuRepository.findAllByDate(date);
+        return menuRepository.findAllByDateOrderedByRestaurantName(date);
     }
 
     //The most popular method of API is to be cached!
     @GetMapping("/todays")
     @Cacheable("todaysMenus")
     public List<Menu> getTodays() {
-        log.info("Get today's menus");
-        return menuRepository.findAllByDate(LocalDate.now());
+        LocalDate now = LocalDate.now();
+        log.info("Get today's ({}) menus", now);
+        return menuRepository.findAllByDateOrderedByRestaurantName(now);
     }
 
     @DeleteMapping("/{menuId}")

@@ -20,8 +20,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Query("DELETE FROM Menu m WHERE m.id=:id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.date=:date")
-    List<Menu> findAllByDate(@Param("date") LocalDate date);
+    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.date=:date ORDER BY m.restaurant.name")
+    List<Menu> findAllByDateOrderedByRestaurantName(@Param("date") LocalDate date);
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.id=:id")
     Menu findByIdWithRestaurantAndDishes(@Param("id") int id);

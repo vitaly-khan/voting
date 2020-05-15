@@ -32,11 +32,13 @@ public class VoteController {
     private VoteRepository voteRepository;
     private MenuRepository menuRepository;
 
-    public VoteController(VoteRepository voteRepository, MenuRepository menuRepository, UserRepository userRepository) {
+    public VoteController(VoteRepository voteRepository,
+                          MenuRepository menuRepository) {
         this.voteRepository = voteRepository;
         this.menuRepository = menuRepository;
     }
 
+    //No need for sorting by date as business logic implies all votes are saved chronologically and in no other way
     @GetMapping
     public List<Vote> getAllForAuthUser(@AuthenticationPrincipal AuthenticatedUser authUser) {
         int userId = authUser.getId();
@@ -59,7 +61,6 @@ public class VoteController {
         log.info("Get all votes for {}", date);
         return voteRepository.findAllByDateWithRestaurants(date);
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

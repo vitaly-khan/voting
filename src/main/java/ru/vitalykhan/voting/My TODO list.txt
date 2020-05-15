@@ -1,7 +1,6 @@
-Add caching
+Add code quality by Codacy and build check by Travis
 Increase test coverage
 Add DB connection pool
 
-Add code quality by Codacy and build check by Travis
 Add 'enabled' field to Restaurants and Menus and use it instead of real deleting
 Add vote counting

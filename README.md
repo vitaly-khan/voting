@@ -70,14 +70,14 @@ GET     /menus/[_menu id_]
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's menus (with restaurants and dishes)
+#### Get today's menus (with restaurants and dishes), sorted by restaurant name
 
 Access: EVERYONE
 
 GET     /menus/today
 
     curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
-#### Get menus by date (with restaurants and dishes)
+#### Get menus by date (with restaurants and dishes), sorted by restaurant name
  
 Access: ADMIN
 
