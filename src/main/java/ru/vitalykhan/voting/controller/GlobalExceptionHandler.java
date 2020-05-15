@@ -41,8 +41,7 @@ public class GlobalExceptionHandler {
             "menu_unique_date_restaurant_id_idx", DATE_RESTAURANT_MENU_DUPLICATION,
             "dish_unique_menu_id_name_idx", DISH_NAME_MENU_DUPLICATION,
             "vote_unique_date_user_id", DATE_USER_VOTE_DUPLICATION,
-            "integrity constraint violation: unique constraint or index violation; sys_ct_10255 table: restaurant",
-            RESTAURANT_NAME_DUPLICATION);
+            "table: restaurant", RESTAURANT_NAME_DUPLICATION);
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  //422
     @ExceptionHandler(NotFoundException.class)
