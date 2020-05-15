@@ -16,6 +16,7 @@ public class RestaurantTestData {
     public static final Restaurant RESTAURANT3 = new Restaurant(RESTAURANT3_ID, "Georgian");
 
     public static final Restaurant[] RESTAURANTS = new Restaurant[]{RESTAURANT1, RESTAURANT2, RESTAURANT3};
+    public static final Restaurant[] SORTED_RESTAURANTS = new Restaurant[]{RESTAURANT3, RESTAURANT2, RESTAURANT1};
 
     public static Restaurant getNew() {
         return new Restaurant("New restaurant");

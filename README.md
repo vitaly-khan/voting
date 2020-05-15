@@ -20,7 +20,7 @@ As a result, provide a link to github repository. It should contain the code, RE
 ## REST API for Restaurants
 
 
-#### Get all (without menus)        
+#### Get all (without menus), sorted by name        
 Access: ADMIN
 
 GET     /restaurants

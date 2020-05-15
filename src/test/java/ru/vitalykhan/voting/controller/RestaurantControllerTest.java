@@ -36,7 +36,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.matchJsonWith(Arrays.asList(RESTAURANTS)));
+                .andExpect(RESTAURANT_MATCHER.matchJsonWith(Arrays.asList(SORTED_RESTAURANTS)));
     }
 
     @Test

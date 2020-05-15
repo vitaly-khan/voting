@@ -30,7 +30,7 @@ public class RestaurantController {
     @GetMapping
     public Iterable<Restaurant> getAll() {
         log.info("Get all restaurants");
-        return restaurantRepository.findAll();
+        return restaurantRepository.findAllByOrderByName();
     }
 
     @GetMapping("/{restaurantId}")
