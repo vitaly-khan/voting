@@ -6,9 +6,11 @@ import javax.validation.constraints.Size;
 
 @MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractEntityWithId {
+    private static final int MIN_NAME_LENGTH = 2;
+    private static final int MAX_NAME_LENGTH = 100;
 
     @NotBlank
-    @Size(min = 2, max = 100)
+    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH)
     protected String name;
 
     protected AbstractNamedEntity() {

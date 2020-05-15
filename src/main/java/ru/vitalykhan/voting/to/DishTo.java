@@ -6,8 +6,12 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 public class DishTo extends AbstractTo {
+
+    private static final int MIN_NAME_LENGTH = 2;
+    private static final int MAX_NAME_LENGTH = 100;
+
     @NotBlank
-    @Size(min = 2, max = 100)
+    @Size(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH)
     private String name;
 
     //"Zero", because complimentary dish can be possible use case

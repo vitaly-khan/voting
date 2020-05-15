@@ -4,7 +4,7 @@ import ru.vitalykhan.voting.model.Restaurant;
 
 import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
 
-public class RestaurantTestData {
+public class RestaurantTestHelper {
     public static TestMatcher<Restaurant> RESTAURANT_MATCHER = new TestMatcher<>(Restaurant.class);
 
     public static final int RESTAURANT1_ID = START_SEQ + 5;

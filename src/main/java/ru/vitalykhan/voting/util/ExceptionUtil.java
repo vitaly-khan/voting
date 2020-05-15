@@ -8,7 +8,11 @@ public final class ExceptionUtil {
         Throwable result = t;
         Throwable cause;
 
-        while (null != (cause = result.getCause()) && (result != cause)) {
+        while (true) {
+            cause = result.getCause();
+            if ((cause == null) || (result.equals(cause))) {
+                break;
+            }
             result = cause;
         }
         return result;

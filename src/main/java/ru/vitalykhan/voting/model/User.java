@@ -13,12 +13,16 @@ import java.time.Instant;
 @Entity
 public class User extends AbstractNamedEntity {
 
+    private static final int MAX_EMAIL_LENGTH = 100;
+    private static final int MIN_PASSWORD_LENGTH = 5;
+    private static final int MAX_PASSWORD_LENGTH = 68; //Max number must cover 68 symbols of bcrypt encoding
+
     @Email
-    @Size(max = 100)
+    @Size(max = MAX_EMAIL_LENGTH)
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 68)  //Max number must cover 68 symbols of bcrypt encoding
+    @Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -30,15 +34,6 @@ public class User extends AbstractNamedEntity {
     private Instant registered = Instant.now();
 
     private boolean enabled = true;
-
-//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//    @Enumerated(EnumType.STRING)
-//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "role")
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    // @Fetch(FetchMode.SUBSELECT)
-//    @BatchSize(size = 200)
-//    private Set<Role> roles;
 
     public User() {
     }

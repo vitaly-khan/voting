@@ -1,12 +1,14 @@
 package ru.vitalykhan.voting;
 
-import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Role;
 import ru.vitalykhan.voting.model.User;
 
 import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
 
-public class UserTestData {
+
+//The utility class name 'UserTestData' doesn't match '[A-Z][a-zA-Z0-9]+(Utils?|Helper|Constants)'
+//by Codacy
+public class UserTestHelper {
     public static TestMatcher<User> USER_MATCHER = new TestMatcher<>(User.class, "password", "registered");
 
     public static final int USER1_ID = START_SEQ + 1;

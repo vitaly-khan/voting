@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.util.exception;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ErrorInfo {
     private final String url;
     private final String type;
