@@ -8,7 +8,7 @@ import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 
-public class ValidationUtil {
+public final class ValidationUtil {
     private ValidationUtil() {
     }
 

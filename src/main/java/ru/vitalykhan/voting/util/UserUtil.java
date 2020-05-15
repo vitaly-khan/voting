@@ -6,7 +6,7 @@ import ru.vitalykhan.voting.to.UserTo;
 
 import java.time.Instant;
 
-public class UserUtil {
+public final class UserUtil {
     private UserUtil() {
     }
 

@@ -4,7 +4,7 @@ import ru.vitalykhan.voting.model.Dish;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.to.DishTo;
 
-public class DishUtil {
+public final class DishUtil {
     private DishUtil() {
     }
 

@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vitalykhan.voting.RestaurantTestData;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
@@ -58,7 +57,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void create() throws Exception {
-        Restaurant newRestaurant = RestaurantTestData.getNew();
+        Restaurant newRestaurant = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant))
@@ -74,7 +73,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        Restaurant updated = RestaurantTestData.getUpdated();
+        Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
@@ -128,7 +127,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void createByRegularUser() throws Exception {
-        Restaurant newRestaurant = RestaurantTestData.getNew();
+        Restaurant newRestaurant = getNew();
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant))
@@ -138,7 +137,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void createByAnonymous() throws Exception {
-        Restaurant newRestaurant = RestaurantTestData.getNew();
+        Restaurant newRestaurant = getNew();
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)))
@@ -147,7 +146,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void updateByRegularUser() throws Exception {
-        Restaurant updated = RestaurantTestData.getUpdated();
+        Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
@@ -157,7 +156,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void updateByAnonymous() throws Exception {
-        Restaurant updated = RestaurantTestData.getUpdated();
+        Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))

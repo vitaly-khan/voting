@@ -1,6 +1,6 @@
 package ru.vitalykhan.voting.util;
 
-public class ExceptionUtil {
+public final class ExceptionUtil {
     private ExceptionUtil() {
     }
 

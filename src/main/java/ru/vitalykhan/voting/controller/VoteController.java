@@ -11,7 +11,6 @@ import ru.vitalykhan.voting.AuthenticatedUser;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Vote;
 import ru.vitalykhan.voting.repository.MenuRepository;
-import ru.vitalykhan.voting.repository.UserRepository;
 import ru.vitalykhan.voting.repository.VoteRepository;
 import ru.vitalykhan.voting.util.ValidationUtil;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
