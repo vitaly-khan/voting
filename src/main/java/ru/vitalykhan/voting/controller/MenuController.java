@@ -52,6 +52,7 @@ public class MenuController {
         return menuRepository.findAllByDate(date);
     }
 
+    //The most popular method of API is to be cached!
     @GetMapping("/todays")
     @Cacheable("todaysMenus")
     public List<Menu> getTodays() {
