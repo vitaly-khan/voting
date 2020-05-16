@@ -1,4 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2810ceb6cddd485089bbc6da1d80899d)](https://www.codacy.com/manual/vitaly-khan/voting?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vitaly-khan/voting&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/vitaly-khan/voting.svg?branch=master)](https://travis-ci.org/vitaly-khan/voting)
 ## Task
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
