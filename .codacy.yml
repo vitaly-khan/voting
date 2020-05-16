@@ -1,0 +1,7 @@
+---
+exclude_paths:
+  - '**.md'
+  - '**.sql'
+  - '**/ProfileControllerTest.java'
+  - '**/RestaurantControllerTest.java'
+  - '**/ErrorInfo.java'
