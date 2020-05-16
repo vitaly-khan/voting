@@ -17,9 +17,17 @@ import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.vitalykhan.voting.RestaurantTestHelper.*;
+import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT1_ID;
+import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT2;
+import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANTS;
+import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT_MATCHER;
+import static ru.vitalykhan.voting.RestaurantTestHelper.SORTED_RESTAURANTS;
+import static ru.vitalykhan.voting.RestaurantTestHelper.getNew;
+import static ru.vitalykhan.voting.RestaurantTestHelper.getUpdated;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
-import static ru.vitalykhan.voting.UserTestHelper.*;
+import static ru.vitalykhan.voting.UserTestHelper.ADMIN1;
+import static ru.vitalykhan.voting.UserTestHelper.USER1;
+import static ru.vitalykhan.voting.UserTestHelper.USER1_ID;
 import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 class RestaurantControllerTest extends AbstractControllerTest {

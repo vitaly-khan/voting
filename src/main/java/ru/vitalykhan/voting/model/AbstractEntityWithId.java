@@ -2,7 +2,11 @@ package ru.vitalykhan.voting.model;
 
 import ru.vitalykhan.voting.HasId;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.SequenceGenerator;
 
 @MappedSuperclass
 public abstract class AbstractEntityWithId implements HasId {
@@ -23,13 +27,13 @@ public abstract class AbstractEntityWithId implements HasId {
         this.id = id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     @Override
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

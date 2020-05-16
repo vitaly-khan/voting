@@ -18,12 +18,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.vitalykhan.voting.util.ExceptionUtil;
-import ru.vitalykhan.voting.util.exception.*;
+import ru.vitalykhan.voting.util.exception.ErrorInfo;
+import ru.vitalykhan.voting.util.exception.ErrorType;
+import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
+import ru.vitalykhan.voting.util.exception.IllegalVoteException;
+import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-import static ru.vitalykhan.voting.util.exception.ErrorType.*;
+import static ru.vitalykhan.voting.util.exception.ErrorType.BAD_REQUEST;
+import static ru.vitalykhan.voting.util.exception.ErrorType.DATA_ERROR;
+import static ru.vitalykhan.voting.util.exception.ErrorType.DATA_NOT_FOUND;
+import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
