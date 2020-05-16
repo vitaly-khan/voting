@@ -1,5 +1,7 @@
 ## Task
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3687a2dd806432490cf751ad5cefbe3)](https://app.codacy.com/manual/vitaly-khan/voting?utm_source=github.com&utm_medium=referral&utm_content=vitaly-khan/voting&utm_campaign=Badge_Grade_Settings)
+
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
 
 Build a voting system for deciding where to have lunch.
