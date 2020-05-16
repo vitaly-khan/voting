@@ -84,7 +84,7 @@ public class MenuController {
         checkIsNew(menuTo);
 
         int restaurantId = menuTo.getRestaurantId();
-        Restaurant restaurant = restaurantRepository.getOne(restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         checkFound(restaurant != null, restaurantId, Restaurant.class);
 
         Menu newMenu = menuRepository.save(new Menu(menuTo.getDate(), restaurant));

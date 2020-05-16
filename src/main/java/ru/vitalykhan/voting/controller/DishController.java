@@ -64,7 +64,7 @@ public class DishController {
         checkIsNew(dishTo);
 
         int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.getOne(menuId);
+        Menu menu = menuRepository.findById(menuId).orElse(null);
         checkFound(menu != null, menuId, Menu.class);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
