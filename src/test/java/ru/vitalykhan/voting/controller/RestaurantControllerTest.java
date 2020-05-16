@@ -17,9 +17,9 @@ import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT1;
 import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT1_ID;
 import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT2;
-import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANTS;
 import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT_MATCHER;
 import static ru.vitalykhan.voting.RestaurantTestHelper.SORTED_RESTAURANTS;
 import static ru.vitalykhan.voting.RestaurantTestHelper.getNew;
@@ -52,7 +52,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.matchJsonWith(RESTAURANTS[0]));
+                .andExpect(RESTAURANT_MATCHER.matchJsonWith(RESTAURANT1));
     }
 
     @Test
