@@ -30,7 +30,7 @@ public final class ValidationUtil {
         }
     }
 
-    public static void checkMenuIsTodays(Menu menu, int menuId, LocalDate today) {
+    public static void checkIsTodays(Menu menu, int menuId, LocalDate today) {
         if (menu == null) {
             throw new NotFoundException(String.format("Menu with id=%d wasn't found!", menuId));
         }

@@ -73,7 +73,7 @@ public class VoteController {
         Menu menu = menuRepository.findById(menuId).orElse(null);
         LocalDate today = LocalDate.now();
 
-        ValidationUtil.checkMenuIsTodays(menu, menuId, today);
+        ValidationUtil.checkIsTodays(menu, menuId, today);
 
         int userId = authUser.getId();
         Vote oldVote = voteRepository.findByDateAndUserId(today, userId);

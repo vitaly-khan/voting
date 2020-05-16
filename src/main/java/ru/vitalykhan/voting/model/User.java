@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,6 +28,7 @@ public class User extends AbstractNamedEntity {
 
     @NotBlank
     @Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +37,7 @@ public class User extends AbstractNamedEntity {
 
     @NotNull
     @PastOrPresent
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant registered = Instant.now();
 
     private boolean enabled = true;
