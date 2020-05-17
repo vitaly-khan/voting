@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
@@ -87,11 +89,26 @@ public class MenuController {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         checkFound(restaurant != null, restaurantId, Restaurant.class);
 
-        Menu newMenu = menuRepository.save(new Menu(menuTo.getDate(), restaurant));
+        Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("menus/{id}")
                 .buildAndExpand(newMenu.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(newMenu);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @Transactional
+    public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
+        log.info("Update menu with id={}", id);
+        assureIdConsistency(menuTo, id);
+        checkFound(menuRepository.existsById(id), id, getClass());
+
+        int restaurantId = menuTo.getRestaurantId();
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        checkFound(restaurant != null, restaurantId, Menu.class);
+
+        menuRepository.save(new Menu(menuTo.getId(), menuTo.getDate(), restaurant));
     }
 }

@@ -33,7 +33,8 @@ public class Menu extends AbstractEntityWithId {
     public Menu() {
     }
 
-    public Menu(LocalDate date, Restaurant restaurant) {
+    public Menu(Integer id, LocalDate date, Restaurant restaurant) {
+        this.id = id;
         this.date = date;
         this.restaurant = restaurant;
     }
