@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public static final String E_MAIL_DUPLICATION = "User with the same e-mail already exists!";
-    public static final String DATE_RESTAURANT_MENU_DUPLICATION = "A menu on this date for this restaurant exists already!";
+    public static final String DATE_RESTAURANT_MENU_DUPLICATION = "A menu of this date for this restaurant exists already!";
     public static final String DISH_NAME_MENU_DUPLICATION = "This menu contains a dish with the same name already!";
     public static final String DATE_USER_VOTE_DUPLICATION = "User can't have 2 votes on the same date!";
     public static final String RESTAURANT_NAME_DUPLICATION = "Restaurant with the same name exists already!";
@@ -66,12 +67,14 @@ public class GlobalExceptionHandler {
     //HttpMessageNotReadableException is thrown in case of wrong JSON body {"wrongName":"Italian"}
     //HttpRequestMethodNotSupportedException is thrown in case of URI: DELETE: voting/restaurants
     //MissingServletRequestParameterException is thrown in case of URI: voting/menus
+    //HttpMediaTypeNotSupportedException.class is thrown in case of URI: PUT /voting/menus/100009 with empty body
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)  // 400
     @ExceptionHandler({IllegalRequestDataException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class,
-            HttpRequestMethodNotSupportedException.class})
+            HttpRequestMethodNotSupportedException.class,
+            HttpMediaTypeNotSupportedException.class})
     public ErrorInfo badRequestError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, BAD_REQUEST);
     }
