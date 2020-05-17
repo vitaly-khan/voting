@@ -98,10 +98,9 @@ public class GlobalExceptionHandler {
     //MethodArgumentNotValidException is thrown in case of e.g. creating menu for expired date (Bean Validation)
     //or in case of missing required field in JSON body.
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
-    public ErrorInfo bindValidationError(HttpServletRequest req, Exception e) {
-        BindingResult result = e instanceof BindException ?
-                ((BindException) e).getBindingResult() : ((MethodArgumentNotValidException) e).getBindingResult();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorInfo bindValidationError(HttpServletRequest req, MethodArgumentNotValidException e) {
+        BindingResult result = e.getBindingResult();
 
         String[] details = result.getFieldErrors().stream()
                 .map(FieldError::getField)
@@ -110,6 +109,7 @@ public class GlobalExceptionHandler {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, details);
     }
 
+    //Case of unexpected exception
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)   //500
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleError(HttpServletRequest req, Exception e) {

@@ -12,7 +12,7 @@ public class ErrorInfo {
                      ErrorType type,
                      String parentException,
                      String rootException,
-                     String... details) {
+                     String[] details) {
         this.url = url.toString();
         this.type = type.getDescription();
         this.parentException = parentException;
