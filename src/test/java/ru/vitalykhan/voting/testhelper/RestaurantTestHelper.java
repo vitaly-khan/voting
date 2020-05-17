@@ -1,6 +1,9 @@
-package ru.vitalykhan.voting;
+package ru.vitalykhan.voting.testhelper;
 
+import ru.vitalykhan.voting.TestMatcher;
 import ru.vitalykhan.voting.model.Restaurant;
+
+import java.util.List;
 
 import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
 
@@ -15,7 +18,7 @@ public class RestaurantTestHelper {
     public static final Restaurant RESTAURANT2 = new Restaurant(RESTAURANT2_ID, "Japanese");
     public static final Restaurant RESTAURANT3 = new Restaurant(RESTAURANT3_ID, "Georgian");
 
-    public static final Restaurant[] SORTED_RESTAURANTS = new Restaurant[]{RESTAURANT3, RESTAURANT2, RESTAURANT1};
+    public static final List<Restaurant> SORTED_RESTAURANTS = List.of(RESTAURANT3, RESTAURANT2, RESTAURANT1);
 
     public static Restaurant getNew() {
         return new Restaurant("New restaurant");

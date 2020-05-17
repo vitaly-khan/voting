@@ -21,11 +21,11 @@ public class TestMatcher<T> {
         assertThat(actual).usingElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
     }
 
-    public ResultMatcher matchJsonWith(T expected) {
+    public ResultMatcher unmarshalAndMatchWith(T expected) {
         return result -> assertMatch(TestUtil.readFromJsonMvcResult(result, clazz), expected);
     }
 
-    public ResultMatcher matchJsonWith(Iterable<T> expected) {
+    public ResultMatcher unmarshalAndMatchWith(Iterable<T> expected) {
         return result -> assertMatch(TestUtil.readListFromJsonMvcResult(result, clazz), expected);
     }
 }

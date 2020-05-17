@@ -18,10 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
-import static ru.vitalykhan.voting.UserTestHelper.USER1;
-import static ru.vitalykhan.voting.UserTestHelper.USER1_ID;
-import static ru.vitalykhan.voting.UserTestHelper.USER_MATCHER;
 import static ru.vitalykhan.voting.controller.GlobalExceptionHandler.E_MAIL_DUPLICATION;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1_ID;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER_MATCHER;
 import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 class ProfileControllerTest extends AbstractControllerTest {
@@ -36,7 +36,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.matchJsonWith(USER1));
+                .andExpect(USER_MATCHER.unmarshalAndMatchWith(USER1));
     }
 
     @Test
@@ -110,7 +110,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void registerAuthenticated() throws Exception {
         UserTo newUserTo = new UserTo("New User", "newuser@gmail.com", "newpassword");
 
-        perform(MockMvcRequestBuilders.post(REST_URL+"/register")
+        perform(MockMvcRequestBuilders.post(REST_URL + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newUserTo))
                 .with(httpBasicOf(USER1)))

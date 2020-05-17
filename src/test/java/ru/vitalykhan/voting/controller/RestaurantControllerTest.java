@@ -13,21 +13,19 @@ import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
 
-import java.util.Arrays;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT1;
-import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT1_ID;
-import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT2;
-import static ru.vitalykhan.voting.RestaurantTestHelper.RESTAURANT_MATCHER;
-import static ru.vitalykhan.voting.RestaurantTestHelper.SORTED_RESTAURANTS;
-import static ru.vitalykhan.voting.RestaurantTestHelper.getNew;
-import static ru.vitalykhan.voting.RestaurantTestHelper.getUpdated;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
-import static ru.vitalykhan.voting.UserTestHelper.ADMIN1;
-import static ru.vitalykhan.voting.UserTestHelper.USER1;
-import static ru.vitalykhan.voting.UserTestHelper.USER1_ID;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT2;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_MATCHER;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.SORTED_RESTAURANTS;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getNew;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getUpdated;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1_ID;
 import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 class RestaurantControllerTest extends AbstractControllerTest {
@@ -43,7 +41,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.matchJsonWith(Arrays.asList(SORTED_RESTAURANTS)));
+                .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(SORTED_RESTAURANTS));
     }
 
     @Test
@@ -52,7 +50,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.matchJsonWith(RESTAURANT1));
+                .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(RESTAURANT1));
     }
 
     @Test
