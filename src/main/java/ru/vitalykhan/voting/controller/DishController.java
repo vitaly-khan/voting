@@ -81,10 +81,10 @@ public class DishController {
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         log.info("Update dish with id={}", id);
         assureIdConsistency(dishTo, id);
-        checkFound(dishRepository.findById(id).isPresent(), id, getClass());
+        checkFound(dishRepository.existsById(id), id, getClass());
 
         int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.getOne(menuId);
+        Menu menu = menuRepository.findById(menuId).orElse(null);
         checkFound(menu != null, menuId, Menu.class);
 
         dishRepository.save(DishUtil.of(dishTo, menu));
