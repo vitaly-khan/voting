@@ -100,6 +100,7 @@ public class MenuController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
         log.info("Update menu with id={}", id);
         assureIdConsistency(menuTo, id);
