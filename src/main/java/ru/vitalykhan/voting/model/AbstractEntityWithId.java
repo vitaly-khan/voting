@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.model;
 
+import org.hibernate.Hibernate;
 import ru.vitalykhan.voting.HasId;
 
 import javax.persistence.GeneratedValue;
@@ -16,8 +17,6 @@ public abstract class AbstractEntityWithId implements HasId {
     @SequenceGenerator(name = "seq_generator", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_generator")
 
-//  See https://hibernate.atlassian.net/browse/HHH-3718 and https://hibernate.atlassian.net/browse/HHH-12034
-//  Proxy initialization when accessing its identifier managed now by JPA_PROXY_COMPLIANCE setting
     protected Integer id;
 
     protected AbstractEntityWithId() {
@@ -46,7 +45,7 @@ public abstract class AbstractEntityWithId implements HasId {
         if (this == o) {
             return true;
         }
-        if (o == null || !getClass().equals(/*Hibernate.getClass(o)*/o.getClass())) {
+        if (o == null || !getClass().equals(Hibernate.getClass(o))) {
             return false;
         }
         AbstractEntityWithId that = (AbstractEntityWithId) o;
