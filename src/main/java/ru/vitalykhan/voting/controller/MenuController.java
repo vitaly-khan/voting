@@ -68,7 +68,7 @@ public class MenuController {
     public List<Menu> getTodays() {
         LocalDate now = LocalDate.now();
         log.info("Get today's ({}) menus", now);
-        return menuRepository.findAllByDateOrderedByRestaurantName(now);
+        return menuRepository.findNotEmptyByDateOrderedByRestaurantName(now);
     }
 
     @DeleteMapping("/{menuId}")

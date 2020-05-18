@@ -2,6 +2,7 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,7 @@ public class DishController {
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
         checkFound(dishRepository.delete(dishId) != 0, dishId, getClass());
@@ -60,6 +62,7 @@ public class DishController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public ResponseEntity<Dish> create(@Valid @RequestBody DishTo dishTo) {
         checkIsNew(dishTo);
 
@@ -78,6 +81,7 @@ public class DishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         log.info("Update dish with id={}", id);
         assureIdConsistency(dishTo, id);
