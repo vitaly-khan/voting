@@ -103,6 +103,16 @@ Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
 
     curl -s -X POST -d '{"date":"2020-05-30","restaurantId":100006}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus -u admin1@gmail.com:admin1
 
+#### Update 
+Access: ADMIN
+
+POST  /menus/[_menu id_]
+
+Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
+
+
+    curl -s -X PUT -d '{"date":"2020-05-30","restaurantId":100007}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
+
 * * *
 
 ## REST API for Dishes
@@ -133,7 +143,7 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 #### Update
 Access: ADMIN
 
-PUT  /dishes/[_dish id]
+PUT  /dishes/[_dish id_]
 
 Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
