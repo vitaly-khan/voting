@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/vitaly-khan/voting.svg?branch=master)](https://travis-ci.org/vitaly-khan/voting)
 ## Task
 
-Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
+Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring Boot) without frontend.
 
 Build a voting system for deciding where to have lunch.
 
@@ -12,7 +12,7 @@ Build a voting system for deciding where to have lunch.
  * Users can vote on which restaurant they want to have lunch at
  * Only one vote counted per user
  * If user votes again the same day:
-    - If it is before 11:00 we asume that he changed his mind.
+    - If it is before 11:00 we assume that he changed his mind.
     - If it is after 11:00 then it is too late, vote can't be changed
 
 Each restaurant provides new menu each day.
@@ -22,7 +22,7 @@ As a result, provide a link to github repository. It should contain the code, RE
 ## REST API for Restaurants
 
 
-#### Get all (without menus), sorted by name        
+#### Get all (without menus) ordered by name        
 Access: ADMIN
 
 GET     /restaurants
@@ -72,14 +72,14 @@ GET     /menus/[_menu id_]
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's menus (with restaurants and dishes), sorted by restaurant name
+#### Get today's menus (with restaurants and dishes) ordered by restaurant name
 
 Access: EVERYONE
 
 GET     /menus/today
 
     curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
-#### Get menus by date (with restaurants and dishes), sorted by restaurant name
+#### Get menus by date (with restaurants and dishes) ordered by restaurant name
  
 Access: ADMIN
 
@@ -99,7 +99,7 @@ Access: ADMIN
 
 POST  /menus  
 
-Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
+Body: {"date":"[_ISO date_]", "restaurantId":[_restaurant id_]}
 
     curl -s -X POST -d '{"date":"2020-05-30","restaurantId":100006}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus -u admin1@gmail.com:admin1
 
@@ -108,7 +108,7 @@ Access: ADMIN
 
 POST  /menus/[_menu id_]
 
-Body: {"date":"[_ISO date_"], "restaurantId":[_restaurant id_]}
+Body: {"date":"[_ISO date_]", "restaurantId":[_restaurant id_]}
 
 
     curl -s -X PUT -d '{"date":"2020-05-30","restaurantId":100007}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
@@ -154,19 +154,19 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 ## REST API for Votes
 
 
-#### Get all votes on a specific date (with Restaurants, without users and dishes)
+#### Get all votes on a specific date (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/filter
 
     curl -s http://localhost:8080/voting/votes/filter?date=2020-05-03 -u admin1@gmail.com:admin1
-#### Get all today's votes (with Restaurants, without users and dishes)
+#### Get all today's votes (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/todays
 
     curl -s http://localhost:8080/voting/votes/todays -u admin1@gmail.com:admin1
-#### Get all votes of an authenticated user (with Restaurants, without users and dishes) 
+#### Get all votes of an authenticated user (with restaurants, without users and dishes) 
 Access: REGULAR USER
 
 GET     /votes

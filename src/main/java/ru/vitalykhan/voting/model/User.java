@@ -45,6 +45,14 @@ public class User extends AbstractNamedEntity {
     public User() {
     }
 
+    public User(Integer id, String name, String email, String password, Role role) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.registered = Instant.now();
+    }
+
     public User(Integer id, String name, String email, String password, Role role, Instant registered, boolean enabled) {
         super(id, name);
         this.email = email;
@@ -56,15 +64,6 @@ public class User extends AbstractNamedEntity {
 
     public User(User u) {
         this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getRole(), u.getRegistered(), u.isEnabled());
-    }
-
-    //For UserTestData class
-    public User(Integer id, String name, String email, String password, Role role) {
-        super(id, name);
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.registered = Instant.now();
     }
 
     public String getEmail() {

@@ -29,11 +29,7 @@
         <jdbc:script location="${jdbc.testDataLocation}"/>
     </jdbc:initialize-database>
 
-    <!--    Spring Data JPA-->
     <!--TODO: change to real dataSource!-->
-
-    <jpa:repositories base-package="ru.vitalykhan.voting.repository"/>
-
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="org.hsqldb.jdbcDriver"
@@ -41,8 +37,11 @@
           p:username="${database.username}"
           p:password="${database.password}"/>
 
-    <!--    Spring ORM-->
+    <!-- Spring Data JPA -->
+    <jpa:repositories base-package="ru.vitalykhan.voting.repository"/>
 
+
+    <!-- Spring ORM -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
           p:packagesToScan="ru.vitalykhan.voting.model">
@@ -61,7 +60,6 @@
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_AUTO}" value="${hibernate.hbm2ddl.auto}"/>
 
                 <!--2nd level hibernate cache-->
-                <!--https://github.com/hibernate/hibernate-orm/blob/master/documentation/src/main/asciidoc/userguide/chapters/caching/Caching.adoc#caching-provider-jcache-->
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).CACHE_REGION_FACTORY}"
                        value="org.hibernate.cache.jcache.internal.JCacheRegionFactory"/>
                 <entry key="#{T(org.hibernate.cache.jcache.ConfigSettings).PROVIDER}"
@@ -81,7 +79,7 @@
         </property>
     </bean>
 
-    <!--    Spring Tx-->
+    <!-- Spring Tx -->
     <tx:annotation-driven/>
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
@@ -91,7 +89,7 @@
     <!--        <context:property-placeholder location="classpath:db/tomcat.properties" system-properties-mode="OVERRIDE"/>-->
     <!--    </beans>-->
 
-    <!--    Spring Web MVC-->
+    <!-- Spring Web MVC -->
     <context:component-scan base-package="ru.vitalykhan.voting.controller"/>
 
     <bean class="ru.vitalykhan.voting.controller.json.JacksonObjectMapper" id="objectMapper"
@@ -107,20 +105,20 @@
 
     <mvc:annotation-driven conversion-service="conversionService">
 
-        <!--    Adds customized ObjectMapper to Spring MVC-->
+        <!-- Adds customized ObjectMapper to Spring MVC -->
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
 
-        <!--    Gives quick access to @AuthenticatedPrincipal-->
+        <!-- Gives an access to @AuthenticatedPrincipal -->
         <mvc:argument-resolvers>
             <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
-    <!--    Spring Security-->
+    <!-- Spring Security -->
     <bean class="org.springframework.security.crypto.factory.PasswordEncoderFactories" id="passwordEncoder"
           factory-method="createDelegatingPasswordEncoder"/>
 

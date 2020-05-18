@@ -12,9 +12,9 @@ VALUES ('USER', 'User 2', 'user2@gmail.com', '{noop}password2'),    --id: 100000
        ('USER', 'User 3', 'user3@gmail.com', '{noop}password3');    --id: 1000004
 
 INSERT INTO RESTAURANT (NAME)
-VALUES ('Korean'),       --id: 100005
+VALUES ('Korean'),          --id: 100005
        ('Japanese'),        --id: 100006
-       ('Georgian');      --id: 100007
+       ('Georgian');        --id: 100007
 
 INSERT INTO MENU (DATE, RESTAURANT_ID)
 VALUES ('2020-05-03', '100005'),    --id: 100008

@@ -36,8 +36,7 @@ public class VoteController {
     private VoteRepository voteRepository;
     private MenuRepository menuRepository;
 
-    public VoteController(VoteRepository voteRepository,
-                          MenuRepository menuRepository) {
+    public VoteController(VoteRepository voteRepository, MenuRepository menuRepository) {
         this.voteRepository = voteRepository;
         this.menuRepository = menuRepository;
     }
@@ -50,7 +49,7 @@ public class VoteController {
         return voteRepository.findAllByUserIdWithRestaurants(userId);
     }
 
-    //Get all votes  with restaurants for a specific date, so the front-end can process voting results
+    //Get all votes with restaurants for a specific date, so the front-end can process voting results
     @GetMapping("/filter")
     public List<Vote> getAllByDate(@RequestParam @NotNull LocalDate date) {
         return getByDate(date);
