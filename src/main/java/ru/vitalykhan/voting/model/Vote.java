@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-public class Vote extends AbstractEntityWithId {
+public class Vote extends AbstractBaseEntity {
 
     @NotNull
     @FutureOrPresent
@@ -72,6 +72,7 @@ public class Vote extends AbstractEntityWithId {
                 ". date=" + date +
                 ", menu=" + menu +
                 ", user=" + user +
+                ", enabled=" + enabled +
                 '}';
     }
 }

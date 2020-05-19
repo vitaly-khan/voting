@@ -40,8 +40,6 @@ public class User extends AbstractNamedEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant registered = Instant.now();
 
-    private boolean enabled = true;
-
     public User() {
     }
 

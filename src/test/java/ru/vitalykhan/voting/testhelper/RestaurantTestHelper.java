@@ -5,7 +5,7 @@ import ru.vitalykhan.voting.model.Restaurant;
 
 import java.util.List;
 
-import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
+import static ru.vitalykhan.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestHelper {
     public static TestMatcher<Restaurant> RESTAURANT_MATCHER = new TestMatcher<>(Restaurant.class);
