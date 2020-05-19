@@ -29,7 +29,6 @@
         <jdbc:script location="${jdbc.testDataLocation}"/>
     </jdbc:initialize-database>
 
-    <!--TODO: change to real dataSource!-->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="org.hsqldb.jdbcDriver"
@@ -37,9 +36,11 @@
           p:username="${database.username}"
           p:password="${database.password}"/>
 
+    <!--        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/topjava"/>-->
+    <!--        <context:property-placeholder location="classpath:db/tomcat.properties" system-properties-mode="OVERRIDE"/>-->
+
     <!-- Spring Data JPA -->
     <jpa:repositories base-package="ru.vitalykhan.voting.repository"/>
-
 
     <!-- Spring ORM -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
@@ -83,11 +84,6 @@
     <tx:annotation-driven/>
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
-
-    <!--    <beans profile="tomcat">-->
-    <!--        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/topjava"/>-->
-    <!--        <context:property-placeholder location="classpath:db/tomcat.properties" system-properties-mode="OVERRIDE"/>-->
-    <!--    </beans>-->
 
     <!-- Spring Web MVC -->
     <context:component-scan base-package="ru.vitalykhan.voting.controller"/>
