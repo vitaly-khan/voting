@@ -22,12 +22,19 @@ As a result, provide a link to github repository. It should contain the code, RE
 ## REST API for Restaurants
 
 
-#### Get all (without menus) ordered by name        
+#### Get all enabled (without menus) ordered by name        
 Access: ADMIN
 
 GET     /restaurants
 
     curl -s http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
+    
+#### Get all (without menus)
+Access: ADMIN
+
+GET     /restaurants/history
+
+    curl -s http://localhost:8080/voting/restaurants/history -u admin1@gmail.com:admin1
 
 #### Get by ID (without menus)
 Access: ADMIN
@@ -36,12 +43,19 @@ GET     /restaurants/[_restaurant id_]
 
     curl -s http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
-#### Delete by ID
+#### Delete by ID (only if restaurant contains no menus)
 Access: ADMIN
 
 DELETE  /restaurants/[_restaurant id_]
 
     curl -s -X DELETE http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
+
+#### Enabled/disable restaurant
+Access: ADMIN
+
+PATCH  /restaurants/[_restaurant id_]?enabled=[_value_]
+
+    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=true -u admin1@gmail.com:admin1
 
 #### Create
 Access: ADMIN
