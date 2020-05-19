@@ -34,6 +34,8 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 @RestController
 @RequestMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishController {
+    public final static String ENTITY_NAME = "dish";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private MenuRepository menuRepository;
@@ -48,7 +50,7 @@ public class DishController {
     public Dish getById(@PathVariable int dishId) {
         log.info("Get dish with id={}", dishId);
         Dish dish = dishRepository.findById(dishId).orElse(null);
-        checkFound(dish != null, dishId, getClass());
+        checkFound(dish != null, dishId, ENTITY_NAME);
         return dish;
     }
 
@@ -57,7 +59,7 @@ public class DishController {
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
-        checkFound(dishRepository.delete(dishId) != 0, dishId, getClass());
+        checkFound(dishRepository.delete(dishId) != 0, dishId, ENTITY_NAME);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -68,7 +70,7 @@ public class DishController {
 
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
-        checkFound(menu != null, menuId, Menu.class);
+        checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
         log.info("Create a new dish {}", newDish);
@@ -85,11 +87,11 @@ public class DishController {
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         log.info("Update dish with id={}", id);
         assureIdConsistency(dishTo, id);
-        checkFound(dishRepository.existsById(id), id, getClass());
+        checkFound(dishRepository.existsById(id), id, ENTITY_NAME);
 
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
-        checkFound(menu != null, menuId, Menu.class);
+        checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
 
         dishRepository.save(DishUtil.of(dishTo, menu));
     }

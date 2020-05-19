@@ -38,6 +38,8 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MenuController {
+    public final static String ENTITY_NAME = "menu";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private MenuRepository menuRepository;
@@ -52,7 +54,7 @@ public class MenuController {
     public Menu getById(@PathVariable int menuId) {
         log.info("Get menu with id={}", menuId);
         Menu menu = menuRepository.findByIdWithRestaurantAndDishes(menuId);
-        checkFound(menu != null, menuId, getClass());
+        checkFound(menu != null, menuId, ENTITY_NAME);
         return menu;
     }
 
@@ -76,7 +78,7 @@ public class MenuController {
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
-        checkFound(menuRepository.delete(menuId) != 0, menuId, getClass());
+        checkFound(menuRepository.delete(menuId) != 0, menuId, ENTITY_NAME);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +89,7 @@ public class MenuController {
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkFound(restaurant != null, restaurantId, Restaurant.class);
+        checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
 
         Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
@@ -104,11 +106,11 @@ public class MenuController {
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
         log.info("Update menu with id={}", id);
         assureIdConsistency(menuTo, id);
-        checkFound(menuRepository.existsById(id), id, getClass());
+        checkFound(menuRepository.existsById(id), id, ENTITY_NAME);
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkFound(restaurant != null, restaurantId, Menu.class);
+        checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
 
         menuRepository.save(new Menu(menuTo.getId(), menuTo.getDate(), restaurant));
     }

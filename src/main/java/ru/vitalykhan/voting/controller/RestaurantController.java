@@ -29,6 +29,8 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
+    public final static String ENTITY_NAME = "restaurant";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private RestaurantRepository restaurantRepository;
@@ -47,7 +49,7 @@ public class RestaurantController {
     public Restaurant getById(@PathVariable int restaurantId) {
         log.info("Get restaurants with id={}", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkFound(restaurant != null, restaurantId, getClass());
+        checkFound(restaurant != null, restaurantId, ENTITY_NAME);
         return restaurant;
     }
 
@@ -55,7 +57,7 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable int restaurantId) {
         log.info("Delete restaurant with id={}", restaurantId);
-        checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, getClass());
+        checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +78,7 @@ public class RestaurantController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("Update restaurant with id={}", id);
         assureIdConsistency(restaurant, id);
-        checkFound(restaurantRepository.existsById(id), id, getClass());
+        checkFound(restaurantRepository.existsById(id), id, ENTITY_NAME);
 
         restaurantRepository.save(restaurant);
     }

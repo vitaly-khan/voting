@@ -1,6 +1,8 @@
 package ru.vitalykhan.voting.util;
 
 import ru.vitalykhan.voting.HasId;
+import ru.vitalykhan.voting.controller.DishController;
+import ru.vitalykhan.voting.controller.MenuController;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
@@ -31,25 +33,24 @@ public final class ValidationUtil {
     }
 
     public static void checkIsValidForVoting(Menu menu, int menuId, LocalDate today) {
-        checkFound(menu != null, menuId, Menu.class);
+        checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
 
         if (!menu.getDate().equals(today)) {
             throw new IllegalVoteException(String.format(
-                    "The menu with id %d can't be voted today as it's out-of-date", menuId));
+                    "The %s with id %d can't be voted today as it's out-of-date", MenuController.ENTITY_NAME, menuId));
         }
 
         if (menu.getDishes().isEmpty()) {
             throw new IllegalVoteException(String.format(
-                    "The menu with id %d can't be voted now as it contains no dish items", menuId));
+                    "The %s with id %d can't be voted now as it contains no %s items",
+                    MenuController.ENTITY_NAME, menuId, DishController.ENTITY_NAME));
         }
     }
 
-    public static void checkFound(boolean found, int restaurantId, Class clazz) {
+    public static void checkFound(boolean found, int restaurantId, String entityName) {
         if (!found) {
             throw new NotFoundException(String.format(
-                    "Unable to find the %s with id %d",
-                    clazz.getSimpleName().replaceFirst("Controller", "").toLowerCase(),
-                    restaurantId));
+                    "Unable to find the %s with id %d", entityName, restaurantId));
         }
     }
 }
