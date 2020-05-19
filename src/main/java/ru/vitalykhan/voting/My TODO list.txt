@@ -1,4 +1,4 @@
 Increase test coverage
-Add DB connection pool
+
 Add 'enabled' field to Restaurants and Menus and use it instead of real deleting
 Add vote counting

@@ -72,7 +72,7 @@ GET     /menus/[_menu id_]
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's menus (with restaurants and dishes) ordered by restaurant name
+#### Get today's NOT EMPTY menus (with restaurants and dishes) ordered by restaurant name
 
 Access: EVERYONE
 

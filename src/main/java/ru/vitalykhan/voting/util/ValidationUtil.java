@@ -30,20 +30,26 @@ public final class ValidationUtil {
         }
     }
 
-    public static void checkIsTodays(Menu menu, int menuId, LocalDate today) {
+    public static void checkIsValidForVoting(Menu menu, int menuId, LocalDate today) {
         if (menu == null) {
-            throw new NotFoundException(String.format("Unable to find Menu with id %d", menuId));
+            throw new NotFoundException(String.format("Unable to find the menu with id %d", menuId));
         }
 
         if (!menu.getDate().equals(today)) {
-            throw new IllegalVoteException(String.format("Menu with id %d can't be voted today", menuId));
+            throw new IllegalVoteException(String.format(
+                    "The menu with id %d can't be voted today as it's out-of-date", menuId));
+        }
+
+        if (menu.getDishes().isEmpty()) {
+            throw new IllegalVoteException(String.format(
+                    "The menu with id %d can't be voted now as it contains no dish items", menuId));
         }
     }
 
     public static void checkFound(boolean found, int restaurantId, Class clazz) {
         if (!found) {
             throw new NotFoundException(String.format(
-                    "Unable to find %s with id %d",
+                    "Unable to find the %s with id %d",
                     clazz.getSimpleName().replaceFirst("Controller", ""),
                     restaurantId));
         }

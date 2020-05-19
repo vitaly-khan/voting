@@ -25,6 +25,7 @@ import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER_MATCHER;
 import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 class ProfileControllerTest extends AbstractControllerTest {
+
     private static final String REST_URL = "/profile/";
 
     @Autowired

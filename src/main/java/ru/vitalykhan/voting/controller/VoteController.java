@@ -41,7 +41,8 @@ public class VoteController {
         this.menuRepository = menuRepository;
     }
 
-    //No need for sorting by date as business logic implies all votes are saved chronologically and in no other way
+    //No need for ordering by date as business logic implies all votes are saved chronologically and in no other way
+    //It's assumed that the user wishes to see only restaurant names and dates (but not dishes) in his history
     @GetMapping
     public List<Vote> getAllForAuthUser(@AuthenticationPrincipal AuthenticatedUser authUser) {
         int userId = authUser.getId();
@@ -72,7 +73,7 @@ public class VoteController {
         Menu menu = menuRepository.findById(menuId).orElse(null);
         LocalDate today = LocalDate.now();
 
-        ValidationUtil.checkIsTodays(menu, menuId, today);
+        ValidationUtil.checkIsValidForVoting(menu, menuId, today);
 
         int userId = authUser.getId();
         Vote oldVote = voteRepository.findByDateAndUserId(today, userId);
