@@ -19,7 +19,6 @@ import java.util.List;
 public class Menu extends AbstractEntityWithId {
 
     @NotNull
-    @FutureOrPresent            //Creating backdated menus is not allowed.
     private LocalDate date;
 
     @NotNull
