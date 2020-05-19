@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 
 @MappedSuperclass
-public abstract class AbstractEntityWithId implements HasId {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100_000;
 
     @Id
@@ -19,10 +19,12 @@ public abstract class AbstractEntityWithId implements HasId {
 
     protected Integer id;
 
-    protected AbstractEntityWithId() {
+    protected boolean enabled = true;
+
+    protected AbstractBaseEntity() {
     }
 
-    protected AbstractEntityWithId(Integer id) {
+    protected AbstractBaseEntity(Integer id) {
         this.id = id;
     }
 
@@ -33,6 +35,14 @@ public abstract class AbstractEntityWithId implements HasId {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
@@ -48,7 +58,7 @@ public abstract class AbstractEntityWithId implements HasId {
         if (o == null || !getClass().equals(Hibernate.getClass(o))) {
             return false;
         }
-        AbstractEntityWithId that = (AbstractEntityWithId) o;
+        AbstractBaseEntity that = (AbstractBaseEntity) o;
         return id != null && id.equals(that.id);
     }
 

@@ -4,6 +4,7 @@ import ru.vitalykhan.voting.HasId;
 import ru.vitalykhan.voting.controller.DishController;
 import ru.vitalykhan.voting.controller.MenuController;
 import ru.vitalykhan.voting.model.Menu;
+import ru.vitalykhan.voting.util.exception.IllegalOperationException;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
@@ -51,6 +52,15 @@ public final class ValidationUtil {
         if (!found) {
             throw new NotFoundException(String.format(
                     "Unable to find the %s with id %d", entityName, restaurantId));
+        }
+    }
+
+    public static void checkNestedEntityNotExists(boolean notExists, int restaurantId,
+                                                  String parentEntity, String childEntity) {
+        if (!notExists) {
+            throw new IllegalOperationException(String.format(
+                    "Unable to delete the %s with id %d while it contains at least one %s",
+                    parentEntity, restaurantId, childEntity));
         }
     }
 }

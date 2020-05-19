@@ -28,4 +28,9 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.id=:id")
     Menu findByIdWithRestaurantAndDishes(@Param("id") int id);
+
+    //HSQLDB doesn't support syntax "SELECT EXISTS (SELECT ...)" returning boolean
+    @Query(value = "SELECT COUNT(*) FROM MENU m WHERE m.RESTAURANT_ID=:id", nativeQuery = true)
+    int countAllByIdRestaurant(@Param("id") int id);
+
 }

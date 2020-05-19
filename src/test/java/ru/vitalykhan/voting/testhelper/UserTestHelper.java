@@ -6,7 +6,7 @@ import ru.vitalykhan.voting.model.User;
 
 import java.util.List;
 
-import static ru.vitalykhan.voting.model.AbstractEntityWithId.START_SEQ;
+import static ru.vitalykhan.voting.model.AbstractBaseEntity.START_SEQ;
 
 
 //The utility class name 'UserTestData' doesn't match '[A-Z][a-zA-Z0-9]+(Utils?|Helper|Constants)'

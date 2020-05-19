@@ -21,6 +21,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.vitalykhan.voting.util.ExceptionUtil;
 import ru.vitalykhan.voting.util.exception.ErrorInfo;
 import ru.vitalykhan.voting.util.exception.ErrorType;
+import ru.vitalykhan.voting.util.exception.IllegalOperationException;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
@@ -58,7 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalVoteException.class})
+    @ExceptionHandler({IllegalVoteException.class, IllegalOperationException.class})
     public ErrorInfo illegalVoteError(HttpServletRequest req, RuntimeException e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }

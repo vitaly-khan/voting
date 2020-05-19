@@ -16,7 +16,7 @@ import java.util.List;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
-public class Menu extends AbstractEntityWithId {
+public class Menu extends AbstractBaseEntity {
 
     @NotNull
     private LocalDate date;
@@ -68,6 +68,7 @@ public class Menu extends AbstractEntityWithId {
                 "id=" + id +
                 ", date=" + date +
                 ", dishes=" + dishes +
+                ", enabled=" + enabled +
                 '}';
     }
 }

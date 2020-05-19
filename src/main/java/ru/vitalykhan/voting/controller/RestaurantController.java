@@ -9,16 +9,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.model.Restaurant;
+import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
+import ru.vitalykhan.voting.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -36,14 +40,23 @@ public class RestaurantController {
 
     private RestaurantRepository restaurantRepository;
 
-    public RestaurantController(RestaurantRepository restaurantRepository) {
+    private MenuRepository menuRepository;
+
+    public RestaurantController(RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.menuRepository = menuRepository;
+    }
+
+    @GetMapping("/history")
+    public Iterable<Restaurant> getAll() {
+        log.info("Get all restaurants");
+        return restaurantRepository.findAll();
     }
 
     @GetMapping
-    public Iterable<Restaurant> getAll() {
-        log.info("Get all restaurants");
-        return restaurantRepository.findAllByOrderByName();
+    public Iterable<Restaurant> getAllEnabled() {
+        log.info("Get all enabled restaurants");
+        return restaurantRepository.findByEnabledTrueOrderByName();
     }
 
     @GetMapping("/{restaurantId}")
@@ -59,7 +72,23 @@ public class RestaurantController {
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int restaurantId) {
         log.info("Delete restaurant with id={}", restaurantId);
+
+        //Restaurant deletion is allowed only if restaurant has no menus (otherwise disabling is a way to go)
+        ValidationUtil.checkNestedEntityNotExists(menuRepository.countAllByIdRestaurant(restaurantId) == 0,
+                restaurantId, ENTITY_NAME, MenuController.ENTITY_NAME);
         checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
+    }
+
+    @PatchMapping("/{restaurantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
+        log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        checkFound(restaurant != null, restaurantId, ENTITY_NAME);
+
+        restaurant.setEnabled(enabled);
+        restaurantRepository.save(restaurant);
+        //TODO: disable/enable all menus of the restaurant!
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
