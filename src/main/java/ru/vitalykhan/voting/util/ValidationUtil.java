@@ -31,9 +31,7 @@ public final class ValidationUtil {
     }
 
     public static void checkIsValidForVoting(Menu menu, int menuId, LocalDate today) {
-        if (menu == null) {
-            throw new NotFoundException(String.format("Unable to find the menu with id %d", menuId));
-        }
+        checkFound(menu != null, menuId, Menu.class);
 
         if (!menu.getDate().equals(today)) {
             throw new IllegalVoteException(String.format(
@@ -50,7 +48,7 @@ public final class ValidationUtil {
         if (!found) {
             throw new NotFoundException(String.format(
                     "Unable to find the %s with id %d",
-                    clazz.getSimpleName().replaceFirst("Controller", ""),
+                    clazz.getSimpleName().replaceFirst("Controller", "").toLowerCase(),
                     restaurantId));
         }
     }
