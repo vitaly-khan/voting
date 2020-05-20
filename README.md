@@ -159,6 +159,13 @@ DELETE  /dishes/[_dish id_]
 
     curl -s -X DELETE http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
+#### Enable/disable
+Access: ADMIN
+
+PATCH  /dishes/[_dish id_]?enabled=[_value_]
+
+    curl -s -X PATCH http://localhost:8080/voting/dishes/100023?enabled=false -u admin1@gmail.com:admin1
+
 #### Create
 Access: ADMIN
 
