@@ -154,7 +154,7 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 ## REST API for Votes
 
 
-#### Get all of a specific date (with restaurants, without users and dishes)
+#### Get all by date (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/filter
@@ -175,9 +175,9 @@ GET     /votes
 #### Get all by menu 
 Access: REGULAR USER
 
-POST /votes?menuId={_menu id_}
+PUT /votes?menuId={_menu id_}
 
-    curl -s -X POST http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
+    curl -s -X PUT http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
     
 * * *
 
