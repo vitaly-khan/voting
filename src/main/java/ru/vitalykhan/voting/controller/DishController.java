@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,6 +30,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
@@ -62,6 +65,24 @@ public class DishController {
         checkFound(dishRepository.delete(dishId) != 0, dishId, ENTITY_NAME);
     }
 
+    @PatchMapping("/{dishId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "todaysMenus", allEntries = true)
+    public void enable(@PathVariable int dishId, @RequestParam boolean enabled) {
+        log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);
+        Dish dish = dishRepository.findById(dishId).orElse(null);
+        checkFound(dish != null, dishId, ENTITY_NAME);
+
+        //Treat the case the dish is being enabled while its menu is disabled
+        if (enabled) {
+            Integer menuId = dish.getMenu().getId();
+            checkEnabled(menuRepository.findByEnabledTrueAndId(menuId) != null,
+                    menuId, MenuController.ENTITY_NAME);
+        }
+        dish.setEnabled(enabled);
+        dishRepository.save(dish);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @CacheEvict(value = "todaysMenus", allEntries = true)
@@ -70,7 +91,9 @@ public class DishController {
 
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
+
         checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
+        checkEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
         log.info("Create a new dish {}", newDish);
@@ -91,7 +114,9 @@ public class DishController {
 
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
+
         checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
+        checkEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
 
         dishRepository.save(DishUtil.of(dishTo, menu));
     }
