@@ -72,7 +72,6 @@ public class Vote extends AbstractBaseEntity {
                 ". date=" + date +
                 ", menu=" + menu +
                 ", user=" + user +
-                ", enabled=" + enabled +
                 '}';
     }
 }

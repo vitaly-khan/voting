@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 @Entity
 public class Restaurant extends AbstractNamedEntity {
 
+    protected boolean enabled = true;
+
     public Restaurant() {
     }
 
@@ -14,6 +16,14 @@ public class Restaurant extends AbstractNamedEntity {
 
     public Restaurant(Integer id, String name) {
         super(id, name);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

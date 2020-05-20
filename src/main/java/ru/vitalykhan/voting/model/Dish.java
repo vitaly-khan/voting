@@ -21,6 +21,8 @@ public class Dish extends AbstractNamedEntity {
     @JsonIgnore
     private Menu menu;
 
+    protected boolean enabled = true;
+
     public Dish() {
     }
 
@@ -44,6 +46,14 @@ public class Dish extends AbstractNamedEntity {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
