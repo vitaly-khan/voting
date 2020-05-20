@@ -67,6 +67,7 @@ public class DishController {
 
     @PatchMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int dishId, @RequestParam boolean enabled) {
         log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);

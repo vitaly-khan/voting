@@ -81,6 +81,8 @@ public class RestaurantController {
 
     @PatchMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
         log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
