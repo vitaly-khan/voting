@@ -16,4 +16,9 @@ public interface DishRepository extends CrudRepository<Dish, Integer> {
     @Transactional
     @Query("DELETE FROM Dish d WHERE d.id=:id")
     int delete(@Param("id") int id);
+
+    //HSQLDB doesn't support syntax "SELECT EXISTS (SELECT ...)" returning boolean
+    @Query(value = "SELECT COUNT(*) FROM DISH d WHERE d.MENU_ID=:id", nativeQuery = true)
+    int countAllByMenuId(@Param("id") int id);
+
 }

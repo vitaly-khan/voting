@@ -18,6 +18,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     List<Restaurant> findByEnabledTrueOrderByName();
 
-
-
+    Restaurant findByEnabledTrueAndId(int id);
 }

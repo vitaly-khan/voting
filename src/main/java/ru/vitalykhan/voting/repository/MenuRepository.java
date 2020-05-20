@@ -20,11 +20,17 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Query("DELETE FROM Menu m WHERE m.id=:id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant JOIN FETCH m.dishes WHERE m.date=:date ORDER BY m.restaurant.name")
-    List<Menu> findNotEmptyByDateOrderedByRestaurantName(@Param("date") LocalDate date);
+    // Return all not empty, enabled, today's menus
+    // with enabled restaurants and enabled dishes
+    // ordered by restaurant name
+    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant r JOIN FETCH m.dishes d WHERE m.date=:date AND m.enabled=true AND d.enabled=true ORDER BY r.name")
+    List<Menu> getTodays(@Param("date") LocalDate date);
 
-    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.date=:date ORDER BY m.restaurant.name")
-    List<Menu> findAllByDateOrderedByRestaurantName(@Param("date") LocalDate date);
+    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.date=:date")
+    List<Menu> findAllByDate(@Param("date") LocalDate date);
+
+    @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes d WHERE m.date=:date AND m.enabled=true AND d.enabled=true")
+    List<Menu> findAllEnabledByDate(@Param("date") LocalDate date);
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.id=:id")
     Menu findByIdWithRestaurantAndDishes(@Param("id") int id);
@@ -32,5 +38,4 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     //HSQLDB doesn't support syntax "SELECT EXISTS (SELECT ...)" returning boolean
     @Query(value = "SELECT COUNT(*) FROM MENU m WHERE m.RESTAURANT_ID=:id", nativeQuery = true)
     int countAllByIdRestaurant(@Param("id") int id);
-
 }

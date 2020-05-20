@@ -101,13 +101,13 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(newRestaurant);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
-        log.info("Update restaurant with id={}", id);
-        assureIdConsistency(restaurant, id);
-        checkFound(restaurantRepository.existsById(id), id, ENTITY_NAME);
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
+        log.info("Update restaurant with id={}", restaurantId);
+        assureIdConsistency(restaurant, restaurantId);
+        checkFound(restaurantRepository.existsById(restaurantId), restaurantId, ENTITY_NAME);
 
         restaurantRepository.save(restaurant);
     }
