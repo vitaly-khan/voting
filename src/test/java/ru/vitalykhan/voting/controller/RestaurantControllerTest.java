@@ -15,6 +15,8 @@ import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.vitalykhan.voting.TestUtil.detailMessageIs;
+import static ru.vitalykhan.voting.TestUtil.errorTypeIs;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
