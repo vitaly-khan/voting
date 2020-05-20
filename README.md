@@ -50,12 +50,12 @@ DELETE  /restaurants/[_restaurant id_]
 
     curl -s -X DELETE http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
-#### Enabled/disable restaurant
+#### Enable/disable
 Access: ADMIN
 
 PATCH  /restaurants/[_restaurant id_]?enabled=[_value_]
 
-    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=true -u admin1@gmail.com:admin1
+    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=false -u admin1@gmail.com:admin1
 
 #### Create
 Access: ADMIN
@@ -86,27 +86,41 @@ GET     /menus/[_menu id_]
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's NOT EMPTY menus (with restaurants and dishes) ordered by restaurant name
+#### Get today's (with restaurants and dishes) ordered by restaurant name, enabled & not empty only
 
 Access: EVERYONE
 
 GET     /menus/today
 
-    curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
-#### Get menus by date (with restaurants and dishes) ordered by restaurant name
- 
+    curl -s http://localhost:8080/voting/menus/todays
+    
+#### Get enabled by date (with restaurants and dishes)
 Access: ADMIN
 
 GET     /menus/?date=[_ISO date_]
 
     curl -s http://localhost:8080/voting/menus/?date=2020-05-03 -u admin1@gmail.com:admin1
 
-#### Delete by ID 
+#### Get all by date (with restaurants and dishes)
+Access: ADMIN
+
+GET     /menus/history?date=[_ISO date_]
+
+    curl -s http://localhost:8080/voting/menus/history?date=2020-05-03 -u admin1@gmail.com:admin1
+
+#### Delete by ID (only if menu contains no dishes)
 Access: ADMIN
 
 DELETE  /menus/[_menu id_]
 
     curl -s -X DELETE http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
+
+#### Enable/disable
+Access: ADMIN
+
+PATCH  /menus/[_menu id_]?enabled=[_value_]
+
+    curl -s -X PATCH http://localhost:8080/voting/menus/100009?enabled=false -u admin1@gmail.com:admin1
 
 #### Create 
 Access: ADMIN
