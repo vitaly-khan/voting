@@ -37,16 +37,4 @@ public abstract class AbstractControllerTest {
     public ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
-
-    public ResultMatcher errorTypeIs(ErrorType type) {
-        return jsonPath("$.type").value(type.getDescription());
-    }
-
-    public ResultMatcher detailMessageIs(String code) {
-        return jsonPath("$.details").value(code);
-    }
-
-    public ResultMatcher parentExceptionIs(String code) {
-        return jsonPath("$.parentException").value(code);
-    }
 }
