@@ -2,6 +2,7 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,8 @@ public class RestaurantController {
 
     @PatchMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
         log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
@@ -104,6 +107,7 @@ public class RestaurantController {
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         log.info("Update restaurant with id={}", restaurantId);
         assureIdConsistency(restaurant, restaurantId);

@@ -97,11 +97,11 @@ public class MenuController {
                 menuId, ENTITY_NAME, DishController.ENTITY_NAME);
 
         checkFound(menuRepository.delete(menuId) != 0, menuId, ENTITY_NAME);
-
     }
 
     @PatchMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int menuId, @RequestParam boolean enabled) {
         log.info("{} the menu with id {}", enabled ? "Enable" : "Disable", menuId);
