@@ -50,12 +50,12 @@ DELETE  /restaurants/[_restaurant id_]
 
     curl -s -X DELETE http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
-#### Enabled/disable restaurant
+#### Enable/disable
 Access: ADMIN
 
 PATCH  /restaurants/[_restaurant id_]?enabled=[_value_]
 
-    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=true -u admin1@gmail.com:admin1
+    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=false -u admin1@gmail.com:admin1
 
 #### Create
 Access: ADMIN
@@ -86,27 +86,41 @@ GET     /menus/[_menu id_]
 
     curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
 
-#### Get today's NOT EMPTY (with restaurants and dishes) ordered by restaurant name
+#### Get today's (with restaurants and dishes) ordered by restaurant name, enabled & not empty only
 
 Access: EVERYONE
 
 GET     /menus/today
 
-    curl -s http://localhost:8080/voting/menus/todays -u user1@gmail.com:password1
-#### Get by date (with restaurants and dishes) ordered by restaurant name
- 
+    curl -s http://localhost:8080/voting/menus/todays
+    
+#### Get enabled by date (with restaurants and dishes)
 Access: ADMIN
 
 GET     /menus/?date=[_ISO date_]
 
     curl -s http://localhost:8080/voting/menus/?date=2020-05-03 -u admin1@gmail.com:admin1
 
-#### Delete by ID 
+#### Get all by date (with restaurants and dishes)
+Access: ADMIN
+
+GET     /menus/history?date=[_ISO date_]
+
+    curl -s http://localhost:8080/voting/menus/history?date=2020-05-03 -u admin1@gmail.com:admin1
+
+#### Delete by ID (only if menu contains no dishes)
 Access: ADMIN
 
 DELETE  /menus/[_menu id_]
 
     curl -s -X DELETE http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
+
+#### Enable/disable
+Access: ADMIN
+
+PATCH  /menus/[_menu id_]?enabled=[_value_]
+
+    curl -s -X PATCH http://localhost:8080/voting/menus/100009?enabled=false -u admin1@gmail.com:admin1
 
 #### Create 
 Access: ADMIN
@@ -168,30 +182,30 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 ## REST API for Votes
 
 
-#### Get all by date (with restaurants, without users and dishes)
+#### Get all votes on a specific date (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/filter
 
     curl -s http://localhost:8080/voting/votes/filter?date=2020-05-03 -u admin1@gmail.com:admin1
-#### Get today's (with restaurants, without users and dishes)
+#### Get all today's votes (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/todays
 
     curl -s http://localhost:8080/voting/votes/todays -u admin1@gmail.com:admin1
-#### Get all of an authenticated user (with restaurants, without users and dishes) 
+#### Get all votes of an authenticated user (with restaurants, without users and dishes) 
 Access: REGULAR USER
 
 GET     /votes
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
-#### Get all by menu 
+#### Vote for a specific menu 
 Access: REGULAR USER
 
-PUT /votes?menuId={_menu id_}
+POST /votes?menuId={_menu id_}
 
-    curl -s -X PUT http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
+    curl -s -X POST http://localhost:8080/voting/votes?menuId=100010 -u user1@gmail.com:password1
     
 * * *
 
