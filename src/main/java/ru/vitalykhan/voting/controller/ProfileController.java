@@ -44,6 +44,7 @@ public class ProfileController {
         return authUser.getUser();
     }
 
+    //User is allowed to 'delete' account softly
     @PutMapping("/disable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disable(@AuthenticationPrincipal AuthenticatedUser authUser) {
