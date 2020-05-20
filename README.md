@@ -189,25 +189,25 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 ## REST API for Votes
 
 
-#### Get all votes on a specific date (with restaurants, without users and dishes)
+#### Get all by date (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/filter
 
     curl -s http://localhost:8080/voting/votes/filter?date=2020-05-03 -u admin1@gmail.com:admin1
-#### Get all today's votes (with restaurants, without users and dishes)
+#### Get today's (with restaurants, without users and dishes)
 Access: ADMIN
 
 GET     /votes/todays
 
     curl -s http://localhost:8080/voting/votes/todays -u admin1@gmail.com:admin1
-#### Get all votes of an authenticated user (with restaurants, without users and dishes) 
+#### Get all of an authenticated user (with restaurants, without users and dishes) 
 Access: REGULAR USER
 
 GET     /votes
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
-#### Vote for a specific menu 
+#### Get by menu 
 Access: REGULAR USER
 
 POST /votes?menuId={_menu id_}
