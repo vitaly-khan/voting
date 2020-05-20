@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.model.Restaurant;
+import ru.vitalykhan.voting.repository.DishRepository;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.to.MenuTo;
@@ -32,8 +34,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExists;
 
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,10 +48,14 @@ public class MenuController {
 
     private MenuRepository menuRepository;
     private RestaurantRepository restaurantRepository;
+    private DishRepository dishRepository;
 
-    public MenuController(MenuRepository menuRepository, RestaurantRepository restaurantRepository) {
+    public MenuController(MenuRepository menuRepository,
+                          RestaurantRepository restaurantRepository,
+                          DishRepository dishRepository) {
         this.menuRepository = menuRepository;
         this.restaurantRepository = restaurantRepository;
+        this.dishRepository = dishRepository;
     }
 
     @GetMapping("/{menuId}")
@@ -58,10 +66,16 @@ public class MenuController {
         return menu;
     }
 
-    @GetMapping
+    @GetMapping("/history")
     public List<Menu> getByDate(@RequestParam @NotNull LocalDate date) {
         log.info("Get menus by date: {}", date);
-        return menuRepository.findAllByDateOrderedByRestaurantName(date);
+        return menuRepository.findAllByDate(date);
+    }
+
+    @GetMapping
+    public List<Menu> getEnabledByDate(@RequestParam @NotNull LocalDate date) {
+        log.info("Get enabled menus by date: {}", date);
+        return menuRepository.findAllEnabledByDate(date);
     }
 
     @GetMapping("/todays")
@@ -69,7 +83,7 @@ public class MenuController {
     public List<Menu> getTodays() {
         LocalDate now = LocalDate.now();
         log.info("Get today's ({}) menus", now);
-        return menuRepository.findNotEmptyByDateOrderedByRestaurantName(now);
+        return menuRepository.getTodays(now);
     }
 
     @DeleteMapping("/{menuId}")
@@ -77,7 +91,32 @@ public class MenuController {
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
+
+        //Menu deletion is allowed only if menu has no dishes (otherwise disabling is a way to go)
+        checkNestedEntityNotExists(dishRepository.countAllByMenuId(menuId) == 0,
+                menuId, ENTITY_NAME, DishController.ENTITY_NAME);
+
         checkFound(menuRepository.delete(menuId) != 0, menuId, ENTITY_NAME);
+
+    }
+
+    @PatchMapping("/{menuId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "todaysMenus", allEntries = true)
+    public void enable(@PathVariable int menuId, @RequestParam boolean enabled) {
+        log.info("{} the menu with id {}", enabled ? "Enable" : "Disable", menuId);
+        Menu menu = menuRepository.findById(menuId).orElse(null);
+        checkFound(menu != null, menuId, ENTITY_NAME);
+
+        //Treat the case the menu is being enabled while its restaurant is disabled
+        if (enabled) {
+            Integer restaurantId = menu.getRestaurant().getId();
+            checkEnabled(restaurantRepository.findByEnabledTrueAndId(restaurantId) != null,
+                    restaurantId, RestaurantController.ENTITY_NAME);
+        }
+        menu.setEnabled(enabled);
+        menuRepository.save(menu);
+        //TODO: disable/enable all dishes of the menu!
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -88,7 +127,9 @@ public class MenuController {
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+
         checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
+        checkEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
         Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
@@ -109,7 +150,9 @@ public class MenuController {
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+
         checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
+        checkEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
         menuRepository.save(new Menu(menuTo.getId(), menuTo.getDate(), restaurant));
     }

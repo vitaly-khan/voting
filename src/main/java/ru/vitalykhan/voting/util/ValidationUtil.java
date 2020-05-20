@@ -56,11 +56,20 @@ public final class ValidationUtil {
     }
 
     public static void checkNestedEntityNotExists(boolean notExists, int restaurantId,
-                                                  String parentEntity, String childEntity) {
+                                                  String childEntityName, String parentEntityName) {
         if (!notExists) {
             throw new IllegalOperationException(String.format(
                     "Unable to delete the %s with id %d while it contains at least one %s",
-                    parentEntity, restaurantId, childEntity));
+                    parentEntityName, restaurantId, childEntityName));
         }
+    }
+
+    public static void checkEnabled(boolean enabled, int parentId, String parentEntityName) {
+        if (!enabled) {
+            throw new IllegalOperationException(String.format(
+                    "Operation can't be performed because the %s with id %d is disabled",
+                    parentEntityName, parentId));
+        }
+
     }
 }
