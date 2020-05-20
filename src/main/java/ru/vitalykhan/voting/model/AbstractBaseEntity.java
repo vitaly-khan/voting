@@ -19,8 +19,6 @@ public abstract class AbstractBaseEntity implements HasId {
 
     protected Integer id;
 
-    protected boolean enabled = true;
-
     protected AbstractBaseEntity() {
     }
 
@@ -35,14 +33,6 @@ public abstract class AbstractBaseEntity implements HasId {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override

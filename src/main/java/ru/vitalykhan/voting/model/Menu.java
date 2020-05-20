@@ -28,6 +28,8 @@ public class Menu extends AbstractBaseEntity {
     @OneToMany(mappedBy = "menu")
     private List<Dish> dishes = Collections.emptyList();
 
+    protected boolean enabled = true;
+
     public Menu() {
     }
 
@@ -59,6 +61,14 @@ public class Menu extends AbstractBaseEntity {
 
     public void setDishes(List<Dish> dishes) {
         this.dishes = dishes;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
