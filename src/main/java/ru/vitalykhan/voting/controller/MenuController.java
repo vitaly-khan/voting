@@ -99,14 +99,14 @@ public class MenuController {
         return ResponseEntity.created(uriOfNewResource).body(newMenu);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(value = "todaysMenus", allEntries = true)
-    public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) {
-        log.info("Update menu with id={}", id);
-        assureIdConsistency(menuTo, id);
-        checkFound(menuRepository.existsById(id), id, ENTITY_NAME);
+    public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int menuId) {
+        log.info("Update menu with id={}", menuId);
+        assureIdConsistency(menuTo, menuId);
+        checkFound(menuRepository.existsById(menuId), menuId, ENTITY_NAME);
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);

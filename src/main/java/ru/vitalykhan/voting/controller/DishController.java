@@ -80,14 +80,14 @@ public class DishController {
         return ResponseEntity.created(uriOfNewResource).body(newDish);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(value = "todaysMenus", allEntries = true)
-    public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id) {
-        log.info("Update dish with id={}", id);
-        assureIdConsistency(dishTo, id);
-        checkFound(dishRepository.existsById(id), id, ENTITY_NAME);
+    public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int dishId) {
+        log.info("Update dish with id={}", dishId);
+        assureIdConsistency(dishTo, dishId);
+        checkFound(dishRepository.existsById(dishId), dishId, ENTITY_NAME);
 
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElse(null);
