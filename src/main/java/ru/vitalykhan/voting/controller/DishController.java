@@ -2,6 +2,7 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import ru.vitalykhan.voting.util.DishUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
@@ -41,10 +43,12 @@ public class DishController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private CacheManager cacheManager;
     private MenuRepository menuRepository;
     private DishRepository dishRepository;
 
-    public DishController(MenuRepository menuRepository, DishRepository dishRepository) {
+    public DishController(CacheManager cacheManager, MenuRepository menuRepository, DishRepository dishRepository) {
+        this.cacheManager = cacheManager;
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
     }
@@ -59,6 +63,7 @@ public class DishController {
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    //TODO: check what is better to clear all cache or additional request to DB
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
@@ -68,7 +73,6 @@ public class DishController {
     @PatchMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int dishId, @RequestParam boolean enabled) {
         log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);
         Dish dish = dishRepository.findById(dishId).orElse(null);
@@ -82,11 +86,18 @@ public class DishController {
         }
         dish.setEnabled(enabled);
         dishRepository.save(dish);
+
+        evictCacheIfTodays(dish.getMenu());
+    }
+
+    private void evictCacheIfTodays(Menu newMenu) {
+        if (newMenu.getDate().equals(LocalDate.now())) {
+            cacheManager.getCache("todaysMenus").clear();
+        }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public ResponseEntity<Dish> create(@Valid @RequestBody DishTo dishTo) {
         checkIsNew(dishTo);
 
@@ -98,6 +109,9 @@ public class DishController {
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
         log.info("Create a new dish {}", newDish);
+
+        evictCacheIfTodays(newDish.getMenu());
+
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("dishes/{id}")
                 .buildAndExpand(newDish.getId()).toUri();
@@ -107,7 +121,6 @@ public class DishController {
     @PutMapping(value = "/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int dishId) {
         log.info("Update dish with id={}", dishId);
         assureIdConsistency(dishTo, dishId);
@@ -119,6 +132,9 @@ public class DishController {
         checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
         checkEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
 
-        dishRepository.save(DishUtil.of(dishTo, menu));
+        Dish dish = DishUtil.of(dishTo, menu);
+        dishRepository.save(dish);
+
+        evictCacheIfTodays(dish.getMenu());
     }
 }

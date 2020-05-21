@@ -2,11 +2,13 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,13 +48,13 @@ public class MenuController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private CacheManager cacheManager;
     private MenuRepository menuRepository;
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
 
-    public MenuController(MenuRepository menuRepository,
-                          RestaurantRepository restaurantRepository,
-                          DishRepository dishRepository) {
+    public MenuController(CacheManager cacheManager, MenuRepository menuRepository, RestaurantRepository restaurantRepository, DishRepository dishRepository) {
+        this.cacheManager = cacheManager;
         this.menuRepository = menuRepository;
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
@@ -102,7 +104,6 @@ public class MenuController {
     @PatchMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int menuId, @RequestParam boolean enabled) {
         log.info("{} the menu with id {}", enabled ? "Enable" : "Disable", menuId);
         Menu menu = menuRepository.findById(menuId).orElse(null);
@@ -118,11 +119,12 @@ public class MenuController {
         menuRepository.save(menu);
 
         menuRepository.cascadeDishDisabling(menuId);
+
+        evictCacheIfTodays(menu);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public ResponseEntity<Menu> create(@Valid @RequestBody MenuTo menuTo) {
         checkIsNew(menuTo);
 
@@ -134,6 +136,9 @@ public class MenuController {
 
         Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
+
+        evictCacheIfTodays(newMenu);
+
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("menus/{id}")
                 .buildAndExpand(newMenu.getId()).toUri();
@@ -143,7 +148,6 @@ public class MenuController {
     @PutMapping(value = "/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int menuId) {
         log.info("Update menu with id={}", menuId);
         assureIdConsistency(menuTo, menuId);
@@ -155,6 +159,26 @@ public class MenuController {
         checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
         checkEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
-        menuRepository.save(new Menu(menuTo.getId(), menuTo.getDate(), restaurant));
+
+        Menu menu = new Menu(menuTo.getId(), menuTo.getDate(), restaurant);
+        menuRepository.save(menu);
+
+        evictCacheIfTodays(menu);
     }
+
+    private void evictCacheIfTodays(Menu newMenu) {
+        if (newMenu.getDate().equals(LocalDate.now())) {
+            evictTodaysMenusCache();
+        }
+    }
+
+    //    https://stackoverflow.com/questions/26147044/spring-cron-expression-for-every-day-101am
+    //    Cache evicting at midnight
+    //TODO: check how it works
+    @Scheduled(cron = "0 0 0 * * *")
+    private void evictTodaysMenusCache() {
+        cacheManager.getCache("todaysMenus").clear();
+    }
+
+
 }
