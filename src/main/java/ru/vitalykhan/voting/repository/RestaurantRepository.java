@@ -16,7 +16,25 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")
     int delete(@Param("id") int id);
 
+
     List<Restaurant> findByEnabledTrueOrderByName();
 
     Restaurant findByEnabledTrueAndId(int id);
+
+    //Cascade disabling
+    //Can be optimized on db level
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE MENU SET ENABLED=FALSE WHERE ID IN " +
+            "(SELECT m.ID FROM RESTAURANT r JOIN MENU m ON r.ID=m.RESTAURANT_ID WHERE r.ID=:id)",
+            nativeQuery = true)
+    void cascadeMenuDisabling(@Param("id") int id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE DISH SET ENABLED=FALSE WHERE ID IN " +
+            "(SELECT d.ID FROM RESTAURANT r JOIN MENU m ON r.ID=m.RESTAURANT_ID " +
+            "JOIN DISH d on m.ID=d.MENU_ID WHERE r.ID=:id);",
+            nativeQuery = true)
+    void cascadeDishDisabling(@Param("id") int id);
 }

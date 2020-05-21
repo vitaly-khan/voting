@@ -90,7 +90,9 @@ public class RestaurantController {
 
         restaurant.setEnabled(enabled);
         restaurantRepository.save(restaurant);
-        //TODO: disable/enable all menus of the restaurant!
+
+        restaurantRepository.cascadeMenuDisabling(restaurantId);
+        restaurantRepository.cascadeDishDisabling(restaurantId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

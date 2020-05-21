@@ -116,7 +116,8 @@ public class MenuController {
         }
         menu.setEnabled(enabled);
         menuRepository.save(menu);
-        //TODO: disable/enable all dishes of the menu!
+
+        menuRepository.cascadeDishDisabling(menuId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

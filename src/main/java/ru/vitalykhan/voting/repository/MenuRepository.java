@@ -40,4 +40,11 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     int countAllByIdRestaurant(@Param("id") int id);
 
     Menu findByEnabledTrueAndId(int id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE DISH SET ENABLED=FALSE WHERE ID IN " +
+            "(SELECT d.ID FROM MENU m JOIN DISH d on m.ID=d.MENU_ID WHERE m.ID=:id);",
+            nativeQuery = true)
+    void cascadeDishDisabling(int menuId);
 }

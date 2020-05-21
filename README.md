@@ -115,7 +115,7 @@ DELETE  /menus/[_menu id_]
 
     curl -s -X DELETE http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
 
-#### Enable/disable
+#### Enable/disable (cascade on disable)
 Access: ADMIN
 
 PATCH  /menus/[_menu id_]?enabled=[_value_]
@@ -159,7 +159,7 @@ DELETE  /dishes/[_dish id_]
 
     curl -s -X DELETE http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
-#### Enable/disable
+#### Enable/disable (cascade on disable)
 Access: ADMIN
 
 PATCH  /dishes/[_dish id_]?enabled=[_value_]
