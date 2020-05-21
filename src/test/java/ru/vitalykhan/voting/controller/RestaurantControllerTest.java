@@ -55,13 +55,13 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(RESTAURANT1));
     }
 
-    @Test
-    void deleteById() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID)
-                .with(httpBasicOf(ADMIN1)))
-                .andExpect(status().isNoContent());
-        Assertions.assertThrows(NotFoundException.class, () -> controller.getById(RESTAURANT1_ID));
-    }
+//    @Test
+//    void deleteById() throws Exception {
+//        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID)
+//                .with(httpBasicOf(ADMIN1)))
+//                .andExpect(status().isNoContent());
+//        Assertions.assertThrows(NotFoundException.class, () -> controller.getById(RESTAURANT1_ID));
+//    }
 
     @Test
     void create() throws Exception {
