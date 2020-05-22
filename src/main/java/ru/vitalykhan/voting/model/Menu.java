@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 public class Menu extends AbstractBaseEntity {
 
     @NotNull
+    @FutureOrPresent        //Creating backdated menus isn't allowed
     private LocalDate date;
 
     @NotNull

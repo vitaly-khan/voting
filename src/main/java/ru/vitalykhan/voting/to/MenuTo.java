@@ -1,11 +1,13 @@
 package ru.vitalykhan.voting.to;
 
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public class MenuTo extends AbstractTo {
     @NotNull
+    @FutureOrPresent        //Creating backdated menus isn't allowed
     private LocalDate date;
 
     @Positive

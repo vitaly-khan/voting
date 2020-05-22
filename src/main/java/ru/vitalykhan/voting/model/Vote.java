@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 public class Vote extends AbstractBaseEntity {
 
     @NotNull
-    @FutureOrPresent
     private LocalDate date;
 
     @NotNull
