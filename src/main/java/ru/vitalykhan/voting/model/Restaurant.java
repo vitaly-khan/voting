@@ -18,6 +18,17 @@ public class Restaurant extends AbstractNamedEntity {
         super(id, name);
     }
 
+    public Restaurant(Integer id, String name, boolean enabled) {
+        super(id, name);
+        this.enabled = enabled;
+    }
+
+    public Restaurant(Restaurant restaurant) {
+        this.id = restaurant.getId();
+        this.name = restaurant.getName();
+        this.enabled = restaurant.isEnabled();
+    }
+
     public boolean isEnabled() {
         return enabled;
     }

@@ -1,6 +1,5 @@
 package ru.vitalykhan.voting.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,16 +12,20 @@ import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.util.exception.NotFoundException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.vitalykhan.voting.TestUtil.detailMessageIs;
 import static ru.vitalykhan.voting.TestUtil.errorTypeIs;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.ALL_RESTAURANTS;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.ENABLED_SORTED_RESTAURANTS;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT2;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT4;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT4_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_MATCHER;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.SORTED_RESTAURANTS;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getNew;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getUpdated;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
@@ -43,7 +46,16 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(SORTED_RESTAURANTS));
+                .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(ENABLED_SORTED_RESTAURANTS));
+    }
+
+    @Test
+    void getAllWithHistory() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/history")
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(ALL_RESTAURANTS));
     }
 
     @Test
@@ -55,13 +67,35 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(RESTAURANT_MATCHER.unmarshalAndMatchWith(RESTAURANT1));
     }
 
-//    @Test
-//    void deleteById() throws Exception {
-//        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID)
-//                .with(httpBasicOf(ADMIN1)))
-//                .andExpect(status().isNoContent());
-//        Assertions.assertThrows(NotFoundException.class, () -> controller.getById(RESTAURANT1_ID));
-//    }
+    @Test
+    void deleteById() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT4_ID)
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> controller.getById(RESTAURANT4_ID));
+    }
+
+    @Test
+    void enable() throws Exception {
+        Restaurant enabled = new Restaurant(RESTAURANT4);
+        enabled.setEnabled(true);
+        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT4_ID + "?enabled=true")
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isNoContent());
+        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT4_ID), enabled);
+    }
+
+    @Test
+    void disable() throws Exception {
+        Restaurant disabled = new Restaurant(RESTAURANT1);
+        disabled.setEnabled(false);
+        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT1_ID + "?enabled=false")
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isNoContent());
+        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT1_ID), disabled);
+
+        //add cascade disable test
+    }
 
     @Test
     void create() throws Exception {
@@ -89,11 +123,9 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT1_ID), updated);
-
     }
 
-//    Tests for AUTHORIZATION ------------------------------------------------------------------------------------------
-
+    //    Tests for AUTHORIZATION --------------------------------------------------------------------------------------
     @Test
     void getAllByRegularUser() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID)
@@ -130,6 +162,19 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void deleteByIdByAnonymous() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void enableByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT1_ID)
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void enableByAnonymous() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT1_ID))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -171,8 +216,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-//    Tests for NotFoundException --------------------------------------------------------------------------------------
 
+    //    Tests for NotFoundException ----------------------------------------------------------------------------------
     @Test
     void getByIdNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + USER1_ID)
@@ -187,8 +232,18 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity());
     }
 
-//    Tests for Validation ---------------------------------------------------------------------------------------------
 
+    //    Tests for Illegal operation ----------------------------------------------------------------------------------
+    @Test
+    void deleteByIdWithNestedEntities() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID)
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorTypeIs(VALIDATION_ERROR));
+    }
+
+
+    //    Tests for Validation -----------------------------------------------------------------------------------------
     @Test
     void createInvalid() throws Exception {
         Restaurant invalid = new Restaurant(null, null);
@@ -211,8 +266,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(errorTypeIs(VALIDATION_ERROR));
     }
 
-//    Tests for Database integrity constraint violation ----------------------------------------------------------------
 
+    //    Tests for Database integrity constraint violation ------------------------------------------------------------
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicate() throws Exception {
@@ -239,4 +294,5 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
                 .andExpect(detailMessageIs(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
     }
+
 }
