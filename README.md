@@ -19,6 +19,9 @@ Each restaurant provides new menu each day.
 
 As a result, provide a link to github repository. It should contain the code, README.md with API documentation and curl commands to get data for voting and vote.
 * * *
+#### [Test data is available here](test_data.md)
+* * *
+
 ## REST API for Restaurants
 
 
