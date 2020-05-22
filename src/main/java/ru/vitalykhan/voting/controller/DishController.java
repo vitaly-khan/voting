@@ -61,7 +61,7 @@ public class DishController extends AbstractController {
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = TODAYS_MENUS_CACHE_NAME, allEntries = true)
-    public void deleteByID(@PathVariable int dishId) {
+    public void deleteById(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
         checkIsFound(dishRepository.delete(dishId) != 0);
     }
@@ -129,7 +129,7 @@ public class DishController extends AbstractController {
 
     private boolean evictCacheIfTodays(Menu newMenu) {
         if (newMenu.getDate().equals(LocalDate.now())) {
-            super.evictCache();
+            evictCache();
             return true;
         }
         return false;

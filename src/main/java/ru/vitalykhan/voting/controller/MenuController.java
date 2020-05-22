@@ -88,7 +88,7 @@ public class MenuController extends AbstractController {
 
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteByID(@PathVariable int menuId) {
+    public void deleteById(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
 
         //Menu deletion is allowed only if menu has no dishes (otherwise disabling is a way to go)
@@ -177,6 +177,6 @@ public class MenuController extends AbstractController {
     //Cache evicting at midnight
     @Scheduled(cron = "0 0 0 * * *")
     void evictTodaysMenusCache() {
-        super.evictCache();
+        evictCache();
     }
 }

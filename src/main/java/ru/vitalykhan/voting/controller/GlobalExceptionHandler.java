@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
     //or in case of missing required field in JSON body.
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorInfo bindValidationError(HttpServletRequest req, MethodArgumentNotValidException e) {
+    public ErrorInfo validationError(HttpServletRequest req, MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
 
         String[] details = result.getFieldErrors().stream()

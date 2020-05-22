@@ -46,7 +46,7 @@ public final class ValidationUtil {
     }
 
     public static void checkNestedEntityNotExist(boolean notExists, int restaurantId,
-                                                 String childEntityName, String parentEntityName) {
+                                                 String parentEntityName, String childEntityName) {
         if (!notExists) {
             throw new IllegalOperationException(String.format(
                     "Unable to delete the %s with id %d while it contains at least one %s",

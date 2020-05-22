@@ -68,7 +68,7 @@ public class RestaurantController extends AbstractController {
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteByID(@PathVariable int restaurantId) {
+    public void deleteById(@PathVariable int restaurantId) {
         log.info("Delete restaurant with id={}", restaurantId);
 
         //Restaurant deletion is allowed only if restaurant has no menus (otherwise disabling is a way to go)
@@ -93,7 +93,7 @@ public class RestaurantController extends AbstractController {
             restaurantRepository.cascadeDishDisabling(restaurantId);
             //Business logic implies no necessity to clear today's menu cache after ENABLING restaurant,
             //as its menus are disabled (due to cascade disabling) or absent
-            super.evictCache();
+            evictCache();
         }
     }
 
