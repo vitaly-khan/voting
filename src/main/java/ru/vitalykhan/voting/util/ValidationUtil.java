@@ -34,7 +34,7 @@ public final class ValidationUtil {
     }
 
     public static void checkIsValidForVoting(Menu menu, int menuId, LocalDate today) {
-        checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
+        checkIsFound(menu != null, menuId, MenuController.ENTITY_NAME);
 
         if (!menu.getDate().equals(today)) {
             throw new IllegalVoteException(String.format(
@@ -48,7 +48,7 @@ public final class ValidationUtil {
         }
     }
 
-    public static void checkFound(boolean found, int restaurantId, String entityName) {
+    public static void checkIsFound(boolean found, int restaurantId, String entityName) {
         if (!found) {
             throw new NotFoundException(String.format(
                     "Unable to find the %s with id %d", entityName, restaurantId));
@@ -64,7 +64,7 @@ public final class ValidationUtil {
         }
     }
 
-    public static void checkEnabled(boolean enabled, int parentId, String parentEntityName) {
+    public static void checkIsEnabled(boolean enabled, int parentId, String parentEntityName) {
         if (!enabled) {
             throw new IllegalOperationException(String.format(
                     "Operation can't be performed because the %s with id %d is disabled",

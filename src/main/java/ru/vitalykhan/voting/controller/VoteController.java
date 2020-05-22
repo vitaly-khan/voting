@@ -87,7 +87,7 @@ public class VoteController {
             oldVote.setMenu(menu);
         } else {
             throw new IllegalVoteException(String.format(
-                    "User with id=%d can't change his vote after %tH:%<tM", userId, VOTE_UPDATE_DEADLINE));
+                    "User with id %d can't change his vote after %tH:%<tM", userId, VOTE_UPDATE_DEADLINE));
         }
     }
 }

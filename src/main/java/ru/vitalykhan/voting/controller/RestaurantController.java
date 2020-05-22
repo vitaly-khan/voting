@@ -28,7 +28,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
-import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
 @RestController
@@ -63,7 +63,7 @@ public class RestaurantController extends AbstractController {
     public Restaurant getById(@PathVariable int restaurantId) {
         log.info("Get restaurants with id={}", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkFound(restaurant != null, restaurantId, ENTITY_NAME);
+        checkIsFound(restaurant != null, restaurantId, ENTITY_NAME);
         return restaurant;
     }
 
@@ -76,7 +76,7 @@ public class RestaurantController extends AbstractController {
         //Hence, no need for today's menu cache evicting
         ValidationUtil.checkNestedEntityNotExists(menuRepository.countAllByIdRestaurant(restaurantId) == 0,
                 restaurantId, ENTITY_NAME, MenuController.ENTITY_NAME);
-        checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
+        checkIsFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
     }
 
     @PatchMapping("/{restaurantId}")
@@ -85,7 +85,7 @@ public class RestaurantController extends AbstractController {
     public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
         log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkFound(restaurant != null, restaurantId, ENTITY_NAME);
+        checkIsFound(restaurant != null, restaurantId, ENTITY_NAME);
 
         restaurant.setEnabled(enabled);
         restaurantRepository.save(restaurant);
@@ -119,7 +119,7 @@ public class RestaurantController extends AbstractController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         log.info("Update restaurant with id={}", restaurantId);
         assureIdConsistency(restaurant, restaurantId);
-        checkFound(restaurantRepository.existsById(restaurantId), restaurantId, ENTITY_NAME);
+        checkIsFound(restaurantRepository.existsById(restaurantId), restaurantId, ENTITY_NAME);
 
         restaurantRepository.save(restaurant);
     }
