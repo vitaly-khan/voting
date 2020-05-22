@@ -60,7 +60,6 @@ public final class ValidationUtil {
                     "Operation can't be performed because the %s with id %d is disabled",
                     parentEntityName, parentId));
         }
-
     }
 
     public static void checkIsFound(boolean found) {

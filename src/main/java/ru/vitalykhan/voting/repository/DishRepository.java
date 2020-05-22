@@ -20,5 +20,4 @@ public interface DishRepository extends CrudRepository<Dish, Integer> {
     //HSQLDB doesn't support syntax "SELECT EXISTS (SELECT ...)" returning boolean
     @Query(value = "SELECT COUNT(*) FROM DISH d WHERE d.MENU_ID=:id", nativeQuery = true)
     int countAllByMenuId(@Param("id") int id);
-
 }
