@@ -30,7 +30,6 @@ import ru.vitalykhan.voting.util.DishUtil;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
@@ -39,18 +38,17 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
 @RestController
 @RequestMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
-public class DishController {
+public class DishController extends AbstractController {
     public final static String ENTITY_NAME = "dish";
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    {
+        log = LoggerFactory.getLogger(getClass());
+    }
 
-    private CacheManager cacheManager;
-    private MenuRepository menuRepository;
     private DishRepository dishRepository;
 
     public DishController(CacheManager cacheManager, MenuRepository menuRepository, DishRepository dishRepository) {
-        this.cacheManager = cacheManager;
-        this.menuRepository = menuRepository;
+        super(cacheManager, menuRepository);
         this.dishRepository = dishRepository;
     }
 
@@ -139,8 +137,7 @@ public class DishController {
 
     private boolean evictCacheIfTodays(Menu newMenu) {
         if (newMenu.getDate().equals(LocalDate.now())) {
-            log.info("Clear the cache of today's menus");
-            Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+            super.evictCache();
             return true;
         }
         return false;

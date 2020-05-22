@@ -1,6 +1,5 @@
 package ru.vitalykhan.voting.controller;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +26,6 @@ import ru.vitalykhan.voting.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
@@ -35,19 +33,18 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController {
+public class RestaurantController extends AbstractController {
     public final static String ENTITY_NAME = "restaurant";
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    {
+        log = LoggerFactory.getLogger(getClass());
+    }
 
-    private CacheManager cacheManager;
     private RestaurantRepository restaurantRepository;
-    private MenuRepository menuRepository;
 
-    public RestaurantController(CacheManager cacheManager, RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
-        this.cacheManager = cacheManager;
+    public RestaurantController(CacheManager cacheManager, MenuRepository menuRepository, RestaurantRepository restaurantRepository) {
+        super(cacheManager, menuRepository);
         this.restaurantRepository = restaurantRepository;
-        this.menuRepository = menuRepository;
     }
 
     @GetMapping("/history")
@@ -98,10 +95,10 @@ public class RestaurantController {
             restaurantRepository.cascadeDishDisabling(restaurantId);
             //Business logic implies no necessity to clear today's menu cache after ENABLING restaurant,
             //as its menus are disabled (due to cascade disabling) or absent
-            log.info("Clear the cache of today's menus");
-            Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+            super.evictCache();
         }
     }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {

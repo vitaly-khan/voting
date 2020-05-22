@@ -1,6 +1,5 @@
 package ru.vitalykhan.voting.controller;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +32,6 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
@@ -43,19 +41,18 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist
 
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
-public class MenuController {
+public class MenuController extends AbstractController {
     public final static String ENTITY_NAME = "menu";
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    {
+        log = LoggerFactory.getLogger(getClass());
+    }
 
-    private CacheManager cacheManager;
-    private MenuRepository menuRepository;
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
 
     public MenuController(CacheManager cacheManager, MenuRepository menuRepository, RestaurantRepository restaurantRepository, DishRepository dishRepository) {
-        this.cacheManager = cacheManager;
-        this.menuRepository = menuRepository;
+        super(cacheManager, menuRepository);
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
     }
@@ -181,11 +178,10 @@ public class MenuController {
         return false;
     }
 
-    //    https://stackoverflow.com/questions/26147044/spring-cron-expression-for-every-day-101am
-    //    Cache evicting at midnight
+    //https://stackoverflow.com/questions/26147044/spring-cron-expression-for-every-day-101am
+    //Cache evicting at midnight
     @Scheduled(cron = "0 0 0 * * *")
     void evictTodaysMenusCache() {
-        log.info("Clear the cache of today's menus");
-        Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+        super.evictCache();
     }
 }
