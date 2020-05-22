@@ -3,7 +3,6 @@ package ru.vitalykhan.voting.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +33,7 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
@@ -90,11 +90,11 @@ public class MenuController {
 
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int menuId) {
         log.info("Delete menu with id={}", menuId);
 
         //Menu deletion is allowed only if menu has no dishes (otherwise disabling is a way to go)
+        //Hence, no need for cache evicting
         checkNestedEntityNotExists(dishRepository.countAllByMenuId(menuId) == 0,
                 menuId, ENTITY_NAME, DishController.ENTITY_NAME);
 
@@ -109,7 +109,7 @@ public class MenuController {
         Menu menu = menuRepository.findById(menuId).orElse(null);
         checkFound(menu != null, menuId, ENTITY_NAME);
 
-        //Treat the case the menu is being enabled while its restaurant is disabled
+        //Treat the case the menu is being enabled while its restaurant has been disabled
         if (enabled) {
             Integer restaurantId = menu.getRestaurant().getId();
             checkEnabled(restaurantRepository.findByEnabledTrueAndId(restaurantId) != null,
@@ -118,9 +118,12 @@ public class MenuController {
         menu.setEnabled(enabled);
         menuRepository.save(menu);
 
-        menuRepository.cascadeDishDisabling(menuId);
-
-        evictCacheIfTodays(menu);
+        if (!enabled) {
+            menuRepository.cascadeDishDisabling(menuId);
+            //Business logic implies no necessity to clear today's menu cache after ENABLING menu,
+            //as its dishes are disabled (due to cascade disabling) or absent
+            evictCacheIfTodays(menu);
+        }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -137,12 +140,12 @@ public class MenuController {
         Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
         log.info("Create a new menu {}", newMenu);
 
-        evictCacheIfTodays(newMenu);
-
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("menus/{id}")
                 .buildAndExpand(newMenu.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(newMenu);
+
+        //No need for today's menu cache evicting until menu contains at least one dish
     }
 
     @PutMapping(value = "/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +154,8 @@ public class MenuController {
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int menuId) {
         log.info("Update menu with id={}", menuId);
         assureIdConsistency(menuTo, menuId);
-        checkFound(menuRepository.existsById(menuId), menuId, ENTITY_NAME);
+        Menu oldMenu = menuRepository.findById(menuId).orElse(null);
+        checkFound(oldMenu != null, menuId, ENTITY_NAME);
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
@@ -159,26 +163,29 @@ public class MenuController {
         checkFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
         checkEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
+        Menu newMenu = new Menu(menuTo.getId(), menuTo.getDate(), restaurant);
+        menuRepository.save(newMenu);
 
-        Menu menu = new Menu(menuTo.getId(), menuTo.getDate(), restaurant);
-        menuRepository.save(menu);
-
-        evictCacheIfTodays(menu);
+        //Treat the case updating the date of the menu affects today's menus
+        //Assure no duplication of cache evicting
+        if (!evictCacheIfTodays(newMenu)) {
+            evictCacheIfTodays(oldMenu);
+        }
     }
 
-    private void evictCacheIfTodays(Menu newMenu) {
-        if (newMenu.getDate().equals(LocalDate.now())) {
+    private boolean evictCacheIfTodays(Menu menu) {
+        if (menu.getDate().equals(LocalDate.now()) && !menu.getDishes().isEmpty()) {
             evictTodaysMenusCache();
+            return true;
         }
+        return false;
     }
 
     //    https://stackoverflow.com/questions/26147044/spring-cron-expression-for-every-day-101am
     //    Cache evicting at midnight
-    //TODO: check how it works
     @Scheduled(cron = "0 0 0 * * *")
-    private void evictTodaysMenusCache() {
-        cacheManager.getCache("todaysMenus").clear();
+    void evictTodaysMenusCache() {
+        log.info("Clear the cache of today's menus");
+        Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
     }
-
-
 }

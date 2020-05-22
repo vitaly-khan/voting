@@ -30,6 +30,7 @@ import ru.vitalykhan.voting.util.DishUtil;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkEnabled;
@@ -63,7 +64,6 @@ public class DishController {
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    //TODO: check what is better to clear all cache or additional request to DB
     @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
@@ -78,7 +78,7 @@ public class DishController {
         Dish dish = dishRepository.findById(dishId).orElse(null);
         checkFound(dish != null, dishId, ENTITY_NAME);
 
-        //Treat the case the dish is being enabled while its menu is disabled
+        //Treat the case the dish is being enabled while its menu has been disabled
         if (enabled) {
             Integer menuId = dish.getMenu().getId();
             checkEnabled(menuRepository.findByEnabledTrueAndId(menuId) != null,
@@ -88,12 +88,6 @@ public class DishController {
         dishRepository.save(dish);
 
         evictCacheIfTodays(dish.getMenu());
-    }
-
-    private void evictCacheIfTodays(Menu newMenu) {
-        if (newMenu.getDate().equals(LocalDate.now())) {
-            cacheManager.getCache("todaysMenus").clear();
-        }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -124,17 +118,31 @@ public class DishController {
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int dishId) {
         log.info("Update dish with id={}", dishId);
         assureIdConsistency(dishTo, dishId);
-        checkFound(dishRepository.existsById(dishId), dishId, ENTITY_NAME);
+        Dish oldDish = dishRepository.findById(dishId).orElse(null);
+        checkFound(oldDish != null, dishId, ENTITY_NAME);
 
-        int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.findById(menuId).orElse(null);
+        int newMenuId = dishTo.getMenuId();
+        Menu newMenu = menuRepository.findById(newMenuId).orElse(null);
 
-        checkFound(menu != null, menuId, MenuController.ENTITY_NAME);
-        checkEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
+        checkFound(newMenu != null, newMenuId, MenuController.ENTITY_NAME);
+        checkEnabled(newMenu.isEnabled(), newMenuId, MenuController.ENTITY_NAME);
 
-        Dish dish = DishUtil.of(dishTo, menu);
-        dishRepository.save(dish);
+        Dish newDish = DishUtil.of(dishTo, newMenu);
+        dishRepository.save(newDish);
 
-        evictCacheIfTodays(dish.getMenu());
+        //Treat the case updating of the {menu id} affects today's menus
+        //Assure no duplication of cache evicting
+        if (!evictCacheIfTodays(newMenu)) {
+            evictCacheIfTodays(oldDish.getMenu());
+        }
+    }
+
+    private boolean evictCacheIfTodays(Menu newMenu) {
+        if (newMenu.getDate().equals(LocalDate.now())) {
+            log.info("Clear the cache of today's menus");
+            Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+            return true;
+        }
+        return false;
     }
 }

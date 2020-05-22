@@ -2,6 +2,7 @@ package ru.vitalykhan.voting.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import ru.vitalykhan.voting.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkFound;
@@ -38,11 +40,12 @@ public class RestaurantController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private CacheManager cacheManager;
     private RestaurantRepository restaurantRepository;
-
     private MenuRepository menuRepository;
 
-    public RestaurantController(RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
+    public RestaurantController(CacheManager cacheManager, RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
+        this.cacheManager = cacheManager;
         this.restaurantRepository = restaurantRepository;
         this.menuRepository = menuRepository;
     }
@@ -69,11 +72,11 @@ public class RestaurantController {
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void deleteByID(@PathVariable int restaurantId) {
         log.info("Delete restaurant with id={}", restaurantId);
 
         //Restaurant deletion is allowed only if restaurant has no menus (otherwise disabling is a way to go)
+        //Hence, no need for today's menu cache evicting
         ValidationUtil.checkNestedEntityNotExists(menuRepository.countAllByIdRestaurant(restaurantId) == 0,
                 restaurantId, ENTITY_NAME, MenuController.ENTITY_NAME);
         checkFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
@@ -82,7 +85,6 @@ public class RestaurantController {
     @PatchMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
     public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
         log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
@@ -91,8 +93,14 @@ public class RestaurantController {
         restaurant.setEnabled(enabled);
         restaurantRepository.save(restaurant);
 
-        restaurantRepository.cascadeMenuDisabling(restaurantId);
-        restaurantRepository.cascadeDishDisabling(restaurantId);
+        if (!enabled) {
+            restaurantRepository.cascadeMenuDisabling(restaurantId);
+            restaurantRepository.cascadeDishDisabling(restaurantId);
+            //Business logic implies no necessity to clear today's menu cache after ENABLING restaurant,
+            //as its menus are disabled (due to cascade disabling) or absent
+            log.info("Clear the cache of today's menus");
+            Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+        }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
