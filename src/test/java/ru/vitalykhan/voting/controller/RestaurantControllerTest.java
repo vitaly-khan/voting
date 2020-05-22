@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
+
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -72,7 +73,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT4_ID)
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> controller.getById(RESTAURANT4_ID));
+        assertThrows(NoSuchElementException.class, () -> controller.getById(RESTAURANT4_ID));
     }
 
     @Test
@@ -217,7 +218,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     }
 
 
-    //    Tests for NotFoundException ----------------------------------------------------------------------------------
+    //    Tests for NoSuchElementException------------------------------------------------------------------------------
     @Test
     void getByIdNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + USER1_ID)

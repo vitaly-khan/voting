@@ -7,9 +7,9 @@ import ru.vitalykhan.voting.model.Menu;
 import ru.vitalykhan.voting.util.exception.IllegalOperationException;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 public final class ValidationUtil {
     private ValidationUtil() {
@@ -34,13 +34,10 @@ public final class ValidationUtil {
     }
 
     public static void checkIsValidForVoting(Menu menu, int menuId, LocalDate today) {
-        checkIsFound(menu != null, menuId, MenuController.ENTITY_NAME);
-
         if (!menu.getDate().equals(today)) {
             throw new IllegalVoteException(String.format(
                     "The %s with id %d can't be voted today as it's out-of-date", MenuController.ENTITY_NAME, menuId));
         }
-
         if (menu.getDishes().isEmpty()) {
             throw new IllegalVoteException(String.format(
                     "The %s with id %d can't be voted now as it contains no %s items",
@@ -48,15 +45,8 @@ public final class ValidationUtil {
         }
     }
 
-    public static void checkIsFound(boolean found, int restaurantId, String entityName) {
-        if (!found) {
-            throw new NotFoundException(String.format(
-                    "Unable to find the %s with id %d", entityName, restaurantId));
-        }
-    }
-
-    public static void checkNestedEntityNotExists(boolean notExists, int restaurantId,
-                                                  String childEntityName, String parentEntityName) {
+    public static void checkNestedEntityNotExist(boolean notExists, int restaurantId,
+                                                 String childEntityName, String parentEntityName) {
         if (!notExists) {
             throw new IllegalOperationException(String.format(
                     "Unable to delete the %s with id %d while it contains at least one %s",
@@ -71,5 +61,11 @@ public final class ValidationUtil {
                     parentEntityName, parentId));
         }
 
+    }
+
+    public static void checkIsFound(boolean found) {
+        if (!found) {
+            throw new NoSuchElementException();
+        }
     }
 }

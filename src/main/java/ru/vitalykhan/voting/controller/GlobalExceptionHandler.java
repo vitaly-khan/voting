@@ -7,7 +7,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -24,10 +23,10 @@ import ru.vitalykhan.voting.util.exception.ErrorType;
 import ru.vitalykhan.voting.util.exception.IllegalOperationException;
 import ru.vitalykhan.voting.util.exception.IllegalRequestDataException;
 import ru.vitalykhan.voting.util.exception.IllegalVoteException;
-import ru.vitalykhan.voting.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static ru.vitalykhan.voting.util.exception.ErrorType.BAD_REQUEST;
 import static ru.vitalykhan.voting.util.exception.ErrorType.DATA_ERROR;
@@ -53,8 +52,8 @@ public class GlobalExceptionHandler {
             "table: restaurant", RESTAURANT_NAME_DUPLICATION);
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  //422
-    @ExceptionHandler(NotFoundException.class)
-    public ErrorInfo notFoundError(HttpServletRequest req, NotFoundException e) {
+    @ExceptionHandler(NoSuchElementException.class)
+    public ErrorInfo notFoundError(HttpServletRequest req, RuntimeException e) {
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 

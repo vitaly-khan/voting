@@ -37,7 +37,7 @@ import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
-import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExists;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist;
 
 @RestController
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +62,7 @@ public class MenuController extends AbstractController {
     public Menu getById(@PathVariable int menuId) {
         log.info("Get menu with id={}", menuId);
         Menu menu = menuRepository.findByIdWithRestaurantAndDishes(menuId);
-        checkIsFound(menu != null, menuId, ENTITY_NAME);
+        checkIsFound(menu != null);
         return menu;
     }
 
@@ -93,10 +93,10 @@ public class MenuController extends AbstractController {
 
         //Menu deletion is allowed only if menu has no dishes (otherwise disabling is a way to go)
         //Hence, no need for cache evicting
-        checkNestedEntityNotExists(dishRepository.countAllByMenuId(menuId) == 0,
+        checkNestedEntityNotExist(dishRepository.countAllByMenuId(menuId) == 0,
                 menuId, ENTITY_NAME, DishController.ENTITY_NAME);
 
-        checkIsFound(menuRepository.delete(menuId) != 0, menuId, ENTITY_NAME);
+        checkIsFound(menuRepository.delete(menuId) != 0);
     }
 
     @PatchMapping("/{menuId}")
@@ -104,8 +104,7 @@ public class MenuController extends AbstractController {
     @Transactional
     public void enable(@PathVariable int menuId, @RequestParam boolean enabled) {
         log.info("{} the menu with id {}", enabled ? "Enable" : "Disable", menuId);
-        Menu menu = menuRepository.findById(menuId).orElse(null);
-        checkIsFound(menu != null, menuId, ENTITY_NAME);
+        Menu menu = menuRepository.findById(menuId).orElseThrow();
 
         //Treat the case the menu is being enabled while its restaurant has been disabled
         if (enabled) {
@@ -130,9 +129,7 @@ public class MenuController extends AbstractController {
         checkIsNew(menuTo);
 
         int restaurantId = menuTo.getRestaurantId();
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-
-        checkIsFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
         checkIsEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
         Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
@@ -152,13 +149,10 @@ public class MenuController extends AbstractController {
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int menuId) {
         log.info("Update menu with id={}", menuId);
         assureIdConsistency(menuTo, menuId);
-        Menu oldMenu = menuRepository.findById(menuId).orElse(null);
-        checkIsFound(oldMenu != null, menuId, ENTITY_NAME);
+        Menu oldMenu = menuRepository.findById(menuId).orElseThrow();
 
         int restaurantId = menuTo.getRestaurantId();
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-
-        checkIsFound(restaurant != null, restaurantId, RestaurantController.ENTITY_NAME);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
         checkIsEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
         Menu newMenu = new Menu(menuTo.getId(), menuTo.getDate(), restaurant);

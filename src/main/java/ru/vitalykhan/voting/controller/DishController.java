@@ -30,7 +30,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 
-import static ru.vitalykhan.voting.controller.MenuController.*;
+import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_NAME;
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
@@ -55,9 +55,7 @@ public class DishController extends AbstractController {
     @GetMapping("/{dishId}")
     public Dish getById(@PathVariable int dishId) {
         log.info("Get dish with id={}", dishId);
-        Dish dish = dishRepository.findById(dishId).orElse(null);
-        checkIsFound(dish != null, dishId, ENTITY_NAME);
-        return dish;
+        return dishRepository.findById(dishId).orElseThrow();
     }
 
     @DeleteMapping("/{dishId}")
@@ -65,7 +63,7 @@ public class DishController extends AbstractController {
     @CacheEvict(value = TODAYS_MENUS_CACHE_NAME, allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
-        checkIsFound(dishRepository.delete(dishId) != 0, dishId, ENTITY_NAME);
+        checkIsFound(dishRepository.delete(dishId) != 0);
     }
 
     @PatchMapping("/{dishId}")
@@ -73,8 +71,7 @@ public class DishController extends AbstractController {
     @Transactional
     public void enable(@PathVariable int dishId, @RequestParam boolean enabled) {
         log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);
-        Dish dish = dishRepository.findById(dishId).orElse(null);
-        checkIsFound(dish != null, dishId, ENTITY_NAME);
+        Dish dish = dishRepository.findById(dishId).orElseThrow();
 
         //Treat the case the dish is being enabled while its menu has been disabled
         if (enabled) {
@@ -94,9 +91,7 @@ public class DishController extends AbstractController {
         checkIsNew(dishTo);
 
         int menuId = dishTo.getMenuId();
-        Menu menu = menuRepository.findById(menuId).orElse(null);
-
-        checkIsFound(menu != null, menuId, MenuController.ENTITY_NAME);
+        Menu menu = menuRepository.findById(menuId).orElseThrow();
         checkIsEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
@@ -116,13 +111,10 @@ public class DishController extends AbstractController {
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int dishId) {
         log.info("Update dish with id={}", dishId);
         assureIdConsistency(dishTo, dishId);
-        Dish oldDish = dishRepository.findById(dishId).orElse(null);
-        checkIsFound(oldDish != null, dishId, ENTITY_NAME);
+        Dish oldDish = dishRepository.findById(dishId).orElseThrow();
 
         int newMenuId = dishTo.getMenuId();
-        Menu newMenu = menuRepository.findById(newMenuId).orElse(null);
-
-        checkIsFound(newMenu != null, newMenuId, MenuController.ENTITY_NAME);
+        Menu newMenu = menuRepository.findById(newMenuId).orElseThrow();
         checkIsEnabled(newMenu.isEnabled(), newMenuId, MenuController.ENTITY_NAME);
 
         Dish newDish = DishUtil.of(dishTo, newMenu);

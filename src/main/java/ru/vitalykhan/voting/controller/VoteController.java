@@ -70,7 +70,7 @@ public class VoteController {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public void vote(@RequestParam int menuId, @AuthenticationPrincipal AuthenticatedUser authUser) {
-        Menu menu = menuRepository.findById(menuId).orElse(null);
+        Menu menu = menuRepository.findById(menuId).orElseThrow();
         LocalDate today = LocalDate.now();
 
         ValidationUtil.checkIsValidForVoting(menu, menuId, today);

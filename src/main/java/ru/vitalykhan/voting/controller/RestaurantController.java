@@ -22,7 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.vitalykhan.voting.model.Restaurant;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
-import ru.vitalykhan.voting.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -31,6 +30,7 @@ import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist;
 
 @RestController
 @RequestMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,9 +63,7 @@ public class RestaurantController extends AbstractController {
     @GetMapping("/{restaurantId}")
     public Restaurant getById(@PathVariable int restaurantId) {
         log.info("Get restaurants with id={}", restaurantId);
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkIsFound(restaurant != null, restaurantId, ENTITY_NAME);
-        return restaurant;
+        return restaurantRepository.findById(restaurantId).orElseThrow();
     }
 
     @DeleteMapping("/{restaurantId}")
@@ -75,9 +73,9 @@ public class RestaurantController extends AbstractController {
 
         //Restaurant deletion is allowed only if restaurant has no menus (otherwise disabling is a way to go)
         //Hence, no need for today's menu cache evicting
-        ValidationUtil.checkNestedEntityNotExists(menuRepository.countAllByIdRestaurant(restaurantId) == 0,
+        checkNestedEntityNotExist(menuRepository.countAllByIdRestaurant(restaurantId) == 0,
                 restaurantId, ENTITY_NAME, MenuController.ENTITY_NAME);
-        checkIsFound(restaurantRepository.delete(restaurantId) != 0, restaurantId, ENTITY_NAME);
+        checkIsFound(restaurantRepository.delete(restaurantId) != 0);
     }
 
     @PatchMapping("/{restaurantId}")
@@ -85,8 +83,7 @@ public class RestaurantController extends AbstractController {
     @Transactional
     public void enable(@PathVariable int restaurantId, @RequestParam boolean enabled) {
         log.info("{} the restaurant with id {}", enabled ? "Enable" : "Disable", restaurantId);
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkIsFound(restaurant != null, restaurantId, ENTITY_NAME);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
 
         restaurant.setEnabled(enabled);
         restaurantRepository.save(restaurant);
@@ -120,7 +117,7 @@ public class RestaurantController extends AbstractController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         log.info("Update restaurant with id={}", restaurantId);
         assureIdConsistency(restaurant, restaurantId);
-        checkIsFound(restaurantRepository.existsById(restaurantId), restaurantId, ENTITY_NAME);
+        checkIsFound(restaurantRepository.existsById(restaurantId));
 
         restaurantRepository.save(restaurant);
     }
