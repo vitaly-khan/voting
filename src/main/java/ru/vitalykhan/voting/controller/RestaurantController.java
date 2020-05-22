@@ -27,6 +27,7 @@ import ru.vitalykhan.voting.util.ValidationUtil;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_NAME;
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
@@ -115,7 +116,7 @@ public class RestaurantController extends AbstractController {
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "todaysMenus", allEntries = true)
+    @CacheEvict(value = TODAYS_MENUS_CACHE_NAME, allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         log.info("Update restaurant with id={}", restaurantId);
         assureIdConsistency(restaurant, restaurantId);

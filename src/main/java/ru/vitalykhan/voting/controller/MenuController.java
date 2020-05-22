@@ -43,6 +43,7 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist
 @RequestMapping(value = "/menus", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MenuController extends AbstractController {
     public final static String ENTITY_NAME = "menu";
+    public static final String TODAYS_MENUS_CACHE_NAME = "todaysMenus";
 
     {
         log = LoggerFactory.getLogger(getClass());
@@ -78,7 +79,7 @@ public class MenuController extends AbstractController {
     }
 
     @GetMapping("/todays")
-    @Cacheable("todaysMenus")
+    @Cacheable(TODAYS_MENUS_CACHE_NAME)
     public List<Menu> getTodays() {
         LocalDate now = LocalDate.now();
         log.info("Get today's ({}) menus", now);

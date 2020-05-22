@@ -6,6 +6,8 @@ import ru.vitalykhan.voting.repository.MenuRepository;
 
 import java.util.Objects;
 
+import static ru.vitalykhan.voting.controller.MenuController.*;
+
 public class AbstractController {
     protected CacheManager cacheManager;
     protected MenuRepository menuRepository;
@@ -18,6 +20,6 @@ public class AbstractController {
 
     protected void evictCache() {
         log.info("Clear the cache of today's menus");
-        Objects.requireNonNull(cacheManager.getCache("todaysMenus")).clear();
+        Objects.requireNonNull(cacheManager.getCache(TODAYS_MENUS_CACHE_NAME)).clear();
     }
 }

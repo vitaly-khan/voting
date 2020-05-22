@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 
+import static ru.vitalykhan.voting.controller.MenuController.*;
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
@@ -61,7 +62,7 @@ public class DishController extends AbstractController {
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "todaysMenus", allEntries = true)
+    @CacheEvict(value = TODAYS_MENUS_CACHE_NAME, allEntries = true)
     public void deleteByID(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
         checkIsFound(dishRepository.delete(dishId) != 0, dishId, ENTITY_NAME);
