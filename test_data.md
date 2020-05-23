@@ -1,33 +1,33 @@
 ## Test Data
 
 ### Admins and Regular Users
-ID | Username | E-Mail | Password | Role
--- | -------- | ------ | -------- | ----
+ID | Username | E-Mail | Password | Role | Comments
+-- | -------- | ------ | -------- | ---- | --------
 100000 | User 2 | user2@gmail.com | password2 | USER 
-100001 | User 1 | user1@gmail.com | password1 | USER 
+100001 | User 1 | user1@gmail.com | password1 | USER | _(hasn't voted today)_ 
 100002 | Admin 2 | admin2@gmail.com | admin2 | ADMIN 
 100003 | Admin 1 | admin1@gmail.com | admin1 | ADMIN 
 100004 | User 3 | user3@gmail.com | password3 | USER 
 
 
 ### Restaurants
-ID | Name
--- | ---- 
+ID | Name | Comments
+-- | ---- | --------
 100005 | Korean 
 100006 | Japanese
-100007 | Georgian
+100007 | Georgian | _(has no today's menu)_
 100008 | Italian
-_100009_ | _Disabled_
+100009 | Thai | _(disabled, contains no menu)_
  
 ### Menus
-ID | Date | Restaurant ID
--- | ---- | -------------
+ID | Date | Restaurant ID | Comments
+-- | ---- | ------------- | --------
 100010 | 2020-05-03 | 100005 
 100011 | 2020-05-03 | 100006
 100012 | 2020-05-03 | 100007
 100013 | _today_ | 100005
 100014 | _today_ | 100006
-100015 | _today_ | 100008
+100015 | _today_ | 100008 | _(contains no dishes)_
 
 ### Dishes
 ID | Name | Price | Menu ID

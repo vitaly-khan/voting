@@ -20,7 +20,7 @@ public class RestaurantTestHelper {
     public static final Restaurant RESTAURANT2 = new Restaurant(RESTAURANT2_ID, "Japanese");
     public static final Restaurant RESTAURANT3 = new Restaurant(RESTAURANT3_ID, "Georgian");
     public static final Restaurant RESTAURANT4 = new Restaurant(RESTAURANT4_ID, "Italian");
-    public static final Restaurant RESTAURANT5 = new Restaurant(RESTAURANT5_ID, "Disabled", false);
+    public static final Restaurant RESTAURANT5 = new Restaurant(RESTAURANT5_ID, "Thai", false);
 
     public static final List<Restaurant> ENABLED_SORTED_RESTAURANTS = List.of(
             RESTAURANT3, RESTAURANT4, RESTAURANT2, RESTAURANT1);

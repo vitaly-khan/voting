@@ -19,7 +19,7 @@ VALUES ('Korean'),   --id: 100005
        ('Georgian'), --id: 100007
        ('Italian');  --id: 100008
 INSERT INTO RESTAURANT(NAME, ENABLED)
-VALUES ('Disabled', false); --id: 100009
+VALUES ('Thai', false); --id: 100009
 
 INSERT INTO MENU (DATE, RESTAURANT_ID)
 VALUES ('2020-05-03', '100005'), --id: 100010
