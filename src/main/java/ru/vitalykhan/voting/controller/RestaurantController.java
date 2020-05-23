@@ -25,6 +25,7 @@ import ru.vitalykhan.voting.repository.RestaurantRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_NAME;
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
@@ -49,13 +50,13 @@ public class RestaurantController extends AbstractController {
     }
 
     @GetMapping("/history")
-    public Iterable<Restaurant> getAll() {
+    public List<Restaurant> getAll() {
         log.info("Get all restaurants");
         return restaurantRepository.findAll();
     }
 
     @GetMapping
-    public Iterable<Restaurant> getAllEnabled() {
+    public List<Restaurant> getAllEnabled() {
         log.info("Get all enabled restaurants");
         return restaurantRepository.findByEnabledTrueOrderByName();
     }
