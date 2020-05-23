@@ -38,6 +38,7 @@ import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkIsPresentOrFuture;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist;
 
 @RestController
@@ -149,6 +150,7 @@ public class MenuController extends AbstractController {
         log.info("Update menu with id={}", menuId);
         assureIdConsistency(menuTo, menuId);
         Menu oldMenu = menuRepository.findById(menuId).orElseThrow();
+        checkIsPresentOrFuture(oldMenu);
 
         int restaurantId = menuTo.getRestaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();

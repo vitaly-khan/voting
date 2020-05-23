@@ -3,7 +3,6 @@ package ru.vitalykhan.voting.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +30,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 
-import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_NAME;
 import static ru.vitalykhan.voting.util.ValidationUtil.assureIdConsistency;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsEnabled;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsFound;
 import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
+import static ru.vitalykhan.voting.util.ValidationUtil.checkIsPresentOrFuture;
 
 @RestController
 @RequestMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,10 +58,17 @@ public class DishController extends AbstractController {
 
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = TODAYS_MENUS_CACHE_NAME, allEntries = true)
     public void deleteById(@PathVariable int dishId) {
         log.info("Delete menu with id={}", dishId);
+
+        //Additional DB request allows: 1) to save on cache evicting and 2) to forbid past menus changing
+        Menu menu = menuRepository.findByDishId(dishId);
+        checkIsFound(menu != null);
+        checkIsPresentOrFuture(menu);
+
         checkIsFound(dishRepository.delete(dishId) != 0);
+
+        evictCacheIfTodays(menu);
     }
 
     @PatchMapping("/{dishId}")
@@ -72,7 +78,7 @@ public class DishController extends AbstractController {
         log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);
         Dish dish = dishRepository.findById(dishId).orElseThrow();
 
-        //Treat the case the dish is being enabled while its menu has been disabled
+        //Treat the case the dish is being enabled while its menu is disabled
         if (enabled) {
             Integer menuId = dish.getMenu().getId();
             checkIsEnabled(menuRepository.findByEnabledTrueAndId(menuId) != null,
@@ -92,6 +98,7 @@ public class DishController extends AbstractController {
         int menuId = dishTo.getMenuId();
         Menu menu = menuRepository.findById(menuId).orElseThrow();
         checkIsEnabled(menu.isEnabled(), menuId, MenuController.ENTITY_NAME);
+        checkIsPresentOrFuture(menu);
 
         Dish newDish = dishRepository.save(DishUtil.of(dishTo, menu));
         log.info("Create a new dish {}", newDish);
@@ -111,10 +118,12 @@ public class DishController extends AbstractController {
         log.info("Update dish with id={}", dishId);
         assureIdConsistency(dishTo, dishId);
         Dish oldDish = dishRepository.findById(dishId).orElseThrow();
+        checkIsPresentOrFuture(oldDish.getMenu());
 
         int newMenuId = dishTo.getMenuId();
         Menu newMenu = menuRepository.findById(newMenuId).orElseThrow();
         checkIsEnabled(newMenu.isEnabled(), newMenuId, MenuController.ENTITY_NAME);
+        checkIsPresentOrFuture(newMenu);
 
         Dish newDish = DishUtil.of(dishTo, newMenu);
         dishRepository.save(newDish);

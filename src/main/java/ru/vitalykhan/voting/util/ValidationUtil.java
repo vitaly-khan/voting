@@ -54,6 +54,13 @@ public final class ValidationUtil {
         }
     }
 
+    public static void checkIsPresentOrFuture(Menu menu) {
+        if (menu.getDate().isBefore(LocalDate.now())) {
+            throw new IllegalOperationException(String.format(
+                    "Operation can't be performed because the affected menu (id %d) is expired", menu.getId()));
+        }
+    }
+
     public static void checkIsEnabled(boolean enabled, int parentId, String parentEntityName) {
         if (!enabled) {
             throw new IllegalOperationException(String.format(
@@ -61,6 +68,7 @@ public final class ValidationUtil {
                     parentEntityName, parentId));
         }
     }
+
 
     public static void checkIsFound(boolean found) {
         if (!found) {

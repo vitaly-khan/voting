@@ -49,4 +49,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
             "(SELECT d.ID FROM MENU m JOIN DISH d on m.ID=d.MENU_ID WHERE m.ID=:id);",
             nativeQuery = true)
     void cascadeDishDisabling(@Param("id") int menuId);
+
+    @Query("SELECT m FROM Menu m JOIN FETCH m.dishes d WHERE d.id=:id")
+    Menu findByDishId(@Param("id") int dishId);
 }

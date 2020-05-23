@@ -4,8 +4,6 @@ import ru.vitalykhan.voting.TestMatcher;
 import ru.vitalykhan.voting.model.Role;
 import ru.vitalykhan.voting.model.User;
 
-import java.util.List;
-
 import static ru.vitalykhan.voting.model.AbstractBaseEntity.START_SEQ;
 
 
