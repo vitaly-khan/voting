@@ -29,7 +29,7 @@ import java.util.List;
 @RequestMapping(value = "/votes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
 
-    private static final LocalTime VOTE_UPDATE_DEADLINE = LocalTime.of(11, 0);
+    public static final LocalTime VOTE_UPDATE_DEADLINE = LocalTime.of(11, 0);
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -87,7 +87,7 @@ public class VoteController {
             oldVote.setMenu(menu);
         } else {
             throw new IllegalVoteException(String.format(
-                    "User with id %d can't change his vote after %tH:%<tM", userId, VOTE_UPDATE_DEADLINE));
+                    "It's not allowed to change a vote after %s", VOTE_UPDATE_DEADLINE));
         }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.User;
@@ -159,7 +160,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newUserTo)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
-                .andExpect(parentExceptionIs("org.springframework.web.bind.MethodArgumentNotValidException"));
+                .andExpect(parentExceptionIs(MethodArgumentNotValidException.class));
     }
 
     @Test
@@ -172,6 +173,6 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
-                .andExpect(parentExceptionIs("org.springframework.web.bind.MethodArgumentNotValidException"));
+                .andExpect(parentExceptionIs(MethodArgumentNotValidException.class));
     }
 }

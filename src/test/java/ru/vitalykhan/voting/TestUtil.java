@@ -46,7 +46,7 @@ public class TestUtil {
         return jsonPath("$.details").value(code);
     }
 
-    public static ResultMatcher parentExceptionIs(String code) {
-        return jsonPath("$.parentException").value(code);
+    public static ResultMatcher parentExceptionIs(Class<? extends Exception> clazz) {
+        return jsonPath("$.parentException").value(clazz.getName());
     }
 }
