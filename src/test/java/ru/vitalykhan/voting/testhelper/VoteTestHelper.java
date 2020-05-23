@@ -18,11 +18,11 @@ import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER3;
 public class VoteTestHelper {
     public static TestMatcher<Vote> VOTE_MATCHER = new TestMatcher<>(Vote.class, "menu", "user");
 
-    public static final int VOTE1_ID = START_SEQ + 27;
-    public static final int VOTE2_ID = START_SEQ + 28;
-    public static final int VOTE3_ID = START_SEQ + 29;
-    public static final int VOTE4_ID = START_SEQ + 30;
-    public static final int VOTE5_ID = START_SEQ + 31;
+    public static final int VOTE1_ID = START_SEQ + 29;
+    public static final int VOTE2_ID = START_SEQ + 30;
+    public static final int VOTE3_ID = START_SEQ + 31;
+    public static final int VOTE4_ID = START_SEQ + 32;
+    public static final int VOTE5_ID = START_SEQ + 33;
 
     public static final Vote VOTE1 = new Vote(VOTE1_ID, DATE_OF_2020_05_03, MENU1, USER1);
     public static final Vote VOTE2 = new Vote(VOTE2_ID, DATE_OF_2020_05_03, MENU2, USER3);

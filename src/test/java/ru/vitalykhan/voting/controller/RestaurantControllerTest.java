@@ -24,8 +24,8 @@ import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.ENABLED_SORTE
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT2;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT4;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT4_ID;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT5;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT5_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_MATCHER;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getNew;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getUpdated;
@@ -70,20 +70,20 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteById() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT4_ID)
+        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT5_ID)
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        assertThrows(NoSuchElementException.class, () -> controller.getById(RESTAURANT4_ID));
+        assertThrows(NoSuchElementException.class, () -> controller.getById(RESTAURANT5_ID));
     }
 
     @Test
     void enable() throws Exception {
-        Restaurant enabled = new Restaurant(RESTAURANT4);
+        Restaurant enabled = new Restaurant(RESTAURANT5);
         enabled.setEnabled(true);
-        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT4_ID + "?enabled=true")
+        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT5_ID + "?enabled=true")
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT4_ID), enabled);
+        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT5_ID), enabled);
     }
 
     @Test
@@ -295,5 +295,4 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
                 .andExpect(detailMessageIs(GlobalExceptionHandler.RESTAURANT_NAME_DUPLICATION));
     }
-
 }

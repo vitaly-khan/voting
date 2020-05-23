@@ -16,35 +16,37 @@ VALUES ('USER', 'User 2', 'user2@gmail.com', '{noop}password2'), --id: 1000000
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Korean'),   --id: 100005
        ('Japanese'), --id: 100006
-       ('Georgian'); --id: 100007
+       ('Georgian'), --id: 100007
+       ('Italian');  --id: 100008
 INSERT INTO RESTAURANT(NAME, ENABLED)
-VALUES ('Disabled', false); --id: 100008
+VALUES ('Disabled', false); --id: 100009
 
 INSERT INTO MENU (DATE, RESTAURANT_ID)
-VALUES ('2020-05-03', '100005'), --id: 100009
-       ('2020-05-03', '100006'), --id: 100010
-       ('2020-05-03', '100007'), --id: 100011
-       (now(), '100005'),        --id: 100012
-       (now(), '100006');        --id: 100013
+VALUES ('2020-05-03', '100005'), --id: 100010
+       ('2020-05-03', '100006'), --id: 100011
+       ('2020-05-03', '100007'), --id: 100012
+       (now(), '100005'),        --id: 100013
+       (now(), '100006'),        --id: 100014
+       (now(), '100008');        --id: 100015
 
 INSERT INTO DISH (NAME, PRICE, MENU_ID)
-VALUES ('Korean dish 1', 20000, 100009),
-       ('Korean dish 3', 15000, 100009),
-       ('Korean dish 2', 35000, 100009),
-       ('Japanese dish 1', 35000, 100010),
-       ('Georgian dish 2', 13000, 100011),
-       ('Georgian dish 1', 30000, 100011),
-       ('Korean dish 1', 20000, 100012),
-       ('Korean dish 5', 30000, 100012),
-       ('Korean dish 4', 40000, 100012),
-       ('Japanese dish 2', 75000, 100013),
-       ('Japanese dish 3', 55000, 100013),
-       ('Japanese dish 5', 42000, 100013),
-       ('Japanese dish 4', 30000, 100013);
+VALUES ('Korean dish 1', 20000, 100010),
+       ('Korean dish 3', 15000, 100010),
+       ('Korean dish 2', 35000, 100010),
+       ('Japanese dish 1', 35000, 100011),
+       ('Georgian dish 2', 13000, 100012),
+       ('Georgian dish 1', 30000, 100012),
+       ('Korean dish 1', 20000, 100013),
+       ('Korean dish 5', 30000, 100013),
+       ('Korean dish 4', 40000, 100013),
+       ('Japanese dish 2', 75000, 100014),
+       ('Japanese dish 3', 55000, 100014),
+       ('Japanese dish 5', 42000, 100014),
+       ('Japanese dish 4', 30000, 100014);
 
 INSERT INTO VOTE (DATE, MENU_ID, USER_ID)
-VALUES ('2020-05-03', 100009, 100001), --id: 100026
-       ('2020-05-03', 100010, 100004),
-       ('2020-05-03', 100010, 100000),
-       (now(), 100012, 100000),
-       (now(), 100012, 100004);
+VALUES ('2020-05-03', 100010, 100001), --id: 100028
+       ('2020-05-03', 100011, 100004),
+       ('2020-05-03', 100011, 100000),
+       (now(), 100013, 100000),
+       (now(), 100013, 100004);
