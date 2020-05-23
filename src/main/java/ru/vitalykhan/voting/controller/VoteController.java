@@ -41,7 +41,7 @@ public class VoteController {
         this.menuRepository = menuRepository;
     }
 
-    //No need for ordering by date as business logic implies all votes are saved chronologically and in no other way
+    //Business logic implies all votes are saved chronologically and in no other way
     //It's assumed that the user wishes to see only restaurant names and dates (but not dishes) in his history
     @GetMapping
     public List<Vote> getAllForAuthUser(@AuthenticationPrincipal AuthenticatedUser authUser) {
