@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.controller;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -41,9 +42,7 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkIsNew;
 public class DishController extends AbstractController {
     public final static String ENTITY_NAME = "dish";
 
-    {
-        log = LoggerFactory.getLogger(getClass());
-    }
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private DishRepository dishRepository;
 
@@ -129,6 +128,7 @@ public class DishController extends AbstractController {
 
     private boolean evictCacheIfTodays(Menu newMenu) {
         if (newMenu.getDate().equals(LocalDate.now())) {
+            log.info("Clear the cache of today's menus");
             evictCache();
             return true;
         }

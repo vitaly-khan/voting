@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.controller;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,9 +39,7 @@ import static ru.vitalykhan.voting.util.ValidationUtil.checkNestedEntityNotExist
 public class RestaurantController extends AbstractController {
     public final static String ENTITY_NAME = "restaurant";
 
-    {
-        log = LoggerFactory.getLogger(getClass());
-    }
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private RestaurantRepository restaurantRepository;
 
@@ -94,6 +93,7 @@ public class RestaurantController extends AbstractController {
             restaurantRepository.cascadeDishDisabling(restaurantId);
             //Business logic implies no necessity to clear today's menu cache after ENABLING restaurant,
             //as its menus are disabled (due to cascade disabling) or absent
+            log.info("Clear the cache of today's menus");
             evictCache();
         }
     }

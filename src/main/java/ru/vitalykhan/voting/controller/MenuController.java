@@ -1,5 +1,6 @@
 package ru.vitalykhan.voting.controller;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -45,9 +46,7 @@ public class MenuController extends AbstractController {
     public final static String ENTITY_NAME = "menu";
     public static final String TODAYS_MENUS_CACHE_NAME = "todaysMenus";
 
-    {
-        log = LoggerFactory.getLogger(getClass());
-    }
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
@@ -177,6 +176,7 @@ public class MenuController extends AbstractController {
     //Cache evicting at midnight
     @Scheduled(cron = "0 0 0 * * *")
     void evictTodaysMenusCache() {
+        log.info("Clear the cache of today's menus");
         evictCache();
     }
 }
