@@ -79,25 +79,26 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void enable() throws Exception {
-        Restaurant enabled = new Restaurant(RESTAURANT6);
-        Assert.isTrue(!enabled.isEnabled(), "Restaurant must be disabled initially");
-        enabled.setEnabled(true);
+        Restaurant toBeEnabled = new Restaurant(RESTAURANT6);
+        Assert.isTrue(!toBeEnabled.isEnabled(), "Restaurant must be disabled initially");
+        toBeEnabled.setEnabled(true);
         perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT6_ID + "?enabled=true")
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT6_ID), enabled);
+        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT6_ID), toBeEnabled);
     }
 
     @Test
     void disable() throws Exception {
-        Restaurant disabled = new Restaurant(RESTAURANT1);
-        disabled.setEnabled(false);
+        Restaurant toBeDisabled = new Restaurant(RESTAURANT1);
+        Assert.isTrue(toBeDisabled.isEnabled(), "Restaurant must be enabled initially");
+        toBeDisabled.setEnabled(false);
         perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT1_ID + "?enabled=false")
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT1_ID), disabled);
+        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT1_ID), toBeDisabled);
 
-        //add cascade disable test
+        //TODO: add cascade on disable test
     }
 
     @Test

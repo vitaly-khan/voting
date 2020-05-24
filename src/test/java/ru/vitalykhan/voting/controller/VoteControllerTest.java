@@ -19,7 +19,7 @@ import static ru.vitalykhan.voting.controller.VoteController.VOTE_UPDATE_DEADLIN
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.DATE_OF_2020_05_03;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU1_ID;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU5_ID;
-import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU6_ID;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.EMPTY_MENU_ID;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1_ID;
@@ -155,7 +155,7 @@ class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     void voteForEmptyTodaysMenu() throws Exception {
-        perform(put(REST_URL + "?menuId=" + MENU6_ID)
+        perform(put(REST_URL + "?menuId=" + EMPTY_MENU_ID)
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(parentExceptionIs(IllegalVoteException.class));

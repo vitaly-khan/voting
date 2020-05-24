@@ -9,10 +9,10 @@ import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU2;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU3;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU4;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU5;
-import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU7;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.DISABLED_MENU;
 
 public class DishTestHelper {
-    public static TestMatcher<Dish> DISH_MATCHER = new TestMatcher<>(Dish.class);
+    public static TestMatcher<Dish> DISH_MATCHER = new TestMatcher<>(Dish.class, "menu");
 
     public static final int DISH1_ID = START_SEQ + 18;
     public static final int DISH2_ID = START_SEQ + 19;
@@ -27,7 +27,7 @@ public class DishTestHelper {
     public static final int DISH11_ID = START_SEQ + 28;
     public static final int DISH12_ID = START_SEQ + 29;
     public static final int DISH13_ID = START_SEQ + 30;
-    public static final int DISH14_ID = START_SEQ + 31; //Disabled
+    public static final int DISABLED_DISH_ID = START_SEQ + 31;
 
     public static final Dish DISH1 = new Dish(DISH1_ID, "Korean Dish 1", 20_000, MENU1);
     public static final Dish DISH2 = new Dish(DISH2_ID, "Korean Dish 3", 15_000, MENU1);
@@ -42,13 +42,5 @@ public class DishTestHelper {
     public static final Dish DISH11 = new Dish(DISH11_ID, "Japanese Dish 3", 55_000, MENU5);
     public static final Dish DISH12 = new Dish(DISH12_ID, "Japanese Dish 5", 42_000, MENU5);
     public static final Dish DISH13 = new Dish(DISH13_ID, "Japanese Dish 4", 30_000, MENU5);
-    public static final Dish DISH14 = new Dish(DISH14_ID, "Italian Dish 1", 30_000, MENU7, false);
-
-//    public static Dish getNew() {
-//        return new Dish("New dish");
-//    }
-//
-//    public static Dish getUpdated() {
-//        return new Dish(DISH1_ID, "Updated");
-//    }
+    public static final Dish DISABLED_DISH = new Dish(DISABLED_DISH_ID, "Italian Dish 1", 30_000, DISABLED_MENU, false);
 }

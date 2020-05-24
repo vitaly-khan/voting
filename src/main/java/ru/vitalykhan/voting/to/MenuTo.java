@@ -21,6 +21,14 @@ public class MenuTo extends AbstractTo {
         return restaurantId;
     }
 
+    public MenuTo() {
+    }
+
+    public MenuTo(LocalDate date, int restaurantId) {
+        this.date = date;
+        this.restaurantId = restaurantId;
+    }
+
     @Override
     public String toString() {
         return "MenuTo{" +
