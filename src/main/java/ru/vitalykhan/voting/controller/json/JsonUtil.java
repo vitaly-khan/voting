@@ -18,7 +18,7 @@ public class JsonUtil {
         try {
             return reader.<T>readValues(json).readAll();
         } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid read array from JSON:\n'" + json + "'", e);
+            throw new IllegalArgumentException("Unable to read an array from JSON:\n'" + json + "'", e);
         }
     }
 
@@ -26,7 +26,7 @@ public class JsonUtil {
         try {
             return getMapper().readValue(json, clazz);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid read from JSON:\n'" + json + "'", e);
+            throw new IllegalArgumentException("Unable to read an object from JSON:\n'" + json + "'", e);
         }
     }
 
