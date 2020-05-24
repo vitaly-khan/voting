@@ -31,7 +31,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     List<Menu> findAllByDate(@Param("date") LocalDate date);
 
     @Query("SELECT DISTINCT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes d " +
-            "WHERE m.date=:date AND m.enabled=true AND d.enabled=true")
+            "WHERE m.date=:date AND m.enabled=true")
     List<Menu> findAllEnabledByDate(@Param("date") LocalDate date);
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant LEFT JOIN FETCH m.dishes WHERE m.id=:id")
