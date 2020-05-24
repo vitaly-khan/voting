@@ -51,14 +51,14 @@ Access: ADMIN
 
 DELETE  /restaurants/[_restaurant id_]
 
-    curl -s -X DELETE http://localhost:8080/voting/restaurants/100009 -u admin1@gmail.com:admin1
+    curl -s -X DELETE http://localhost:8080/voting/restaurants/100010 -u admin1@gmail.com:admin1
 
-#### Enable/disable
+#### Enable/disable (cascade on disable)
 Access: ADMIN
 
 PATCH  /restaurants/[_restaurant id_]?enabled=[_boolean value_]
 
-    curl -s -X PATCH http://localhost:8080/voting/restaurants/100005?enabled=false -u admin1@gmail.com:admin1
+    curl -s -X PATCH http://localhost:8080/voting/restaurants/100008?enabled=false -u admin1@gmail.com:admin1
 
 #### Create
 Access: ADMIN
@@ -67,7 +67,7 @@ POST  /restaurants
 
 Body: {"name":"[_restaurant name_]"}
 
-    curl -s -X POST -d '{"name":"French"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
+    curl -s -X POST -d '{"name":"Greek"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants -u admin1@gmail.com:admin1
 
 #### Update
 Access: ADMIN
@@ -76,7 +76,7 @@ PUT  /restaurants/[_restaurant id_]
 
 Body: {"name":"[_restaurant name_]"}
 
-    curl -s -X PUT -d '{"name":"Italian"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100006 -u admin1@gmail.com:admin1
+    curl -s -X PUT -d '{"name":"Spanish"}' -H 'Content-Type:application/json' http://localhost:8080/voting/restaurants/100009 -u admin1@gmail.com:admin1
 
 * * *
 
@@ -87,7 +87,7 @@ Access: ADMIN
 
 GET     /menus/[_menu id_] 
 
-    curl -s http://localhost:8080/voting/menus/100010 -u admin1@gmail.com:admin1
+    curl -s http://localhost:8080/voting/menus/100011 -u admin1@gmail.com:admin1
 
 #### Get today's (with restaurants and dishes) ordered by restaurant name, enabled & not empty only
 
@@ -116,14 +116,14 @@ Access: ADMIN
 
 DELETE  /menus/[_menu id_]
 
-    curl -s -X DELETE http://localhost:8080/voting/menus/100015 -u admin1@gmail.com:admin1
+    curl -s -X DELETE http://localhost:8080/voting/menus/100016 -u admin1@gmail.com:admin1
 
 #### Enable/disable (cascade on disable)
 Access: ADMIN
 
 PATCH  /menus/[_menu id_]?enabled=[_boolean value_]
 
-    curl -s -X PATCH http://localhost:8080/voting/menus/100011?enabled=false -u admin1@gmail.com:admin1
+    curl -s -X PATCH http://localhost:8080/voting/menus/100015?enabled=false -u admin1@gmail.com:admin1
 
 #### Create 
 Access: ADMIN
@@ -132,7 +132,7 @@ POST  /menus
 
 Body: {"date":"[_ISO date_]", "restaurantId":[_restaurant id_]}
 
-    curl -s -X POST -d '{"date":"2020-05-30","restaurantId":100006}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus -u admin1@gmail.com:admin1
+    curl -s -X POST -d '{"date":"2021-05-30","restaurantId":100006}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus -u admin1@gmail.com:admin1
 
 #### Update 
 Access: ADMIN
@@ -142,7 +142,7 @@ POST  /menus/[_menu id_]
 Body: {"date":"[_ISO date_]", "restaurantId":[_restaurant id_]}
 
 
-    curl -s -X PUT -d '{"date":"2020-05-30","restaurantId":100007}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus/100008 -u admin1@gmail.com:admin1
+    curl -s -X PUT -d '{"date":"2021-05-30","restaurantId":100007}' -H 'Content-Type:application/json' http://localhost:8080/voting/menus/100017 -u admin1@gmail.com:admin1
 
 * * *
 
@@ -162,7 +162,7 @@ DELETE  /dishes/[_dish id_]
 
     curl -s -X DELETE http://localhost:8080/voting/dishes/100024 -u admin1@gmail.com:admin1
 
-#### Enable/disable (cascade on disable)
+#### Enable/disable
 Access: ADMIN
 
 PATCH  /dishes/[_dish id_]?enabled=[_boolean value_]
@@ -176,7 +176,7 @@ POST  /dishes
 
 Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
-    curl -s -X POST -d '{"name":"Japanese New Dish","price": 9900,"menuId": 100011}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes -u admin1@gmail.com:admin1
+    curl -s -X POST -d '{"name":"Korean New Dish","price": 9900,"menuId": 100014}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes -u admin1@gmail.com:admin1
 
 #### Update
 Access: ADMIN
@@ -185,7 +185,7 @@ PUT  /dishes/[_dish id_]
 
 Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
-    curl -s -X PUT -d '{"name": "Japanese Updated Dish","price":77000,"menuId":100011}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes/100016 -u admin1@gmail.com:admin1
+    curl -s -X PUT -d '{"name": "Korean Updated Dish","price":77000,"menuId":100017}' -H 'Content-Type:application/json' http://localhost:8080/voting/dishes/100026 -u admin1@gmail.com:admin1
 
 * * *
 
@@ -204,13 +204,13 @@ Access: ADMIN
 GET     /votes/todays
 
     curl -s http://localhost:8080/voting/votes/todays -u admin1@gmail.com:admin1
-#### Get all of an authenticated user (with restaurants, without users and dishes) 
+#### Get all of the authenticated user (with restaurants, without users and dishes) 
 Access: REGULAR USER
 
 GET     /votes
 
     curl -s http://localhost:8080/voting/votes/ -u user1@gmail.com:password1
-#### Get by menu 
+#### Vote for menu 
 Access: REGULAR USER
 
 PUT /votes?menuId={_menu id_}
