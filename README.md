@@ -46,8 +46,9 @@ GET     /restaurants/[_restaurant id_]
 
     curl -s http://localhost:8080/voting/restaurants/100005 -u admin1@gmail.com:admin1
 
-#### Delete by ID (only if restaurant contains no menus)
+#### Delete by ID
 Access: ADMIN
+<br>Not allowed if restaurant has at least one menu.
 
 DELETE  /restaurants/[_restaurant id_]
 
@@ -111,8 +112,9 @@ GET     /menus/history?date=[_ISO date_]
 
     curl -s http://localhost:8080/voting/menus/history?date=2020-05-03 -u admin1@gmail.com:admin1
 
-#### Delete by ID (only if menu contains no dishes)
+#### Delete by ID
 Access: ADMIN
+<br>Not allowed if menu has at least one dish.
 
 DELETE  /menus/[_menu id_]
 
@@ -120,6 +122,7 @@ DELETE  /menus/[_menu id_]
 
 #### Enable/disable (cascade on disable)
 Access: ADMIN
+<br>Enabling isn't allowed while restaurant is disabled.
 
 PATCH  /menus/[_menu id_]?enabled=[_boolean value_]
 
@@ -127,6 +130,7 @@ PATCH  /menus/[_menu id_]?enabled=[_boolean value_]
 
 #### Create 
 Access: ADMIN
+<br>Creating backdated menu isn't allowed.
 
 POST  /menus  
 
@@ -136,6 +140,7 @@ Body: {"date":"[_ISO date_]", "restaurantId":[_restaurant id_]}
 
 #### Update 
 Access: ADMIN
+<br>Is allowed if it affects today's or future menus only.
 
 POST  /menus/[_menu id_]
 
@@ -157,6 +162,7 @@ GET     /dishes/[_dish id_]
 
 #### Delete by ID
 Access: ADMIN
+<br>Is allowed if dish belongs to today's or future menus only.
 
 DELETE  /dishes/[_dish id_]
 
@@ -164,6 +170,8 @@ DELETE  /dishes/[_dish id_]
 
 #### Enable/disable
 Access: ADMIN
+<br>Enabling isn't allowed while menu is disabled.
+
 
 PATCH  /dishes/[_dish id_]?enabled=[_boolean value_]
 
@@ -171,6 +179,7 @@ PATCH  /dishes/[_dish id_]?enabled=[_boolean value_]
 
 #### Create
 Access: ADMIN
+<br>Is allowed for today's or future menus only.
 
 POST  /dishes
 
@@ -180,6 +189,7 @@ Body: {"name":"[_dish name_]", "price":[_dish price_], "menuId":[_menu id_]}
 
 #### Update
 Access: ADMIN
+<br>Is allowed if it affects today's or future menus only.
 
 PUT  /dishes/[_dish id_]
 
@@ -213,7 +223,7 @@ GET     /votes
 #### Vote for menu 
 Access: REGULAR USER
 
-PUT /votes?menuId={_menu id_}
+PUT /votes?menuId=[_menu id_]
 
     curl -s -X PUT http://localhost:8080/voting/votes?menuId=100014 -u user1@gmail.com:password1
     
