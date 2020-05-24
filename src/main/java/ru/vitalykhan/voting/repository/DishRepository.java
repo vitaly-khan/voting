@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vitalykhan.voting.model.Dish;
 
+import java.util.Optional;
+
 @Repository
 @Transactional(readOnly = true)
 public interface DishRepository extends CrudRepository<Dish, Integer> {
@@ -20,4 +22,7 @@ public interface DishRepository extends CrudRepository<Dish, Integer> {
     //HSQLDB doesn't support syntax "SELECT EXISTS (SELECT ...)" returning boolean
     @Query(value = "SELECT COUNT(*) FROM DISH d WHERE d.MENU_ID=:id", nativeQuery = true)
     int countAllByMenuId(@Param("id") int id);
+
+    @Query("SELECT d FROM Dish d JOIN FETCH Menu m WHERE d.id=:id")
+    Dish findByIdWithMenu(@Param("id") int id);
 }

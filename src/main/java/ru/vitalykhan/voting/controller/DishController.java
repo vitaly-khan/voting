@@ -117,20 +117,30 @@ public class DishController extends AbstractController {
     public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int dishId) {
         log.info("Update dish with id={}", dishId);
         assureIdConsistency(dishTo, dishId);
-        Dish oldDish = dishRepository.findById(dishId).orElseThrow();
-        checkIsPresentOrFuture(oldDish.getMenu());
+
+        Dish oldDish = dishRepository.findByIdWithMenu(dishId);
+        checkIsFound(oldDish != null);
+        checkIsEnabled(oldDish.isEnabled(), dishId, ENTITY_NAME);
+
+        Menu menu = oldDish.getMenu();
+        Integer menuId = menu.getId();
+        checkIsEnabled(menu.isEnabled(), menuId, ENTITY_NAME);
+        checkIsPresentOrFuture(menu);
 
         int newMenuId = dishTo.getMenuId();
-        Menu newMenu = menuRepository.findById(newMenuId).orElseThrow();
-        checkIsEnabled(newMenu.isEnabled(), newMenuId, MenuController.ENTITY_NAME);
-        checkIsPresentOrFuture(newMenu);
+        if (newMenuId != menuId) {
+            Menu newMenu = menuRepository.findById(newMenuId).orElseThrow();
+            checkIsEnabled(newMenu.isEnabled(), newMenuId, MenuController.ENTITY_NAME);
+            checkIsPresentOrFuture(newMenu);
+            menu = newMenu;
+        }
 
-        Dish newDish = DishUtil.of(dishTo, newMenu);
+        Dish newDish = DishUtil.of(dishTo, menu);
         dishRepository.save(newDish);
 
         //Treat the case updating of the {menu id} affects today's menus
         //Assure no duplication of cache evicting
-        if (!evictCacheIfTodays(newMenu)) {
+        if (!evictCacheIfTodays(menu) && newMenuId != menuId) {
             evictCacheIfTodays(oldDish.getMenu());
         }
     }
