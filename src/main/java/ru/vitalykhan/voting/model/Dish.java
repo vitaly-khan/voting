@@ -21,7 +21,7 @@ public class Dish extends AbstractNamedEntity {
     @JsonIgnore
     private Menu menu;
 
-    protected boolean enabled = true;
+    private boolean enabled = true;
 
     public Dish() {
     }

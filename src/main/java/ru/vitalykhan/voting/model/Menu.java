@@ -30,7 +30,7 @@ public class Menu extends AbstractBaseEntity {
     @OneToMany(mappedBy = "menu")
     private List<Dish> dishes = Collections.emptyList();
 
-    protected boolean enabled = true;
+    private boolean enabled = true;
 
     public Menu() {
     }
@@ -78,6 +78,7 @@ public class Menu extends AbstractBaseEntity {
         return "Menu{" +
                 "id=" + id +
                 ", date=" + date +
+                ", restaurant=" + restaurant +
                 ", dishes=" + dishes +
                 ", enabled=" + enabled +
                 '}';

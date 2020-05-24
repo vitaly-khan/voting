@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 @Entity
 public class Restaurant extends AbstractNamedEntity {
 
-    protected boolean enabled = true;
+    private boolean enabled = true;
 
     public Restaurant() {
     }
