@@ -27,6 +27,7 @@ import ru.vitalykhan.voting.repository.DishRepository;
 import ru.vitalykhan.voting.repository.MenuRepository;
 import ru.vitalykhan.voting.repository.RestaurantRepository;
 import ru.vitalykhan.voting.to.MenuTo;
+import ru.vitalykhan.voting.util.MenuUtil;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -132,7 +133,7 @@ public class MenuController extends AbstractController {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
         checkIsEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
-        Menu newMenu = menuRepository.save(new Menu(null, menuTo.getDate(), restaurant));
+        Menu newMenu = menuRepository.save(MenuUtil.of(menuTo, restaurant));
         log.info("Create a new menu {}", newMenu);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -156,7 +157,7 @@ public class MenuController extends AbstractController {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
         checkIsEnabled(restaurant.isEnabled(), restaurantId, RestaurantController.ENTITY_NAME);
 
-        Menu newMenu = new Menu(menuTo.getId(), menuTo.getDate(), restaurant);
+        Menu newMenu = MenuUtil.of(menuTo, restaurant);
         menuRepository.save(newMenu);
 
         //Treat the case updating the date of the menu affects today's menus
