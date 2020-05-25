@@ -23,6 +23,6 @@ public interface DishRepository extends CrudRepository<Dish, Integer> {
     @Query(value = "SELECT COUNT(*) FROM DISH d WHERE d.MENU_ID=:id", nativeQuery = true)
     int countAllByMenuId(@Param("id") int id);
 
-    @Query("SELECT d FROM Dish d JOIN FETCH Menu m WHERE d.id=:id")
+    @Query("SELECT d FROM Dish d JOIN FETCH d.menu WHERE d.id=:id")
     Dish findByIdWithMenu(@Param("id") int id);
 }
