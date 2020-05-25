@@ -33,6 +33,7 @@ import static ru.vitalykhan.voting.testhelper.MenuTestHelper.TODAY;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getNew;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getUpdated;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
 
 class MenuControllerTest extends AbstractControllerTest {
 
@@ -71,8 +72,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void getTodays() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "todays")
-                .with(httpBasicOf(ADMIN1)))
+        perform(MockMvcRequestBuilders.get(REST_URL + "todays"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MENU_MATCHER.unmarshalAndMatchWith(ENABLED_NOT_EMPTY_TODAYS_MENUS));
@@ -136,5 +136,79 @@ class MenuControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         MENU_MATCHER.assertMatch(controller.getById(MENU4_ID), updated);
+    }
+
+    //    Tests for AUTHORIZATION --------------------------------------------------------------------------------------
+    @Test
+    void getByIdByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + MENU1_ID)
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getByIdByAnonymous() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + MENU1_ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getByDateByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "history?date=" + TODAY)
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getByDateByAnonymous() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "history?date=" + TODAY))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getEnabledByDateByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + DISABLED_MENU_ID + "?enabled=true")
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getEnabledByDateByAnonymous() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + DISABLED_MENU_ID + "?enabled=true"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(MenuUtil.getToFrom(getNew())))
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void createByAnonymousUser() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(MenuUtil.getToFrom(getNew()))))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void updateByRegularUser() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MENU4_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(MenuUtil.getToFrom(getUpdated())))
+                .with(httpBasicOf(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateByAnonymous() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MENU4_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(MenuUtil.getToFrom(getUpdated()))))
+                .andExpect(status().isUnauthorized());
     }
 }
