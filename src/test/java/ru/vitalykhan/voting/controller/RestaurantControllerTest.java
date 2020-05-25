@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Restaurant;
+import ru.vitalykhan.voting.util.exception.ErrorType;
 
 import java.util.NoSuchElementException;
 
@@ -226,13 +227,15 @@ class RestaurantControllerTest extends AbstractControllerTest {
     void getByIdNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + USER1_ID)
                 .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void deleteByIdNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + USER1_ID)
+        perform(MockMvcRequestBuilders.delete(REST_URL + USER1_ID)
                 .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
                 .andExpect(status().isUnprocessableEntity());
     }
 
