@@ -19,7 +19,7 @@ import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_WI
 public class MenuTestHelper {
     public static TestMatcher<Menu> MENU_MATCHER = new TestMatcher<>(Menu.class, "dishes");
 
-    public static final LocalDate DATE_OF_2020_05_03 = LocalDate.of(2020,5,3);
+    public static final LocalDate DATE_OF_2020_05_03 = LocalDate.of(2020, 5, 3);
     public static final LocalDate TODAY = LocalDate.now();
 
     public static final int MENU1_ID = START_SEQ + 11;
@@ -50,7 +50,15 @@ public class MenuTestHelper {
         return new Menu(MENU4_ID, TODAY.plus(1, ChronoUnit.DAYS), RESTAURANT_WITH_NO_TODAYS_MENUS);
     }
 
-    public static MenuTo getNewTo() {
+    public static MenuTo getDuplicateTo() {
         return new MenuTo(TODAY, RESTAURANT1_ID);
+    }
+
+    public static String getJsonWithWrongField() {
+        return "{\"wrongField\":100009,\"date\":\"2020-05-30\",\"restaurantId\":100006}";
+    }
+
+    public static MenuTo getBackdated() {
+        return new MenuTo(TODAY.minus(1, ChronoUnit.DAYS), RESTAURANT1_ID);
     }
 }

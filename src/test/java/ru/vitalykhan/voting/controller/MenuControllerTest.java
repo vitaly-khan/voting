@@ -3,6 +3,7 @@ package ru.vitalykhan.voting.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,9 +12,11 @@ import org.springframework.util.Assert;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Menu;
+import ru.vitalykhan.voting.testhelper.RestaurantTestHelper;
 import ru.vitalykhan.voting.to.MenuTo;
 import ru.vitalykhan.voting.util.MenuUtil;
 import ru.vitalykhan.voting.util.exception.ErrorType;
+import ru.vitalykhan.voting.util.exception.IllegalOperationException;
 
 import java.util.NoSuchElementException;
 
@@ -24,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.vitalykhan.voting.TestUtil.detailMessageIs;
 import static ru.vitalykhan.voting.TestUtil.errorTypeIs;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
+import static ru.vitalykhan.voting.TestUtil.parentExceptionIs;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.ALL_TODAYS_MENUS;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.DISABLED_MENU;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.DISABLED_MENU_ID;
@@ -37,12 +41,15 @@ import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU4_ID;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU5_ID;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU_MATCHER;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.TODAY;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getBackdated;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getDuplicateTo;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getJsonWithWrongField;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getNew;
-import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getNewTo;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getUpdated;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1_ID;
+import static ru.vitalykhan.voting.util.exception.ErrorType.BAD_REQUEST;
 import static ru.vitalykhan.voting.util.exception.ErrorType.VALIDATION_ERROR;
 
 class MenuControllerTest extends AbstractControllerTest {
@@ -250,7 +257,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void createNotFoundRestaurant() throws Exception {
-        MenuTo menuTo = getNewTo();
+        MenuTo menuTo = getDuplicateTo();
         menuTo.setRestaurantId(MENU1_ID);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -272,7 +279,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void updateNotFoundRestaurant() throws Exception {
-        MenuTo menuTo = getNewTo();
+        MenuTo menuTo = getDuplicateTo();
         menuTo.setRestaurantId(MENU1_ID);
         perform(MockMvcRequestBuilders.put(REST_URL + USER1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -284,21 +291,77 @@ class MenuControllerTest extends AbstractControllerTest {
 
 
     //    Tests for Enabled Restaurant ---------------------------------------------------------------------------------
-    //TODO: implement
+
+    @Test
+    void createDisabledRestaurant() throws Exception {
+        MenuTo menuTo = getDuplicateTo();
+        menuTo.setRestaurantId(RestaurantTestHelper.DISABLED_RESTAURANT_ID);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(menuTo))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorTypeIs(VALIDATION_ERROR))
+                .andExpect(parentExceptionIs(IllegalOperationException.class));
+    }
+    //TODO: add more
 
 
     //    Tests for Present or Future Menu -----------------------------------------------------------------------------
-    //TODO: implement
+    //TODO: add some
+
+
+    //    Tests for Validation -----------------------------------------------------------------------------------------
+    @Test
+    void createBackdated() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getBackdated()))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorTypeIs(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateBackdated() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MENU5_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getBackdated()))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorTypeIs(VALIDATION_ERROR));
+    }
+
+    @Test
+    void createWithWrongField() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getJsonWithWrongField()))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isBadRequest())
+                .andExpect(errorTypeIs(BAD_REQUEST))
+                .andExpect(parentExceptionIs(HttpMessageNotReadableException.class));
+    }
+
+    @Test
+    void updateWithWrongField() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MENU5_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getJsonWithWrongField()))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(status().isBadRequest())
+                .andExpect(errorTypeIs(BAD_REQUEST))
+                .andExpect(parentExceptionIs(HttpMessageNotReadableException.class));
+    }
 
 
     //    Tests for Database integrity constraint violation ------------------------------------------------------------
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicate() throws Exception {
-        MenuTo menuTo = getNewTo();
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(menuTo))
+                .content(JsonUtil.writeValue(getDuplicateTo()))
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isConflict())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))
@@ -310,7 +373,7 @@ class MenuControllerTest extends AbstractControllerTest {
     void updateDuplicate() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + MENU5_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(getNewTo()))
+                .content(JsonUtil.writeValue(getDuplicateTo()))
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isConflict())
                 .andExpect(errorTypeIs(VALIDATION_ERROR))

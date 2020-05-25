@@ -22,12 +22,12 @@ import static ru.vitalykhan.voting.TestUtil.detailMessageIs;
 import static ru.vitalykhan.voting.TestUtil.errorTypeIs;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.ALL_RESTAURANTS;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.DISABLED_RESTAURANT;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.DISABLED_RESTAURANT_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.ENABLED_SORTED_RESTAURANTS;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT2;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT6;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT6_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_MATCHER;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getNew;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.getUpdated;
@@ -72,21 +72,21 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteById() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT6_ID)
+        perform(MockMvcRequestBuilders.delete(REST_URL + DISABLED_RESTAURANT_ID)
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        assertThrows(NoSuchElementException.class, () -> controller.getById(RESTAURANT6_ID));
+        assertThrows(NoSuchElementException.class, () -> controller.getById(DISABLED_RESTAURANT_ID));
     }
 
     @Test
     void enable() throws Exception {
-        Restaurant toBeEnabled = new Restaurant(RESTAURANT6);
+        Restaurant toBeEnabled = new Restaurant(DISABLED_RESTAURANT);
         Assert.isTrue(!toBeEnabled.isEnabled(), "Restaurant must be disabled initially");
         toBeEnabled.setEnabled(true);
-        perform(MockMvcRequestBuilders.patch(REST_URL + RESTAURANT6_ID + "?enabled=true")
+        perform(MockMvcRequestBuilders.patch(REST_URL + DISABLED_RESTAURANT_ID + "?enabled=true")
                 .with(httpBasicOf(ADMIN1)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(controller.getById(RESTAURANT6_ID), toBeEnabled);
+        RESTAURANT_MATCHER.assertMatch(controller.getById(DISABLED_RESTAURANT_ID), toBeEnabled);
     }
 
     @Test
