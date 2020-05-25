@@ -9,7 +9,10 @@ import org.springframework.util.Assert;
 import ru.vitalykhan.voting.TestUtil;
 import ru.vitalykhan.voting.controller.json.JsonUtil;
 import ru.vitalykhan.voting.model.Menu;
+import ru.vitalykhan.voting.testhelper.MenuTestHelper;
+import ru.vitalykhan.voting.to.MenuTo;
 import ru.vitalykhan.voting.util.MenuUtil;
+import ru.vitalykhan.voting.util.exception.ErrorType;
 
 import java.util.NoSuchElementException;
 
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.vitalykhan.voting.TestUtil.errorTypeIs;
 import static ru.vitalykhan.voting.TestUtil.httpBasicOf;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.ALL_TODAYS_MENUS;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.DISABLED_MENU;
@@ -31,9 +35,11 @@ import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU4_ID;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.MENU_MATCHER;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.TODAY;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getNew;
+import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getNewTo;
 import static ru.vitalykhan.voting.testhelper.MenuTestHelper.getUpdated;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.ADMIN1;
 import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1;
+import static ru.vitalykhan.voting.testhelper.UserTestHelper.USER1_ID;
 
 class MenuControllerTest extends AbstractControllerTest {
 
@@ -211,4 +217,67 @@ class MenuControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(MenuUtil.getToFrom(getUpdated()))))
                 .andExpect(status().isUnauthorized());
     }
+
+
+    //    Tests for NoSuchElementException------------------------------------------------------------------------------
+    @Test
+    void getByIdNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + USER1_ID)
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void deleteByIdNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + USER1_ID)
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void enableNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + USER1_ID + "?enabled=true")
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void createNotFoundRestaurant() throws Exception {
+        MenuTo menuTo = MenuTestHelper.getNewTo();
+        menuTo.setRestaurantId(MENU1_ID);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(menuTo))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateNotFoundMenu() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + USER1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(MenuUtil.getToFrom(getUpdated())))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateNotFoundRestaurant() throws Exception {
+        MenuTo menuTo = MenuTestHelper.getNewTo();
+        menuTo.setRestaurantId(MENU1_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + USER1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(menuTo))
+                .with(httpBasicOf(ADMIN1)))
+                .andExpect(errorTypeIs(ErrorType.DATA_NOT_FOUND))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    //    Tests for NoSuchElementException------------------------------------------------------------------------------
+
 }

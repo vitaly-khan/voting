@@ -21,6 +21,10 @@ public class MenuTo extends AbstractTo {
         return restaurantId;
     }
 
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     public MenuTo() {
     }
 

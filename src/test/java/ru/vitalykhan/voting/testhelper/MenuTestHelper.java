@@ -2,18 +2,19 @@ package ru.vitalykhan.voting.testhelper;
 
 import ru.vitalykhan.voting.TestMatcher;
 import ru.vitalykhan.voting.model.Menu;
+import ru.vitalykhan.voting.to.MenuTo;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import static ru.vitalykhan.voting.model.AbstractBaseEntity.START_SEQ;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT1_ID;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT2;
-import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_WITH_NO_TODAYS_MENUS;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT4;
 import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT5;
+import static ru.vitalykhan.voting.testhelper.RestaurantTestHelper.RESTAURANT_WITH_NO_TODAYS_MENUS;
 
 public class MenuTestHelper {
     public static TestMatcher<Menu> MENU_MATCHER = new TestMatcher<>(Menu.class, "dishes");
@@ -47,5 +48,9 @@ public class MenuTestHelper {
 
     public static Menu getUpdated() {
         return new Menu(MENU4_ID, TODAY.plus(1, ChronoUnit.DAYS), RESTAURANT_WITH_NO_TODAYS_MENUS);
+    }
+
+    public static MenuTo getNewTo() {
+        return new MenuTo(TODAY, RESTAURANT1_ID);
     }
 }
