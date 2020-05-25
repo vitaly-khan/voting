@@ -76,7 +76,13 @@ public class DishController extends AbstractController {
     @Transactional
     public void enable(@PathVariable int dishId, @RequestParam boolean enabled) {
         log.info("{} the dish with id {}", enabled ? "Enable" : "Disable", dishId);
-        Dish dish = dishRepository.findById(dishId).orElseThrow();
+        Dish dish = dishRepository.findByIdWithMenu(dishId);
+        checkIsFound(dish != null);
+        checkIsEnabled(dish.isEnabled(), dishId, ENTITY_NAME);
+
+        Menu menu = dish.getMenu();
+        checkIsEnabled(menu.isEnabled(), menu.getId(), ENTITY_NAME);
+        checkIsPresentOrFuture(menu);
 
         //Treat the case the dish is being enabled while its menu is disabled
         if (enabled) {
