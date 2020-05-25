@@ -131,27 +131,27 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     //    Tests for AUTHORIZATION --------------------------------------------------------------------------------------
     @Test
-    void getAllByRegularUser() throws Exception {
+    void getByIdByRegularUser() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID)
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void getAllByAnonymous() throws Exception {
+    void getByIdByAnonymous() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void getByIdByRegularUser() throws Exception {
+    void getAllByRegularUser() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
                 .with(httpBasicOf(USER1)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void getByIdByAnonymous() throws Exception {
+    void getAllByAnonymous() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isUnauthorized());
     }
