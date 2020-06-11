@@ -33,8 +33,8 @@ public class VoteController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private VoteRepository voteRepository;
-    private MenuRepository menuRepository;
+    private final VoteRepository voteRepository;
+    private final MenuRepository menuRepository;
 
     public VoteController(VoteRepository voteRepository, MenuRepository menuRepository) {
         this.voteRepository = voteRepository;

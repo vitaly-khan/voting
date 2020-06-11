@@ -8,8 +8,8 @@ import java.util.Objects;
 import static ru.vitalykhan.voting.controller.MenuController.TODAYS_MENUS_CACHE_NAME;
 
 public class AbstractController {
-    protected CacheManager cacheManager;
-    protected MenuRepository menuRepository;
+    protected final CacheManager cacheManager;
+    protected final MenuRepository menuRepository;
 
     public AbstractController(CacheManager cacheManager, MenuRepository menuRepository) {
         this.cacheManager = cacheManager;

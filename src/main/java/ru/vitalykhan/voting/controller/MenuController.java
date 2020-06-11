@@ -50,8 +50,8 @@ public class MenuController extends AbstractController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private RestaurantRepository restaurantRepository;
-    private DishRepository dishRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final DishRepository dishRepository;
 
     public MenuController(CacheManager cacheManager, MenuRepository menuRepository, RestaurantRepository restaurantRepository, DishRepository dishRepository) {
         super(cacheManager, menuRepository);

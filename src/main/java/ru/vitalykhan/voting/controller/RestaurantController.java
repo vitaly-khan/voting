@@ -41,7 +41,7 @@ public class RestaurantController extends AbstractController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
     public RestaurantController(CacheManager cacheManager, MenuRepository menuRepository, RestaurantRepository restaurantRepository) {
         super(cacheManager, menuRepository);

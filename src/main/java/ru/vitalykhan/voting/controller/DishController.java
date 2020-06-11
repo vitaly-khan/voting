@@ -43,7 +43,7 @@ public class DishController extends AbstractController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private DishRepository dishRepository;
+    private final DishRepository dishRepository;
 
     public DishController(CacheManager cacheManager, MenuRepository menuRepository, DishRepository dishRepository) {
         super(cacheManager, menuRepository);
