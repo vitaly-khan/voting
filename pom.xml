@@ -31,7 +31,7 @@
         <javax-el.version>3.0.1-b11</javax-el.version>
         <json-path.version>2.4.0</json-path.version>
 
-        <jackson-json.version>2.10.3</jackson-json.version>
+        <jackson-json.version>2.12.1</jackson-json.version>
     </properties>
 
     <build>
